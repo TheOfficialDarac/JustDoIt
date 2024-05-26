@@ -5,15 +5,28 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt", "JustDoIt\JustDoIt.csproj", "{EE658171-E418-46D6-9B76-1E94C320C843}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt.DAL", "JustDoIt.DAL\JustDoIt.DAL.csproj", "{FF414CAE-A454-4F5C-9531-173F83ADB150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.DAL", "JustDoIt.DAL\JustDoIt.DAL.csproj", "{FF414CAE-A454-4F5C-9531-173F83ADB150}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7CC0BC9D-46D1-4659-9868-198CD8A52EE5} = {7CC0BC9D-46D1-4659-9868-198CD8A52EE5}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt.Model", "JustDoIt.Model\JustDoIt.Model.csproj", "{7CC0BC9D-46D1-4659-9868-198CD8A52EE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.Model", "JustDoIt.Model\JustDoIt.Model.csproj", "{7CC0BC9D-46D1-4659-9868-198CD8A52EE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt.Repository", "JustDoIt.Repository\JustDoIt.Repository.csproj", "{04FBDAD8-8DFC-48BE-8A96-734FE42AED8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.Repository", "JustDoIt.Repository\JustDoIt.Repository.csproj", "{04FBDAD8-8DFC-48BE-8A96-734FE42AED8D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7CC0BC9D-46D1-4659-9868-198CD8A52EE5} = {7CC0BC9D-46D1-4659-9868-198CD8A52EE5}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt.Service", "JustDoIt.Service\JustDoIt.Service.csproj", "{B4AB4642-5202-47F9-A23F-98ACC343DA41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.Service", "JustDoIt.Service\JustDoIt.Service.csproj", "{B4AB4642-5202-47F9-A23F-98ACC343DA41}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04FBDAD8-8DFC-48BE-8A96-734FE42AED8D} = {04FBDAD8-8DFC-48BE-8A96-734FE42AED8D}
+		{7CC0BC9D-46D1-4659-9868-198CD8A52EE5} = {7CC0BC9D-46D1-4659-9868-198CD8A52EE5}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt.WebAPI", "JustDoIt.WebAPI\JustDoIt.WebAPI.csproj", "{2D2E5952-3D47-4880-A88D-96C8A456B552}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.WebAPI", "JustDoIt.WebAPI\JustDoIt.WebAPI.csproj", "{2D2E5952-3D47-4880-A88D-96C8A456B552}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B4AB4642-5202-47F9-A23F-98ACC343DA41} = {B4AB4642-5202-47F9-A23F-98ACC343DA41}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
