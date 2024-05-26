@@ -1,4 +1,5 @@
-﻿using JustDoIt.Service.Common;
+﻿using JustDoIt.Model;
+using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.WebAPI.Controllers
@@ -11,10 +12,15 @@ namespace JustDoIt.WebAPI.Controllers
         {
             _service = service;
         }
-        [HttpGet]
+        [HttpGet, Route("Test")]
         public Task<string> Index()
         {
             return _service.Test();
+        }
+        [HttpGet]
+        public Task<IEnumerable<Model.Task>> Test() { 
+            var response = _service.GetTasks();
+            return ((Task<IEnumerable<Model.Task>>)response);
         }
     }
 }

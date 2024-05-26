@@ -29,11 +29,11 @@ namespace JustDoIt.DAL
 
         public virtual DbSet<UserProject> UserProjects { get; set; }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer(optionsBuilder.con)
-        //    optionsBuilder.UseSqlServer("Data Source=localhost; Initial Catalog=task_manager; Integrated Security=True; Trust Server Certificate=True");
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //optionsBuilder.UseSqlServer(optionsBuilder.con)
+            optionsBuilder.UseSqlServer("Data Source=localhost; Initial Catalog=task_manager; Integrated Security=True; Trust Server Certificate=True");
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

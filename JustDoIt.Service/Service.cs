@@ -16,9 +16,14 @@ namespace JustDoIt.Service
         {
             _repository = repository;
         }
+
         #endregion Constructors
 
         #region Methods
+        public Task<IEnumerable<Model.Task>> GetTasks()
+        {
+            return _repository.GetTasks();
+        }
 
         public Task<string> Test() => Task.FromResult("This is a success");
         #endregion Methods

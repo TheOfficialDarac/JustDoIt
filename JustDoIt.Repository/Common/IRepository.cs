@@ -2,6 +2,6 @@
 {
     public interface IRepository
     {
-        IEnumerable<Model.Task> GetTasks();
+        Task<IEnumerable<Model.Task>> GetTasks();
     }
 }
