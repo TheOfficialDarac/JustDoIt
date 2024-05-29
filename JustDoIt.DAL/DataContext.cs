@@ -1,6 +1,5 @@
 ﻿using JustDoIt.Model;
 using Microsoft.EntityFrameworkCore;
-using JustDoIt.Model;
 
 namespace JustDoIt.DAL
 {
