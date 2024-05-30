@@ -1,5 +1,4 @@
-﻿using JustDoIt.Model;
-using JustDoIt.Service.Common;
+﻿using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
@@ -7,18 +6,22 @@ namespace JustDoIt.API.Controllers
     [ApiController, Route("api")]
     public class HomeController : Controller
     {
+        #region Properties
+
         private IService _service { get; set; }
+        #endregion Properties
+
+        #region Constructors
+
         public HomeController(IService service)
         {
             _service = service;
         }
-        [HttpGet, Route("Test")]
-        public Task<string> Index()
-        {
-            return _service.Test();
-        }
+        #endregion Constructors
 
-        [HttpGet]
+        #region Methods
+
+        [HttpGet("tasks", Name = "GetTasks")]
         public async Task<ActionResult> GetTasks(
             string? title,
             string? description,
@@ -34,6 +37,8 @@ namespace JustDoIt.API.Controllers
 
             //TODO(Dario)   sanitize possible input scenarios
             
+            try {
+
             var response = await _service.GetTasks(
                 title: title,
                 description: description,
@@ -47,11 +52,23 @@ namespace JustDoIt.API.Controllers
                 pageSize: pageSize
             );
 
-            if(response is null) {
-                return NotFound();
+            return response is null ? NotFound() : Ok(response);
+            } catch {
+                return BadRequest();
             }
-
-            return Ok(response);
         }
+
+        [HttpGet("tasks/{id:int}", Name = "GetTask")]
+        public async Task<ActionResult> GetTask(int id) {
+            try {
+
+            var task = await _service.GetTask(id);
+            
+            return task is null ? NotFound() : Ok(task);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion Methods
     }
 }

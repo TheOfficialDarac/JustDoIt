@@ -14,5 +14,6 @@
             int page = 1,
             int pageSize = 5
         );
+        Task<Model.Task> GetTask(int id);
     }
 }

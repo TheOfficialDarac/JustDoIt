@@ -20,6 +20,12 @@ namespace JustDoIt.Service
         #endregion Constructors
 
         #region Methods
+
+        public async Task<Model.Task> GetTask(int id)
+        {
+            return await _repository.GetTask(id);
+        }
+
         public async Task<IEnumerable<Model.Task>> GetTasks(
             string? title,
             string? description,
@@ -46,7 +52,6 @@ namespace JustDoIt.Service
                 );
         }
 
-        public Task<string> Test() => Task.FromResult("This is a success");
         #endregion Methods
     }
 }

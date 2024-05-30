@@ -34,46 +34,54 @@ namespace JustDoIt.Repository
             int pageSize = 5
         ) {
             try {
-            // var query = _context.Tasks.AsQueryable();
+                var query = _context.Tasks.AsQueryable();
 
-            // if(!string.IsNullOrEmpty(title)) {
-            //     query = query.Where(t => t.Title.Contains(title)); 
-            // }
+                if(!string.IsNullOrEmpty(title)) {
+                    query = query.Where(t => t.Title.Contains(title)); 
+                }
 
-            // if(!string.IsNullOrEmpty(description)) {
-            //     query = query.Where(t => t.Description.Contains(description));
-            // }
-        
-            // if(!string.IsNullOrEmpty(pictureURL)) {
-            //     query = query.Where(t => t.PictureUrl == pictureURL);
-            // }
+                if(!string.IsNullOrEmpty(description)) {
+                    query = query.Where(t => t.Description.Contains(description));
+                }
+            
+                if(!string.IsNullOrEmpty(pictureURL)) {
+                    query = query.Where(t => t.PictureUrl == pictureURL);
+                }
 
-            // if(!string.IsNullOrEmpty(state)) {
-            //     query = query.Where(t => t.State == state);
-            // }
+                if(!string.IsNullOrEmpty(state)) {
+                    query = query.Where(t => t.State == state);
+                }
 
-            // if(deadlineStart.HasValue) {
-            //     deadlineStart = DateTime.SpecifyKind(deadlineStart.Value, DateTimeKind.Utc);
-            //     query = query.Where(t => t.Deadline >= deadlineStart);
-            // }
+                if(deadlineStart.HasValue) {
+                    deadlineStart = DateTime.SpecifyKind(deadlineStart.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.Deadline >= deadlineStart);
+                }
 
-            // if(deadlineEnd.HasValue) {
-            //     deadlineEnd = DateTime.SpecifyKind(deadlineEnd.Value, DateTimeKind.Utc);
-            //     query = query.Where(t => t.Deadline <= deadlineEnd);
-            // }
+                if(deadlineEnd.HasValue) {
+                    deadlineEnd = DateTime.SpecifyKind(deadlineEnd.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.Deadline <= deadlineEnd);
+                }
 
-            // if(adminID.HasValue) {
-            //     query = query.Where(t => t.AdminId == adminID);   
-            // }
+                if(adminID.HasValue) {
+                    query = query.Where(t => t.AdminId == adminID);   
+                }
 
-            // if(projectID.HasValue) {
-            //     query = query.Where(t => t.ProjectId == projectID);   
-            // }
+                if(projectID.HasValue) {
+                    query = query.Where(t => t.ProjectId == projectID);   
+                }
 
-            // var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            var results = await _context.Tasks.ToListAsync();
-            return results;
+                var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                return results;
             } catch (Exception e){
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<Model.Task> GetTask(int id) {
+            try {
+                var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+                return task;
+            } catch (Exception e) {
                 throw new Exception(e.Message);
             }
         }

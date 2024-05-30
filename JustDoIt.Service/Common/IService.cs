@@ -2,7 +2,6 @@
 {
     public interface IService
     {
-        Task<string> Test();
         Task<IEnumerable<Model.Task>> GetTasks(
             string? title,
             string? description,
@@ -15,5 +14,6 @@
             int page = 1,
             int pageSize = 5
         );
+        Task<Model.Task> GetTask(int id);
     }
 }
