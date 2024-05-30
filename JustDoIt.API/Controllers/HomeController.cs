@@ -2,7 +2,7 @@
 using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JustDoIt.WebAPI.Controllers
+namespace JustDoIt.API.Controllers
 {
     [ApiController, Route("api")]
     public class HomeController : Controller

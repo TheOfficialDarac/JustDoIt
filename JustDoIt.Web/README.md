@@ -31,4 +31,4 @@ export default {
 
 # React + TypeScript + Vite + Tailwind Frontend
 
-This is the frontend for the
+This is the frontend for the JustDoIt project

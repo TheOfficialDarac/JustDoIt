@@ -1,6 +1,6 @@
-@JustDoIt.WebAPI_HostAddress = http://localhost:5153
+@JustDoIt.API_HostAddress = http://localhost:5153
 
-GET {{JustDoIt.WebAPI_HostAddress}}/weatherforecast/
+GET {{JustDoIt.API_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
