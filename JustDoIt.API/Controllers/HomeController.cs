@@ -17,10 +17,41 @@ namespace JustDoIt.API.Controllers
         {
             return _service.Test();
         }
+
         [HttpGet]
-        public Task<IEnumerable<Model.Task>> Test() { 
-            var response = _service.GetTasks();
-            return ((Task<IEnumerable<Model.Task>>)response);
+        public async Task<ActionResult> GetTasks(
+            string? title,
+            string? description,
+            string? pictureURL,
+            DateTime? deadlineStart,
+            DateTime? deadlineEnd,
+            string? state,
+            int? adminID,
+            int? projectID,
+            int page = 1,
+            int pageSize = 5
+        ) { 
+
+            //TODO(Dario)   sanitize possible input scenarios
+            
+            var response = await _service.GetTasks(
+                title: title,
+                description: description,
+                pictureURL: pictureURL,
+                deadlineStart: deadlineStart,
+                deadlineEnd: deadlineEnd,
+                state: state,
+                adminID: adminID,
+                projectID: projectID,
+                page: page,
+                pageSize: pageSize
+            );
+
+            if(response is null) {
+                return NotFound();
+            }
+
+            return Ok(response);
         }
     }
 }

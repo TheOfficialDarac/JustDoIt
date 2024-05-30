@@ -4,19 +4,19 @@ public partial class Task
 {
     public int Id { get; set; }
 
-    public string Title { get; set; } = null!;
+    public string Title { get; set; } = string.Empty;
 
     public int? AdminId { get; set; }
 
-    public string? Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     public int? ProjectId { get; set; }
 
-    public string? PictureUrl { get; set; }
+    public string PictureUrl { get; set; } = string.Empty;
 
-    public DateOnly? Deadline { get; set; }
+    public DateTime? Deadline { get; set; }
 
-    public string State { get; set; } = null!;
+    public string State { get; set; } = string.Empty;
 
     public virtual AppUser? Admin { get; set; }
 
