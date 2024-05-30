@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JustDoIt.API.Controllers
 {
     [ApiController, Route("api")]
-    public class HomeController : Controller
+    public class TaskController : Controller
     {
         #region Properties
 
@@ -13,7 +13,7 @@ namespace JustDoIt.API.Controllers
 
         #region Constructors
 
-        public HomeController(IService service)
+        public TaskController(IService service)
         {
             _service = service;
         }
