@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
 {
-    [ApiController, Route("api")]
+    [ApiController, Route("api/tasks")]
     public class TaskController : Controller
     {
         #region Properties
@@ -21,7 +21,7 @@ namespace JustDoIt.API.Controllers
 
         #region Methods
 
-        [HttpGet("tasks", Name = "GetTasks")]
+        [HttpGet("", Name = "GetTasks")]
         public async Task<ActionResult> GetTasks(
             string? title,
             string? description,
@@ -53,12 +53,12 @@ namespace JustDoIt.API.Controllers
             );
 
             return response is null ? NotFound() : Ok(response);
-            } catch {
-                return BadRequest();
+            } catch (Exception e){
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpGet("tasks/{id:int}", Name = "GetTask")]
+        [HttpGet("{id:int}", Name = "GetTask")]
         public async Task<ActionResult> GetTask(int id) {
             try {
 
@@ -69,6 +69,39 @@ namespace JustDoIt.API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPut("update", Name = "UpdateTask")]
+        public async Task<ActionResult> PutTask([FromBody]Model.Task task) {
+            try {
+
+                if (task == null) {
+                    return NotFound();
+                }
+
+                var success = await _service.UpdateTask(task);
+                return Ok(success);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("create", Name = "CreateTask")]
+        public async Task<IActionResult> CreateTask([FromBody] Model.Task task) {
+            try
+            {
+                if(task is null) {
+                    return NotFound();
+                }
+
+                var success = await _service.CreateTask(task);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         #endregion Methods
     }
 }

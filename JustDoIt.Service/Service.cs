@@ -1,4 +1,5 @@
-﻿using JustDoIt.Repository.Common;
+﻿using JustDoIt.Model;
+using JustDoIt.Repository.Common;
 using JustDoIt.Service.Common;
 
 namespace JustDoIt.Service
@@ -50,6 +51,39 @@ namespace JustDoIt.Service
                 page:page,
                 pageSize:pageSize
                 );
+        }
+
+        public async Task<bool> UpdateTask(Model.Task task)
+        {
+            return await _repository.PutTask(task);
+        }
+
+         public async Task<bool> CreateTask(Model.Task task)
+        {
+            return await _repository.CreateTask(task);
+        }
+
+        public async Task<bool> DeleteTask(Model.Task task)
+        {
+            return await _repository.DeleteTask(task);
+        }
+
+        public async Task<IEnumerable<Project>> GetProjects(
+            string? title,
+            string? description,
+            string? pictureURL,
+            int? adminID,
+            int page = 1,
+            int pageSize = 5
+            ) {
+            return await _repository.GetProjects(
+                title:title,
+                description: description,
+                pictureURL: pictureURL,
+                adminID:adminID,
+                page:page,
+                pageSize: pageSize
+            );
         }
 
         #endregion Methods

@@ -1,7 +1,10 @@
-﻿namespace JustDoIt.Repository.Common
+﻿using JustDoIt.Model;
+
+namespace JustDoIt.Repository.Common
 {
     public interface IRepository
     {
+        #region Tasks
         Task<IEnumerable<Model.Task>> GetTasks(
             string? title,
             string? description,
@@ -15,5 +18,24 @@
             int pageSize = 5
         );
         Task<Model.Task> GetTask(int id);
+
+        Task<bool> PutTask(Model.Task task);
+
+        Task<bool> DeleteTask(Model.Task task);
+
+        Task<bool> CreateTask(Model.Task task);
+        #endregion Tasks
+
+        #region Projects
+
+        Task<IEnumerable<Project>> GetProjects(
+            string? title,
+            string? description,
+            string? pictureURL,
+            int? adminID,
+            int page = 1,
+            int pageSize = 5
+        );
+        #endregion Projects
     }
 }
