@@ -100,5 +100,22 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> CreateComment(Comment comment); 
         #endregion Comments
+        
+        #region Attachments
+        public Task<IEnumerable<Attachment>> GetAttachments(
+            string? filepath,
+            int? taskID,
+            int? projectID,
+            int page = 1,
+            int pageSize = 5
+        );
+        Task<Attachment> GetAttachment(int id);
+
+        Task<bool> UpdateAttachment(Attachment attachment);
+
+        Task<bool> DeleteAttachment(Attachment attachment);
+
+        Task<bool> CreateAttachment(Attachment attachment); 
+        #endregion Attachments
     }
 }

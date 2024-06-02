@@ -603,6 +603,108 @@ namespace JustDoIt.Repository
         }
         #endregion Comments
 
+        #region Attachments
+
+        public async Task<IEnumerable<Attachment>> GetAttachments(
+            string? filepath, 
+            int? taskID,
+            int? projectID,
+            int page = 1, 
+            int pageSize = 5) {
+            try {
+                var query = _context.Attachments.AsQueryable();
+
+                if(!string.IsNullOrEmpty(filepath)) {
+                    query = query.Where(l => 
+                    l.Filepath.Contains(filepath)); 
+                }
+
+                if(taskID.HasValue) {
+                    query = query.Where(l => l.TaskId == taskID);
+                }
+
+                if(projectID.HasValue) {
+                    query = query.Where(l => l.ProjectId == projectID);
+                }
+            
+                var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                return results;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            } 
+        }
+
+        public async Task<Attachment> GetAttachment(int id)
+        {
+            try {
+                var result = await _context.Attachments.FirstOrDefaultAsync(a => a.Id == id);
+                return result;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateAttachment(Attachment attachment)
+        {
+             try
+            {
+                var existing = await _context.Attachments.FindAsync(attachment.Id);
+                
+                if (existing == null)
+                {
+                    return false;   
+                }
+                
+                existing.Filepath = attachment.Filepath;
+                existing.ProjectId = attachment.ProjectId;
+                existing.TaskId = attachment.TaskId;
+                
+                _context.ChangeTracker.DetectChanges();
+                await _context.SaveChangesAsync();
+                
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteAttachment(Attachment attachment)
+        {
+            try
+            {
+                var existing = await _context.Attachments.FindAsync(attachment.Id);
+
+                if(existing is null) {
+                    return false;
+                }
+
+                _context.Attachments.Remove(attachment);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> CreateAttachment(Attachment attachment)
+        {
+            try
+            {
+                await _context.Attachments.AddAsync(attachment);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        #endregion Attachments
+
         #endregion Methods
     }
 }

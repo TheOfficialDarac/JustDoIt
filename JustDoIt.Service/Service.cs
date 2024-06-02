@@ -227,7 +227,47 @@ namespace JustDoIt.Service
             return await _repository.CreateComment(comment);
         }
 
+
         #endregion Users
+
+        #region Attachments
+
+        public async Task<IEnumerable<Attachment>> GetAttachments(
+            string? filepath, 
+            int? taskID, 
+            int? projectID, 
+            int page = 1, 
+            int pageSize = 5) {
+                
+            return await _repository.GetAttachments(
+                filepath: filepath,
+                taskID: taskID,
+                projectID: projectID,
+                page: page,
+                pageSize: pageSize
+            );
+        }
+
+        public async Task<Attachment> GetAttachment(int id)
+        {
+            return await _repository.GetAttachment(id);
+        }
+
+        public async Task<bool> UpdateAttachment(Attachment attachment)
+        {
+            return await _repository.UpdateAttachment(attachment);
+        }
+
+        public async Task<bool> DeleteAttachment(Attachment attachment)
+        {
+            return await _repository.DeleteAttachment(attachment);
+        }
+
+        public async Task<bool> CreateAttachment(Attachment attachment)
+        {
+            return await _repository.CreateAttachment(attachment);
+        }
+        #endregion Attachments
         #endregion Methods
     }
 }
