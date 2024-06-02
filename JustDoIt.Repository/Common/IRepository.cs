@@ -36,6 +36,14 @@ namespace JustDoIt.Repository.Common
             int page = 1,
             int pageSize = 5
         );
+
+         Task<Project> GetProject(int id);
+
+        Task<bool> UpdateProject(Project task);
+
+        Task<bool> DeleteProject(Project task);
+
+        Task<bool> CreateProject(Project task);
         #endregion Projects
     }
 }

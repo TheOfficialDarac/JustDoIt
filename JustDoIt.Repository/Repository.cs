@@ -98,19 +98,19 @@ namespace JustDoIt.Repository
                     return false;   
                 }
                 
-                existing.Title = task.Title;
-                existing.AdminId = task.AdminId;
-                existing.Description = task.Description;
-                existing.ProjectId = task.ProjectId;
-                existing.PictureUrl = task.PictureUrl;
-                existing.Deadline = task.Deadline;
-                existing.State = task.State;
-                existing.Admin = task.Admin;
-                existing.Project = task.Project;
-                existing.Attachments = task.Attachments;
-                existing.Comments = task.Comments;
-                existing.Labels = task.Labels;
-                existing.Users = task.Users;
+                existing.Title          = task.Title;
+                existing.AdminId        = task.AdminId;
+                existing.Description    = task.Description;
+                existing.ProjectId      = task.ProjectId;
+                existing.PictureUrl     = task.PictureUrl;
+                existing.Deadline       = task.Deadline;
+                existing.State          = task.State;
+                existing.Admin          = task.Admin;
+                existing.Project        = task.Project;
+                existing.Attachments    = task.Attachments;
+                existing.Comments       = task.Comments;
+                existing.Labels         = task.Labels;
+                existing.Users          = task.Users;
 
                 
                 _context.ChangeTracker.DetectChanges();
@@ -190,6 +190,81 @@ namespace JustDoIt.Repository
             } catch (Exception e){
                 throw new Exception(e.Message);
             } 
+        }
+
+        public async Task<Project> GetProject(int id)
+        {
+            try {
+                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
+                return (project is null) ? null : project;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateProject(Project project)
+        {
+            try
+            {
+                var existing = await _context.Projects.FindAsync(project.Id);
+                
+                if (existing == null)
+                {
+                    return false;   
+                }
+                
+                existing.AdminId        = project.AdminId;
+                existing.Title          = project.Title;
+                existing.PictureUrl     = project.PictureUrl;
+                existing.Description    = project.Description;
+                existing.Admin          = project.Admin;
+                existing.Attachments    = project.Attachments;
+                existing.Tasks          = project.Tasks;
+                existing.UserProjects   = project.UserProjects;
+                
+                _context.ChangeTracker.DetectChanges();
+                await _context.SaveChangesAsync();
+                
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteProject(Project project)
+        {
+            try
+            {
+                var existing = await _context.Projects.FindAsync(project.Id);
+
+                if(existing is null) {
+                    return false;
+                }
+
+                _context.Projects.Remove(existing);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> CreateProject(Project project)
+        {
+             try
+            {
+                await _context.Projects.AddAsync(project);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         #endregion Methods

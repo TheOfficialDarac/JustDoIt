@@ -1,3 +1,4 @@
+using JustDoIt.Model;
 using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +47,50 @@ namespace JustDoIt.API.Controllers
             catch (Exception ex)
             {
                  return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id:int}", Name = "GetProject")]
+        public async Task<ActionResult> GetProject(int id) {
+            try {
+
+            var project = await _service.GetProject(id);
+            
+            return project is null ? NotFound() : Ok(project);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("update", Name = "UpdateProject")]
+        public async Task<ActionResult> UpdateProject([FromBody]Project project) {
+            try {
+
+                if (project == null) {
+                    return NotFound();
+                }
+
+                var success = await _service.UpdateProject(project);
+                return Ok(success);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("create", Name = "CreateProject")]
+        public async Task<IActionResult> CreateProject([FromBody] Project project) {
+            try
+            {
+                if(project is null) {
+                    return NotFound();
+                }
+
+                var success = await _service.CreateProject(project);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
         #endregion Methods

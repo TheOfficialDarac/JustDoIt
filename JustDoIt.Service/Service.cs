@@ -22,6 +22,8 @@ namespace JustDoIt.Service
 
         #region Methods
 
+        #region Tasks
+
         public async Task<Model.Task> GetTask(int id)
         {
             return await _repository.GetTask(id);
@@ -68,6 +70,8 @@ namespace JustDoIt.Service
             return await _repository.DeleteTask(task);
         }
 
+        #endregion Tasks
+
         public async Task<IEnumerable<Project>> GetProjects(
             string? title,
             string? description,
@@ -84,6 +88,27 @@ namespace JustDoIt.Service
                 page:page,
                 pageSize: pageSize
             );
+        }
+
+        
+        public async Task<Project> GetProject(int id)
+        {
+            return await _repository.GetProject(id);
+        }
+
+        public async Task<bool> UpdateProject(Project project)
+        {
+            return await _repository.UpdateProject(project);
+        }
+
+        public async Task<bool> DeleteProject(Project project)
+        {
+            return await _repository.DeleteProject(project);
+        }
+
+        public async Task<bool> CreateProject(Project project)
+        {
+            return await _repository.CreateProject(project);
         }
 
         #endregion Methods
