@@ -82,5 +82,22 @@ namespace JustDoIt.Service.Common
 
         Task<bool> CreateLabel(Label label);    
         #endregion Labels
+
+        #region Comments
+        public Task<IEnumerable<Comment>> GetComments(
+            string? text,
+            int? taskID,
+            int? userID,
+            int page = 1,
+            int pageSize = 5
+        );
+        Task<Comment> GetComment(int id);
+
+        Task<bool> UpdateComment(Comment comment);
+
+        Task<bool> DeleteComment(Comment comment);
+
+        Task<bool> CreateComment(Comment comment); 
+        #endregion Comments
     }
 }

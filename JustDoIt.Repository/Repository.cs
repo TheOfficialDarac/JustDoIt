@@ -4,6 +4,7 @@ using JustDoIt.Model;
 using JustDoIt.Repository.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.IdentityModel.Tokens;
 
 namespace JustDoIt.Repository
 {
@@ -395,6 +396,9 @@ namespace JustDoIt.Repository
                 throw new Exception(ex.Message);
             }
         }
+        #endregion Users
+
+        #region Labels
 
         public async Task<IEnumerable<Label>> GetLabels(
             string? title, 
@@ -494,7 +498,110 @@ namespace JustDoIt.Repository
                 throw new Exception(ex.Message);
             }
         }
-        #endregion Users
+        #endregion Labels
+
+        #region Comments
+
+        public async Task<IEnumerable<Comment>> GetComments(
+            string? text, 
+            int? taskID,
+            int? userID,
+            int page = 1, 
+            int pageSize = 5) {
+            try {
+                var query = _context.Comments.AsQueryable();
+
+                if(!string.IsNullOrEmpty(text)) {
+                    query = query.Where(l => 
+                    l.Text != null &&
+                    l.Text.Contains(text)); 
+                }
+
+                if(taskID.HasValue) {
+                    query = query.Where(l => l.TaskId == taskID);
+                }
+
+                if(userID.HasValue) {
+                    query = query.Where(l => l.UserId == userID);
+                }
+            
+                var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                return results;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            } 
+        }
+
+        public async Task<Comment> GetComment(int id)
+        {
+            try {
+                var result = await _context.Comments.FirstOrDefaultAsync(l => l.Id == id);
+                return result;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateComment(Comment comment)
+        {
+             try
+            {
+                var existing = await _context.Comments.FindAsync(comment.Id);
+                
+                if (existing == null)
+                {
+                    return false;   
+                }
+                
+                existing.Text = comment.Text;
+                existing.UserId = comment.UserId;
+                existing.TaskId = comment.TaskId;
+                
+                _context.ChangeTracker.DetectChanges();
+                await _context.SaveChangesAsync();
+                
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteComment(Comment comment)
+        {
+            try
+            {
+                var existing = await _context.Comments.FindAsync(comment.Id);
+
+                if(existing is null) {
+                    return false;
+                }
+
+                _context.Comments.Remove(existing);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> CreateComment(Comment comment)
+        {
+            try
+            {
+                await _context.Comments.AddAsync(comment);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        #endregion Comments
 
         #endregion Methods
     }

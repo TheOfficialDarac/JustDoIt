@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Emit;
+using JustDoIt.Model;
 using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -195,14 +196,32 @@ namespace JustDoIt.API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete("labels/delete", Name = "DeleteLabel")]
+        public async Task<IActionResult> DeleteLabel(Model.Label label)
+        {
+            try
+            {
+                if(label is null) {
+                    return NotFound(label);
+                }
+
+                var success = await _service.DeleteLabel(label);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion Labels
 
         #region Comments
-        [HttpGet("labels", Name = "GetLabels")]
-        public async Task<ActionResult> GetLabels(
-            string? title,
-            string? description,
+        [HttpGet("comments", Name = "GetComments")]
+        public async Task<ActionResult> GetComments(
+            string? text,
             int? taskID,
+            int? userID,
             int page = 1,
             int pageSize = 5
         ) { 
@@ -211,10 +230,10 @@ namespace JustDoIt.API.Controllers
             
             try {
 
-            var response = await _service.GetLabels(
-                title: title,
-                description: description,
+            var response = await _service.GetComments(
+                text: text,
                 taskID: taskID,
+                userID: userID,
                 page: page,
                 pageSize: pageSize
             );
@@ -225,11 +244,11 @@ namespace JustDoIt.API.Controllers
             }
         }
 
-        [HttpGet("labels/{id:int}", Name = "GetLabel")]
-        public async Task<ActionResult> GetLabel(int id) {
+        [HttpGet("comments/{id:int}", Name = "GetComment")]
+        public async Task<ActionResult> GetComment(int id) {
             try {
 
-            var result = await _service.GetLabel(id);
+            var result = await _service.GetComment(id);
             
             return result is null ? NotFound() : Ok(result);
             } catch (Exception e) {
@@ -237,30 +256,48 @@ namespace JustDoIt.API.Controllers
             }
         }
 
-        [HttpPut("labels/update", Name = "UpdateLabel")]
-        public async Task<ActionResult> UpdateLabel([FromBody]Model.Label label) {
+        [HttpPut("comments/update", Name = "UpdateComment")]
+        public async Task<ActionResult> UpdateComment([FromBody]Comment comment) {
             try {
 
-                if (label == null) {
-                    return NotFound(label);
+                if (comment == null) {
+                    return NotFound(comment);
                 }
 
-                var success = await _service.UpdateLabel(label);
+                var success = await _service.UpdateComment(comment);
                 return Ok(success);
             } catch (Exception e) {
                 return BadRequest(e.Message);
             }
         }
 
-        [HttpPost("labels/create", Name = "CreateLabel")]
-        public async Task<IActionResult> CreateLabel([FromBody] Model.Label label) {
+        [HttpPost("comments/create", Name = "CreateComment")]
+        public async Task<IActionResult> CreateComment([FromBody] Comment comment) {
             try
             {
-                if(label is null) {
-                    return NotFound(label);
+                if(comment is null) {
+                    return NotFound(comment);
                 }
 
-                var success = await _service.CreateLabel(label);
+                var success = await _service.CreateComment(comment);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("comments/delete", Name = "DeleteComment")]
+        public async Task<IActionResult> DeleteComment(Comment comment)
+        {
+            try
+            {
+                if(comment is null) {
+                    return NotFound(comment);
+                }
+
+                var success = await _service.DeleteComment(comment);
                 return Ok(success);
             }
             catch (Exception e)

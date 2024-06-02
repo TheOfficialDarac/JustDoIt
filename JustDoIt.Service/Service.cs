@@ -192,6 +192,41 @@ namespace JustDoIt.Service
             return await _repository.CreateLabel(label);
         }
 
+        public async Task<IEnumerable<Comment>> GetComments(
+            string? text, 
+            int? taskID, 
+            int? userID, 
+            int page = 1, 
+            int pageSize = 5) {
+            return await _repository.GetComments(
+                text: text,
+                taskID: taskID,
+                userID: userID,
+                page: page,
+                pageSize: pageSize
+            );
+        }
+
+        public async Task<Comment> GetComment(int id)
+        {
+            return await _repository.GetComment(id);
+        }
+
+        public async Task<bool> UpdateComment(Comment comment)
+        {
+            return await _repository.UpdateComment(comment);
+        }
+
+        public async Task<bool> DeleteComment(Comment comment)
+        {
+            return await _repository.DeleteComment(comment);
+        }
+
+        public async Task<bool> CreateComment(Comment comment)
+        {
+            return await _repository.CreateComment(comment);
+        }
+
         #endregion Users
         #endregion Methods
     }
