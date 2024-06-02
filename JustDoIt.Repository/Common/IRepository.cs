@@ -45,5 +45,25 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> CreateProject(Project task);
         #endregion Projects
+
+        #region Users
+        Task<IEnumerable<AppUser>> GetUsers(
+            string? username,
+            string? firstName,
+            string? lastName,
+            string? email,
+            string? pictureURL,
+            int page = 1,
+            int pageSize = 5
+        );
+
+        Task<AppUser> GetUser(int id);
+
+        Task<bool> UpdateUser(AppUser user);
+
+        Task<bool> DeleteUser(AppUser user);
+
+        Task<bool> CreateUser(AppUser user);
+        #endregion Users
     }
 }

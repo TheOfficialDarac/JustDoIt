@@ -2,6 +2,7 @@
 using JustDoIt.Model;
 using JustDoIt.Repository.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace JustDoIt.Repository
 {
@@ -21,6 +22,8 @@ namespace JustDoIt.Repository
         #endregion Constructor
 
         #region Methods
+
+        #region Tasks
 
         public async Task<IEnumerable<Model.Task>> GetTasks(
             string? title,
@@ -157,6 +160,9 @@ namespace JustDoIt.Repository
                 throw new Exception(ex.Message);
             }
         }
+        #endregion Tasks
+
+        #region Projects
 
         public async Task<IEnumerable<Project>> GetProjects(
             string? title,
@@ -174,7 +180,8 @@ namespace JustDoIt.Repository
                 }
 
                 if(!string.IsNullOrEmpty(description)) {
-                    query = query.Where(p => p.Description.Contains(description));
+                    query = query.Where(p => p.Description != null && 
+                                             p.Description.Contains(description));
                 }
             
                 if(!string.IsNullOrEmpty(pictureURL)) {
@@ -255,7 +262,7 @@ namespace JustDoIt.Repository
 
         public async Task<bool> CreateProject(Project project)
         {
-             try
+            try
             {
                 await _context.Projects.AddAsync(project);
                 await _context.SaveChangesAsync();
@@ -266,6 +273,128 @@ namespace JustDoIt.Repository
                 throw new Exception(ex.Message);
             }
         }
+        #endregion Projects
+
+        #region Users
+
+        public async Task<IEnumerable<AppUser>> GetUsers(
+            string? username, 
+            string? firstName, 
+            string? lastName, 
+            string? email, 
+            string? pictureURL, 
+            int page = 1, 
+            int pageSize = 5) {
+
+            try {
+                var query = _context.AppUsers.AsQueryable();
+
+                if(!string.IsNullOrEmpty(username)) {
+                    query = query.Where(p => p.Username.Contains(username)); 
+                }
+
+                if(!string.IsNullOrEmpty(firstName)) {
+                    query = query.Where(p => 
+                    p.FirstName != null &&
+                    p.FirstName.Contains(firstName));
+                }
+            
+                if(!string.IsNullOrEmpty(lastName)) {
+                    query = query.Where(t => 
+                    t.LastName != null &&
+                    t.LastName.Contains(lastName));
+                }
+
+                if(!string.IsNullOrEmpty(email)) {
+                    query = query.Where(t => t.Email == email);
+                }
+
+                if(!string.IsNullOrEmpty(pictureURL)) {
+                    query = query.Where(t => t.PictureUrl == pictureURL);
+                }
+
+                var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                return results;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            } 
+        }
+
+        public async Task<AppUser> GetUser(int id)
+        {
+            try {
+                var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == id);
+                return (user is null) ? null : user;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateUser(AppUser user)
+        {
+            try
+            {
+                var existing = await _context.AppUsers.FindAsync(user.Id);
+                
+                if (existing == null)
+                {
+                    return false;   
+                }
+                
+                existing.Username = user.Username;
+                existing.Password = user.Password;
+                existing.FirstName = user.FirstName;
+                existing.LastName = user.LastName;
+                existing.Email = user.Email;
+                existing.IsVerified = user.IsVerified;
+                existing.Token = user.Token;
+                existing.PictureUrl = user.PictureUrl;
+                
+                _context.ChangeTracker.DetectChanges();
+                await _context.SaveChangesAsync();
+                
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteUser(AppUser user)
+        {
+            try
+            {
+                var existing = await _context.AppUsers.FindAsync(user.Id);
+
+                if(existing is null) {
+                    return false;
+                }
+
+                _context.AppUsers.Remove(existing);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> CreateUser(AppUser user)
+        {
+            try
+            {
+                await _context.AppUsers.AddAsync(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        #endregion Users
 
         #endregion Methods
     }

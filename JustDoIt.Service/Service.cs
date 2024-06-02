@@ -1,4 +1,5 @@
-﻿using JustDoIt.Model;
+﻿using System.Runtime.CompilerServices;
+using JustDoIt.Model;
 using JustDoIt.Repository.Common;
 using JustDoIt.Service.Common;
 
@@ -72,6 +73,8 @@ namespace JustDoIt.Service
 
         #endregion Tasks
 
+        #region Projects
+
         public async Task<IEnumerable<Project>> GetProjects(
             string? title,
             string? description,
@@ -110,7 +113,51 @@ namespace JustDoIt.Service
         {
             return await _repository.CreateProject(project);
         }
+        #endregion Projects
 
+        #region Users
+
+        public async Task<IEnumerable<AppUser>> GetUsers(
+            string? username, 
+            string? firstName, 
+            string? lastName, 
+            string? email, 
+            string? pictureURL, 
+            int page = 1, 
+            int pageSize = 5) {
+            
+            return await _repository.GetUsers(
+                username:username,
+                firstName:firstName,
+                lastName:lastName,
+                email:email,
+                pictureURL:pictureURL,
+                page:page,
+                pageSize:pageSize
+            );
+        }
+
+        public async Task<AppUser> GetUser(int id)
+        {
+            return await _repository.GetUser(id);
+        }
+
+        public async Task<bool> UpdateUser(AppUser user)
+        {
+            return await _repository.UpdateUser(user);
+        }
+
+        public async Task<bool> DeleteUser(AppUser user)
+        {
+            return await _repository.DeleteUser(user);
+        }
+
+        public async Task<bool> CreateUser(AppUser user)
+        {
+            return await _repository.CreateUser(user);
+        }
+
+        #endregion Users
         #endregion Methods
     }
 }
