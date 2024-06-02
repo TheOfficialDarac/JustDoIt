@@ -63,5 +63,24 @@ namespace JustDoIt.Service.Common
 
         Task<bool> CreateUser(AppUser user);
         #endregion Users
+
+        #region Labels
+        
+        Task<IEnumerable<Label>> GetLabels(
+            string? title,
+            string? description,
+            int? taskID,
+            int page = 1,
+            int pageSize = 5
+        );
+
+        Task<Label> GetLabel(int id);
+
+        Task<bool> UpdateLabel(Label label);
+
+        Task<bool> DeleteLabel(Label label);
+
+        Task<bool> CreateLabel(Label label);    
+        #endregion Labels
     }
 }

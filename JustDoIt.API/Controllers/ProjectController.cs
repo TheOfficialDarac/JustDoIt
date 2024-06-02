@@ -82,10 +82,28 @@ namespace JustDoIt.API.Controllers
             try
             {
                 if(project is null) {
-                    return NotFound();
+                    return NotFound(project);
                 }
 
                 var success = await _service.CreateProject(project);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("delete", Name = "DeleteProject")]
+        public async Task<IActionResult> DeleteProject(Project project)
+        {
+            try
+            {
+                if(project is null) {
+                    return NotFound();
+                }
+
+                var success = await _service.DeleteProject(project);
                 return Ok(success);
             }
             catch (Exception e)

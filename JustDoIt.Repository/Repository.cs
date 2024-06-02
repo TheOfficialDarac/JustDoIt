@@ -1,4 +1,5 @@
-﻿using JustDoIt.DAL;
+﻿using System.Text;
+using JustDoIt.DAL;
 using JustDoIt.Model;
 using JustDoIt.Repository.Common;
 using Microsoft.EntityFrameworkCore;
@@ -224,10 +225,10 @@ namespace JustDoIt.Repository
                 existing.Title          = project.Title;
                 existing.PictureUrl     = project.PictureUrl;
                 existing.Description    = project.Description;
-                existing.Admin          = project.Admin;
-                existing.Attachments    = project.Attachments;
-                existing.Tasks          = project.Tasks;
-                existing.UserProjects   = project.UserProjects;
+                // existing.Admin          = project.Admin;
+                // existing.Attachments    = project.Attachments;
+                // existing.Tasks          = project.Tasks;
+                // existing.UserProjects   = project.UserProjects;
                 
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
@@ -386,6 +387,105 @@ namespace JustDoIt.Repository
             try
             {
                 await _context.AppUsers.AddAsync(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<IEnumerable<Label>> GetLabels(
+            string? title, 
+            string? description, 
+            int? taskID,
+            int page = 1, 
+            int pageSize = 5) {
+            try {
+                var query = _context.Labels.AsQueryable();
+
+                if(!string.IsNullOrEmpty(title)) {
+                    query = query.Where(l => l.Title.Contains(title)); 
+                }
+
+                if(!string.IsNullOrEmpty(description)) {
+                    query = query.Where(l => 
+                    l.Description != null &&
+                    l.Description.Contains(description));
+                }
+
+                if(taskID.HasValue) {
+                    query = query.Where(l => l.TaskId == taskID);
+                }
+            
+                var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                return results;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            } 
+        }
+
+        public async Task<Label> GetLabel(int id)
+        {
+            try {
+                var result = await _context.Labels.FirstOrDefaultAsync(l => l.Id == id);
+                return result;
+            } catch (Exception e) {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateLabel(Label label)
+        {
+             try
+            {
+                var existing = await _context.Labels.FindAsync(label.Id);
+                
+                if (existing == null)
+                {
+                    return false;   
+                }
+                
+                existing.Title = label.Title;
+                existing.Description = label.Description;
+                
+                _context.ChangeTracker.DetectChanges();
+                await _context.SaveChangesAsync();
+                
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteLabel(Label label)
+        {
+            try
+            {
+                var existing = await _context.Labels.FindAsync(label.Id);
+
+                if(existing is null) {
+                    return false;
+                }
+
+                _context.Labels.Remove(existing);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> CreateLabel(Label label)
+        {
+            try
+            {
+                await _context.Labels.AddAsync(label);
                 await _context.SaveChangesAsync();
                 return true;
             }

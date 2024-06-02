@@ -157,6 +157,41 @@ namespace JustDoIt.Service
             return await _repository.CreateUser(user);
         }
 
+        public async Task<IEnumerable<Label>> GetLabels(
+            string? title, 
+            string? description, 
+            int? taskID,
+            int page = 1, 
+            int pageSize = 5) {
+            return await _repository.GetLabels(
+                title:title,
+                description:description,
+                taskID: taskID,
+                page:page,
+                pageSize:pageSize
+            );
+        }
+
+        public Task<Label> GetLabel(int id)
+        {
+            return _repository.GetLabel(id);
+        }
+
+        public Task<bool> UpdateLabel(Label label)
+        {
+            return _repository.UpdateLabel(label);
+        }
+
+        public async Task<bool> DeleteLabel(Label label)
+        {
+            return await _repository.DeleteLabel(label);
+        }
+
+        public async Task<bool> CreateLabel(Label label)
+        {
+            return await _repository.CreateLabel(label);
+        }
+
         #endregion Users
         #endregion Methods
     }

@@ -1,4 +1,5 @@
-﻿using JustDoIt.Service.Common;
+﻿using System.Reflection.Emit;
+using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
@@ -20,6 +21,8 @@ namespace JustDoIt.API.Controllers
         #endregion Constructors
 
         #region Methods
+
+        #region Tasks
 
         [HttpGet("", Name = "GetTasks")]
         public async Task<ActionResult> GetTasks(
@@ -71,7 +74,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut("update", Name = "UpdateTask")]
-        public async Task<ActionResult> PutTask([FromBody]Model.Task task) {
+        public async Task<ActionResult> UpdateTask([FromBody]Model.Task task) {
             try {
 
                 if (task == null) {
@@ -101,6 +104,171 @@ namespace JustDoIt.API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete("delete", Name = "DeleteTask")]
+        public async Task<IActionResult> DeleteTask(Model.Task task)
+        {
+            try
+            {
+                if(task is null) {
+                    return NotFound(task);
+                }
+
+                var success = await _service.DeleteTask(task);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion Tasks
+
+        #region Labels
+        [HttpGet("labels", Name = "GetLabels")]
+        public async Task<ActionResult> GetLabels(
+            string? title,
+            string? description,
+            int? taskID,
+            int page = 1,
+            int pageSize = 5
+        ) { 
+
+            //TODO(Dario)   sanitize possible input scenarios
+            
+            try {
+
+            var response = await _service.GetLabels(
+                title: title,
+                description: description,
+                taskID: taskID,
+                page: page,
+                pageSize: pageSize
+            );
+
+            return response is null ? NotFound() : Ok(response);
+            } catch (Exception e){
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("labels/{id:int}", Name = "GetLabel")]
+        public async Task<ActionResult> GetLabel(int id) {
+            try {
+
+            var result = await _service.GetLabel(id);
+            
+            return result is null ? NotFound() : Ok(result);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("labels/update", Name = "UpdateLabel")]
+        public async Task<ActionResult> UpdateLabel([FromBody]Model.Label label) {
+            try {
+
+                if (label == null) {
+                    return NotFound(label);
+                }
+
+                var success = await _service.UpdateLabel(label);
+                return Ok(success);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("labels/create", Name = "CreateLabel")]
+        public async Task<IActionResult> CreateLabel([FromBody] Model.Label label) {
+            try
+            {
+                if(label is null) {
+                    return NotFound(label);
+                }
+
+                var success = await _service.CreateLabel(label);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion Labels
+
+        #region Comments
+        [HttpGet("labels", Name = "GetLabels")]
+        public async Task<ActionResult> GetLabels(
+            string? title,
+            string? description,
+            int? taskID,
+            int page = 1,
+            int pageSize = 5
+        ) { 
+
+            //TODO(Dario)   sanitize possible input scenarios
+            
+            try {
+
+            var response = await _service.GetLabels(
+                title: title,
+                description: description,
+                taskID: taskID,
+                page: page,
+                pageSize: pageSize
+            );
+
+            return response is null ? NotFound() : Ok(response);
+            } catch (Exception e){
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("labels/{id:int}", Name = "GetLabel")]
+        public async Task<ActionResult> GetLabel(int id) {
+            try {
+
+            var result = await _service.GetLabel(id);
+            
+            return result is null ? NotFound() : Ok(result);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("labels/update", Name = "UpdateLabel")]
+        public async Task<ActionResult> UpdateLabel([FromBody]Model.Label label) {
+            try {
+
+                if (label == null) {
+                    return NotFound(label);
+                }
+
+                var success = await _service.UpdateLabel(label);
+                return Ok(success);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("labels/create", Name = "CreateLabel")]
+        public async Task<IActionResult> CreateLabel([FromBody] Model.Label label) {
+            try
+            {
+                if(label is null) {
+                    return NotFound(label);
+                }
+
+                var success = await _service.CreateLabel(label);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion Comments
 
         #endregion Methods
     }

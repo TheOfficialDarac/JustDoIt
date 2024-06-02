@@ -79,7 +79,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost("create", Name = "CreateUser")]
-        public async Task<IActionResult> CreatCreateUser([FromBody] AppUser user) {
+        public async Task<IActionResult> CreateUser([FromBody] AppUser user) {
             try
             {
                 if(user is null) {
@@ -87,6 +87,24 @@ namespace JustDoIt.API.Controllers
                 }
 
                 var success = await _service.CreateUser(user);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("delete", Name = "DeleteUser")]
+        public async Task<IActionResult> DeleteUser(AppUser user)
+        {
+            try
+            {
+                if(user is null) {
+                    return NotFound();
+                }
+
+                var success = await _service.DeleteUser(user);
                 return Ok(success);
             }
             catch (Exception e)
