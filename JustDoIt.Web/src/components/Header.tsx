@@ -3,7 +3,14 @@ interface Props {
 }
 
 const Header = ({ name }: Props) => {
-  return <div className="container-xl bg-red-300 p-4">Header {name}</div>;
+  console.log(name);
+  return (
+    <>
+      <div className="container bg-red-300 p-4 mx-auto flex-initial">
+        Header {name}
+      </div>
+    </>
+  );
 };
 
 export default Header;
