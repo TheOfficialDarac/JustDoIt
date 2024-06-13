@@ -17,6 +17,7 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/react";
 import DummyLogo from "../assets/DummyLogo";
+import LoginModal from "./LoginModal";
 
 interface Props {
   name: string;
@@ -53,23 +54,23 @@ function Header({ name }: Props) {
           />
           <NavbarBrand>
             <DummyLogo />
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-bold text-inherit">Just Do It</p>
           </NavbarBrand>
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link color="foreground" href="#">
+            <Link color="foreground" href="/">
               Features
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="#">
+            <Link color="foreground" href="/">
               Customers
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="#">
+            <Link color="foreground" href="/">
               {name}
             </Link>
           </NavbarItem>
@@ -107,7 +108,8 @@ function Header({ name }: Props) {
           {true ? (
             <>
               <NavbarItem className="hidden lg:flex">
-                <Link href="/login">Login</Link>
+                {/* <Link href={}>Login</Link> */}
+                <LoginModal />
               </NavbarItem>
               <NavbarItem>
                 <Button

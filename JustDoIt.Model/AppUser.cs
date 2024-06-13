@@ -1,5 +1,5 @@
 ﻿namespace JustDoIt.Model;
-public partial class AppUser
+public partial class AppUser    //  : IdentityUser
 {
     public int Id { get; set; }
 

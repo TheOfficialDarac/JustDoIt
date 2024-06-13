@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JustDoIt.DAL
 {
+    // public partial class DataContext : IdentityDbContext<AppUser>
     public partial class DataContext : DbContext
     {
         public DataContext()
