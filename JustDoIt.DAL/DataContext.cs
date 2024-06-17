@@ -33,12 +33,14 @@ public partial class DataContext : IdentityDbContext<AppUser>
 
     public virtual DbSet<UserProject> UserProjects { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(this.Database.GetDbConnection());
-            // "Server=localhost;Database=task_manager;Trusted_Connection=True; TrustServerCertificate=True;");
+//  is override is useless as same is set in Program.cs
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //     => optionsBuilder.UseSqlServer(Configuration[""]);
+    //         // "Server=localhost;Database=task_manager;Trusted_Connection=True; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //  added for identity
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Attachment>(entity =>
