@@ -1,12 +1,15 @@
-﻿namespace JustDoIt.Model;
+﻿using System;
+using System.Collections.Generic;
+
+namespace JustDoIt.Model;
 
 public partial class Project
 {
     public int Id { get; set; }
 
-    public int? AdminId { get; set; }
+    public string? AdminId { get; set; }
 
-    public string Title { get; set; } = null!;
+    public string? Title { get; set; }
 
     public string? PictureUrl { get; set; }
 

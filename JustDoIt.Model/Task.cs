@@ -1,22 +1,25 @@
-﻿namespace JustDoIt.Model;
+﻿using System;
+using System.Collections.Generic;
+
+namespace JustDoIt.Model;
 
 public partial class Task
 {
     public int Id { get; set; }
 
-    public string Title { get; set; } = string.Empty;
+    public string? Title { get; set; }
 
-    public int? AdminId { get; set; }
+    public string? AdminId { get; set; }
 
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
 
-    public int? ProjectId { get; set; }
+    public int ProjectId { get; set; }
 
-    public string PictureUrl { get; set; } = string.Empty;
+    public string? PictureUrl { get; set; }
 
     public DateTime? Deadline { get; set; }
 
-    public string State { get; set; } = string.Empty;
+    public string? State { get; set; }
 
     public virtual AppUser? Admin { get; set; }
 
@@ -26,7 +29,7 @@ public partial class Task
 
     public virtual ICollection<Label> Labels { get; set; } = new List<Label>();
 
-    public virtual Project? Project { get; set; }
+    public virtual Project Project { get; set; } = null!;
 
     public virtual ICollection<AppUser> Users { get; set; } = new List<AppUser>();
 }

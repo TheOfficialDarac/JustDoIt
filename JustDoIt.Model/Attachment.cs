@@ -1,4 +1,7 @@
-﻿namespace JustDoIt.Model;
+﻿using System;
+using System.Collections.Generic;
+
+namespace JustDoIt.Model;
 
 public partial class Attachment
 {

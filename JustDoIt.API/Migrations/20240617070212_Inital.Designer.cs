@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JustDoIt.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240614152321_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240617070212_Inital")]
+    partial class Inital
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

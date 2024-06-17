@@ -2,10 +2,10 @@ using JustDoIt.DAL;
 using JustDoIt.Model;
 using Microsoft.AspNetCore.Builder;
 
-// using JustDoIt.Repository;
-// using JustDoIt.Repository.Common;
-// using JustDoIt.Service;
-// using JustDoIt.Service.Common;
+using JustDoIt.Repository;
+using JustDoIt.Repository.Common;
+using JustDoIt.Service;
+using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +29,8 @@ builder.Services.AddSwaggerGen(options => {
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-// builder.Services.AddScoped<IRepository, Repository>();
-// builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IService, Service>();
 builder.Services.AddCors();
 builder.Services.AddDbContext<DataContext>(options => {
     var connection = builder.Configuration.GetConnectionString("DevelopmentConnection");
