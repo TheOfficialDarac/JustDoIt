@@ -70,14 +70,31 @@ const Register = () => {
 
   return (
     <>
-      <form className="p-2 m-auto flex-1">
+      <h3 className="text-center p-2 m-2">Register</h3>
+      <form
+        className="flex flex-col items-center p-4 gap-4 border border-neutral-300 border-solid rounded-xl w-full"
+        onSubmit={() => {
+          alert("Has been submitted");
+        }}
+      >
+        <Avatar
+          src={""}
+          name=""
+          className="w-10 h-10 cursor-pointer"
+          onClick={() => {
+            hiddenFileInput.current.click();
+          }}
+          data-hover="border-gray-400 border border-2 border-blue-300"
+        />
+        {/* <fieldset className="w-100">
+          <legend>Do you agree to the terms?</legend> */}
         <Input
           value={email}
           type="email"
           label="Email"
           variant="bordered"
           isInvalid={isInvalid}
-          color={isInvalid ? "danger" : "success"}
+          color={isInvalid ? "danger" : "default"}
           errorMessage="Please enter a valid email"
           onValueChange={setEmail}
           className="max-w-xs"
@@ -89,7 +106,7 @@ const Register = () => {
           label="Username"
           variant="bordered"
           isInvalid={validateUsername}
-          color={validateUsername ? "danger" : "success"}
+          color={validateUsername ? "danger" : "default"}
           errorMessage="Please enter a valid username"
           onValueChange={setUsername}
           className="max-w-xs"
@@ -101,7 +118,7 @@ const Register = () => {
           label="Password"
           variant="bordered"
           isInvalid={validatePassword}
-          color={validatePassword ? "danger" : "success"}
+          color={validatePassword ? "danger" : "default"}
           errorMessage="Please enter a valid username"
           onValueChange={setPassword}
           className="max-w-xs"
@@ -113,7 +130,7 @@ const Register = () => {
           label="First Name"
           variant="bordered"
           isInvalid={validateFirstName}
-          color={validateFirstName ? "danger" : "success"}
+          color={validateFirstName ? "danger" : "default"}
           errorMessage="Please enter a valid First Name"
           onValueChange={setFirstName}
           className="max-w-xs"
@@ -125,7 +142,7 @@ const Register = () => {
           label="Last Name"
           variant="bordered"
           isInvalid={validateLastName}
-          color={validateLastName ? "danger" : "success"}
+          color={validateLastName ? "danger" : "default"}
           errorMessage="Please enter a valid Last Name"
           onValueChange={setLastName}
           className="max-w-xs"
@@ -137,26 +154,12 @@ const Register = () => {
           label="Phone Number"
           variant="bordered"
           isInvalid={validatePhoneNum}
-          color={validatePhoneNum ? "danger" : "success"}
+          color={validatePhoneNum ? "danger" : "default"}
           errorMessage="Please enter a valid Phone Number"
           onValueChange={setPhoneNum}
           className="max-w-xs"
         />
 
-        {/* <Input
-          value={profilePic}
-          type="file"
-          // label="Profile image"
-          // variant="bordered"
-          isInvalid={validateProfilePic}
-          // color={validateProfilePic ? "danger" : "success"}
-          // errorMessage="Please input image"
-          onValueChange={setProfilePic}
-          accept="image/*"
-          ref={hiddenFileInput}
-          style={{ display: "none" }}
-          hidden={true}
-        /> */}
         <input
           type="file"
           accept="image/*"
@@ -164,20 +167,25 @@ const Register = () => {
           // onChangeCapture={}
           // onChange={setProfilePic}
           ref={hiddenFileInput}
+          name="profilePicture"
         />
-        <button
+        {/* <button
           type="button"
           onClick={() => {
-            // if (hiddenFileInput) {
             hiddenFileInput.current.click();
-            // }
           }}
-        >
+          className="border-solid border border-gray-200 border-2 text-foreground-500 py-4 px-3 motion-reduce:transition-none cursor-pointer rounded-xl w-full max-w-xs text-left text-small font-normal bg-transparent hover:border-gray-400"
+        > 
           Image
         </button>
-        {isValidProfileImage ? (
-          <Avatar src={""} className="w-20 h-20 text-large" />
-        ) : null}
+         */}
+        {/* </fieldset> */}
+        <button
+          type="submit"
+          className="border border-2 border-solid rounded-xl border-sky-400 p-3 text-foreground-500 hover:text-sky-400"
+        >
+          Register
+        </button>
       </form>
     </>
   );

@@ -10,15 +10,15 @@ function Layout() {
   return (
     <>
       <Header name="header" />
-
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          {/* <Route path="/login" element={<Login />} /> */}
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
-
+      <main className="max-w-screen-xl w-full flex-1">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            {/* <Route path="/login" element={<Login />} /> */}
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </BrowserRouter>
+      </main>
       <Footer name="footer" />
     </>
   );

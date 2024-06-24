@@ -9,7 +9,7 @@ import App from "./App.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <NextUIProvider>
+    <NextUIProvider className="min-h-screen flex flex-col items-center">
       <App />
     </NextUIProvider>
   </React.StrictMode>
