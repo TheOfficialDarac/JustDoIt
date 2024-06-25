@@ -5,6 +5,7 @@ const Register = () => {
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [repeatPassword, setRepeatPassword] = React.useState("");
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [phoneNum, setPhoneNum] = React.useState("");
@@ -51,6 +52,13 @@ const Register = () => {
     return true;
   }, [password]);
 
+  const validateRepeatPassword = React.useMemo(() => {
+    if (password === repeatPassword) return false;
+
+    //! TODO add password validations
+    return true;
+  }, [repeatPassword]);
+
   const validatePhoneNum = React.useMemo(() => {
     if (phoneNum === "") return false;
 
@@ -80,73 +88,89 @@ const Register = () => {
         <Avatar
           src={""}
           name=""
-          className="w-10 h-10 cursor-pointer"
+          className="w-20 h-20 cursor-pointer"
           onClick={() => {
             hiddenFileInput.current.click();
           }}
           data-hover="border-gray-400 border border-2 border-blue-300"
         />
-        {/* <fieldset className="w-100">
-          <legend>Do you agree to the terms?</legend> */}
-        <Input
-          value={email}
-          type="email"
-          label="Email"
-          variant="bordered"
-          isInvalid={isInvalid}
-          color={isInvalid ? "danger" : "default"}
-          errorMessage="Please enter a valid email"
-          onValueChange={setEmail}
-          className="max-w-xs"
-        />
 
-        <Input
-          value={username}
-          type="text"
-          label="Username"
-          variant="bordered"
-          isInvalid={validateUsername}
-          color={validateUsername ? "danger" : "default"}
-          errorMessage="Please enter a valid username"
-          onValueChange={setUsername}
-          className="max-w-xs"
-        />
+        <div className="flex gap-3">
+          <Input
+            value={username}
+            type="text"
+            label="Username"
+            variant="bordered"
+            isInvalid={validateUsername}
+            color={validateUsername ? "danger" : "default"}
+            errorMessage="Please enter a valid username"
+            onValueChange={setUsername}
+            className="max-w-xs"
+          />
 
-        <Input
-          value={password}
-          type="text"
-          label="Password"
-          variant="bordered"
-          isInvalid={validatePassword}
-          color={validatePassword ? "danger" : "default"}
-          errorMessage="Please enter a valid username"
-          onValueChange={setPassword}
-          className="max-w-xs"
-        />
+          <Input
+            value={email}
+            type="email"
+            label="Email"
+            variant="bordered"
+            isInvalid={isInvalid}
+            color={isInvalid ? "danger" : "default"}
+            errorMessage="Please enter a valid email"
+            onValueChange={setEmail}
+            className="max-w-xs"
+          />
+        </div>
 
-        <Input
-          value={firstName}
-          type="text"
-          label="First Name"
-          variant="bordered"
-          isInvalid={validateFirstName}
-          color={validateFirstName ? "danger" : "default"}
-          errorMessage="Please enter a valid First Name"
-          onValueChange={setFirstName}
-          className="max-w-xs"
-        />
+        <div className="flex gap-3">
+          <Input
+            value={password}
+            type="password"
+            label="Password"
+            variant="bordered"
+            isInvalid={validatePassword}
+            color={validatePassword ? "danger" : "default"}
+            errorMessage="Please enter a valid password"
+            onValueChange={setPassword}
+            className="max-w-xs"
+          />
 
-        <Input
-          value={lastName}
-          type="text"
-          label="Last Name"
-          variant="bordered"
-          isInvalid={validateLastName}
-          color={validateLastName ? "danger" : "default"}
-          errorMessage="Please enter a valid Last Name"
-          onValueChange={setLastName}
-          className="max-w-xs"
-        />
+          <Input
+            value={repeatPassword}
+            type="password"
+            label="Repeat Password"
+            variant="bordered"
+            isInvalid={validateRepeatPassword}
+            color={validateRepeatPassword ? "danger" : "default"}
+            errorMessage="Please repeated password"
+            onValueChange={setRepeatPassword}
+            className="max-w-xs"
+          />
+        </div>
+        <div className="flex gap-3">
+          <Input
+            value={firstName}
+            type="text"
+            label="First Name"
+            variant="bordered"
+            isInvalid={validateFirstName}
+            color={validateFirstName ? "danger" : "default"}
+            errorMessage="Please enter a valid First Name"
+            onValueChange={setFirstName}
+            className="max-w-xs"
+          />
+
+          <Input
+            value={lastName}
+            type="text"
+            label="Last Name"
+            variant="bordered"
+            isInvalid={validateLastName}
+            color={validateLastName ? "danger" : "default"}
+            errorMessage="Please enter a valid Last Name"
+            onValueChange={setLastName}
+            className="max-w-xs"
+          />
+        </div>
 
         <Input
           value={phoneNum}
@@ -179,7 +203,6 @@ const Register = () => {
           Image
         </button>
          */}
-        {/* </fieldset> */}
         <button
           type="submit"
           className="border border-2 border-solid rounded-xl border-sky-400 p-3 text-foreground-500 hover:text-sky-400"
