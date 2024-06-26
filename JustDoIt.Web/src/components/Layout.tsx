@@ -1,24 +1,14 @@
-import Header from "./Header";
-import Footer from "./Footer";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
-import Register from "../pages/Register";
 // import Login from "../pages/Login";
 // import Testing from "../LoginModal";
 
-function Layout() {
+import Footer from "./Footer";
+import Header from "./Header";
+
+function Layout({ children }: any) {
   return (
     <>
       <Header name="header" />
-      <main className="max-w-screen-xl w-full flex-1">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            {/* <Route path="/login" element={<Login />} /> */}
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </BrowserRouter>
-      </main>
+      <main className="max-w-screen-xl w-full flex-1">{children}</main>
       <Footer name="footer" />
     </>
   );

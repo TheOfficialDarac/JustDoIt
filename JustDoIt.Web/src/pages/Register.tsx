@@ -10,9 +10,10 @@ const Register = () => {
   const [lastName, setLastName] = React.useState("");
   const [phoneNum, setPhoneNum] = React.useState("");
   const [profilePic, setProfilePic] = React.useState("");
-  const [isValidProfileImage, setIsValidProfileImage] = React.useState(false);
+  // const [isValidProfileImage, setIsValidProfileImage] = React.useState(false);
 
   const hiddenFileInput = useRef(null);
+
   //#region Validation
 
   const validateEmail = (email: string) =>
@@ -66,23 +67,29 @@ const Register = () => {
     return true;
   }, [phoneNum]);
 
-  const validateProfilePic = React.useMemo(() => {
-    if (profilePic === "") return false;
+  // const validateProfilePic = React.useMemo(() => {
+  //   if (profilePic === "") return false;
 
-    setIsValidProfileImage(true);
-    //! TODO add password validations
-    return true;
-  }, [profilePic]);
+  //   setIsValidProfileImage(true);
+  //   //! TODO add password validations
+  //   return true;
+  // }, [profilePic]);
 
   //#endregion Validation
 
+  //#region register
+
+  //#endregiion register
   return (
     <>
+      <br />
+      <br />
       <h3 className="text-center p-2 m-2">Register</h3>
       <form
-        className="flex flex-col items-center p-4 gap-4 border border-neutral-300 border-solid rounded-xl w-full"
-        onSubmit={() => {
-          alert("Has been submitted");
+        className="flex flex-col items-center p-4 gap-4 border border-neutral-300 border-solid rounded-xl w-full border-2 shadow-sm"
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log("Has been submitted");
         }}
       >
         <Avatar
@@ -205,7 +212,7 @@ const Register = () => {
          */}
         <button
           type="submit"
-          className="border border-2 border-solid rounded-xl border-sky-400 p-3 text-foreground-500 hover:text-sky-400"
+          className="border border-2 border-solid rounded-xl border-gray-200 p-4 text-foreground-500 hover:text-sky-400 text-small hover:border-sky-400"
         >
           Register
         </button>

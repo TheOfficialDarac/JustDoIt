@@ -6,13 +6,38 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Checkbox,
+  // Checkbox,
   Input,
   Link,
 } from "@nextui-org/react";
+import React from "react";
 
 export default function LoginModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  let [email, setEmail] = React.useState("");
+  let [password, setPassword] = React.useState("");
+
+  const performLogin = () => {
+    fetch(
+      "http://localhost:5153/api/auth/login?useCookies=true&useSessionCookies=true",
+      {
+        method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      }
+    );
+  };
 
   return (
     <>
@@ -54,6 +79,11 @@ export default function LoginModal() {
                   label="Email"
                   placeholder="Enter your email"
                   variant="bordered"
+                  //
+                  value={email}
+                  type="email"
+                  onValueChange={setEmail}
+                  // className="max-w-xs"
                 />
                 <Input
                   endContent={
@@ -83,8 +113,10 @@ export default function LoginModal() {
                   placeholder="Enter your password"
                   type="password"
                   variant="bordered"
+                  value={password}
+                  onValueChange={setPassword}
                 />
-                <div className="flex py-2 px-1 justify-center">
+                {/* <div className="flex py-2 px-1 justify-center">
                   <Checkbox
                     classNames={{
                       label: "text-small",
@@ -92,7 +124,7 @@ export default function LoginModal() {
                   >
                     Remember me
                   </Checkbox>
-                </div>
+                </div> */}
                 <div className="flex py-2 px-1 justify-around">
                   <Link color="primary" href="#" size="sm">
                     Forgot password?
@@ -111,7 +143,11 @@ export default function LoginModal() {
                 >
                   Close
                 </Button>
-                <Button color="primary" onPress={onClose} className="flex-1">
+                <Button
+                  color="primary"
+                  onPress={performLogin}
+                  className="flex-1"
+                >
                   Sign in
                 </Button>
               </ModalFooter>
