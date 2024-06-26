@@ -38,56 +38,72 @@ namespace JustDoIt.Repository
             int? projectID,
             int page = 1,
             int pageSize = 5
-        ) {
-            try {
+        )
+        {
+            try
+            {
                 var query = _context.Tasks.AsQueryable();
 
-                if(!string.IsNullOrEmpty(title)) {
-                    query = query.Where(t => t.Title.Contains(title)); 
+                if (!string.IsNullOrEmpty(title))
+                {
+                    query = query.Where(t => t.Title.Contains(title));
                 }
 
-                if(!string.IsNullOrEmpty(description)) {
+                if (!string.IsNullOrEmpty(description))
+                {
                     query = query.Where(t => t.Description.Contains(description));
                 }
-            
-                if(!string.IsNullOrEmpty(pictureURL)) {
+
+                if (!string.IsNullOrEmpty(pictureURL))
+                {
                     query = query.Where(t => t.PictureUrl == pictureURL);
                 }
 
-                if(!string.IsNullOrEmpty(state)) {
+                if (!string.IsNullOrEmpty(state))
+                {
                     query = query.Where(t => t.State == state);
                 }
 
-                if(deadlineStart.HasValue) {
+                if (deadlineStart.HasValue)
+                {
                     deadlineStart = DateTime.SpecifyKind(deadlineStart.Value, DateTimeKind.Utc);
                     query = query.Where(t => t.Deadline >= deadlineStart);
                 }
 
-                if(deadlineEnd.HasValue) {
+                if (deadlineEnd.HasValue)
+                {
                     deadlineEnd = DateTime.SpecifyKind(deadlineEnd.Value, DateTimeKind.Utc);
                     query = query.Where(t => t.Deadline <= deadlineEnd);
                 }
 
-                if(!adminID.IsNullOrEmpty()) {
-                    query = query.Where(t => t.AdminId == adminID);   
+                if (!adminID.IsNullOrEmpty())
+                {
+                    query = query.Where(t => t.AdminId == adminID);
                 }
 
-                if(projectID.HasValue) {
-                    query = query.Where(t => t.ProjectId == projectID);   
+                if (projectID.HasValue)
+                {
+                    query = query.Where(t => t.ProjectId == projectID);
                 }
 
                 var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
                 return results;
-            } catch (Exception e){
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }
 
-        public async Task<Model.Task> GetTask(int id) {
-            try {
+        public async Task<Model.Task> GetTask(int id)
+        {
+            try
+            {
                 var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
                 return (task is null) ? null : task;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }
@@ -97,30 +113,30 @@ namespace JustDoIt.Repository
             try
             {
                 var existing = await _context.Tasks.FindAsync(task.Id);
-                
+
                 if (existing == null)
                 {
-                    return false;   
+                    return false;
                 }
-                
-                existing.Title          = task.Title;
-                existing.AdminId        = task.AdminId;
-                existing.Description    = task.Description;
-                existing.ProjectId      = task.ProjectId;
-                existing.PictureUrl     = task.PictureUrl;
-                existing.Deadline       = task.Deadline;
-                existing.State          = task.State;
-                existing.Admin          = task.Admin;
-                existing.Project        = task.Project;
-                existing.Attachments    = task.Attachments;
-                existing.Comments       = task.Comments;
-                existing.Labels         = task.Labels;
-                existing.Users          = task.Users;
 
-                
+                existing.Title = task.Title;
+                existing.AdminId = task.AdminId;
+                existing.Description = task.Description;
+                existing.ProjectId = task.ProjectId;
+                existing.PictureUrl = task.PictureUrl;
+                existing.Deadline = task.Deadline;
+                existing.State = task.State;
+                existing.Admin = task.Admin;
+                existing.Project = task.Project;
+                existing.Attachments = task.Attachments;
+                existing.Comments = task.Comments;
+                existing.Labels = task.Labels;
+                existing.Users = task.Users;
+
+
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -129,13 +145,14 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<bool> DeleteTask(Model.Task task)
+        public async Task<bool> DeleteTask(int taskID)
         {
             try
             {
-                var existing = await _context.Tasks.FindAsync(task.Id);
+                var existing = await _context.Tasks.FindAsync(taskID);
 
-                if(existing is null) {
+                if (existing is null)
+                {
                     return false;
                 }
 
@@ -173,40 +190,51 @@ namespace JustDoIt.Repository
             string? adminID,
             int page = 1,
             int pageSize = 5
-        ) {
-            try {
+        )
+        {
+            try
+            {
                 var query = _context.Projects.AsQueryable();
 
-                if(!string.IsNullOrEmpty(title)) {
-                    query = query.Where(p => p.Title.Contains(title)); 
+                if (!string.IsNullOrEmpty(title))
+                {
+                    query = query.Where(p => p.Title.Contains(title));
                 }
 
-                if(!string.IsNullOrEmpty(description)) {
-                    query = query.Where(p => p.Description != null && 
+                if (!string.IsNullOrEmpty(description))
+                {
+                    query = query.Where(p => p.Description != null &&
                                              p.Description.Contains(description));
                 }
-            
-                if(!string.IsNullOrEmpty(pictureURL)) {
+
+                if (!string.IsNullOrEmpty(pictureURL))
+                {
                     query = query.Where(t => t.PictureUrl == pictureURL);
                 }
 
-                if(!adminID.IsNullOrEmpty()) {
-                    query = query.Where(t => t.AdminId == adminID);   
+                if (!adminID.IsNullOrEmpty())
+                {
+                    query = query.Where(t => t.AdminId == adminID);
                 }
 
                 var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
                 return results;
-            } catch (Exception e){
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
-            } 
+            }
         }
 
         public async Task<Project> GetProject(int id)
         {
-            try {
+            try
+            {
                 var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
                 return (project is null) ? null : project;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }
@@ -216,24 +244,24 @@ namespace JustDoIt.Repository
             try
             {
                 var existing = await _context.Projects.FindAsync(project.Id);
-                
+
                 if (existing == null)
                 {
-                    return false;   
+                    return false;
                 }
-                
-                existing.AdminId        = project.AdminId;
-                existing.Title          = project.Title;
-                existing.PictureUrl     = project.PictureUrl;
-                existing.Description    = project.Description;
+
+                existing.AdminId = project.AdminId;
+                existing.Title = project.Title;
+                existing.PictureUrl = project.PictureUrl;
+                existing.Description = project.Description;
                 // existing.Admin          = project.Admin;
                 // existing.Attachments    = project.Attachments;
                 // existing.Tasks          = project.Tasks;
                 // existing.UserProjects   = project.UserProjects;
-                
+
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -242,13 +270,14 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<bool> DeleteProject(Project project)
+        public async Task<bool> DeleteProject(int projectID)
         {
             try
             {
-                var existing = await _context.Projects.FindAsync(project.Id);
+                var existing = await _context.Projects.FindAsync(projectID);
 
-                if(existing is null) {
+                if (existing is null)
+                {
                     return false;
                 }
 
@@ -280,81 +309,93 @@ namespace JustDoIt.Repository
         #region Users
 
         public async Task<IEnumerable<AppUser>> GetUsers(
-            string? username, 
-            string? firstName, 
-            string? lastName, 
-            string? email, 
-            string? pictureURL, 
-            int page = 1, 
-            int pageSize = 5) {
+            string? username,
+            string? firstName,
+            string? lastName,
+            string? email,
+            string? pictureURL,
+            int page = 1,
+            int pageSize = 5)
+        {
 
-            try {
+            try
+            {
                 var query = _context.AppUsers.AsQueryable();
 
-                if(!string.IsNullOrEmpty(username)) {
-                    query = query.Where(p => p.UserName.Contains(username)); 
+                if (!string.IsNullOrEmpty(username))
+                {
+                    query = query.Where(p => p.UserName.Contains(username));
                 }
 
-                if(!string.IsNullOrEmpty(firstName)) {
-                    query = query.Where(p => 
+                if (!string.IsNullOrEmpty(firstName))
+                {
+                    query = query.Where(p =>
                     p.FirstName != null &&
                     p.FirstName.Contains(firstName));
                 }
-            
-                if(!string.IsNullOrEmpty(lastName)) {
-                    query = query.Where(t => 
+
+                if (!string.IsNullOrEmpty(lastName))
+                {
+                    query = query.Where(t =>
                     t.LastName != null &&
                     t.LastName.Contains(lastName));
                 }
 
-                if(!string.IsNullOrEmpty(email)) {
+                if (!string.IsNullOrEmpty(email))
+                {
                     query = query.Where(t => t.Email == email);
                 }
 
-                if(!string.IsNullOrEmpty(pictureURL)) {
+                if (!string.IsNullOrEmpty(pictureURL))
+                {
                     query = query.Where(t => t.PictureUrl == pictureURL);
                 }
 
                 var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
                 return results;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
-            } 
+            }
         }
 
         public async Task<AppUser> GetUser(string id)
         {
-            try {
+            try
+            {
                 var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == id);
                 return (user is null) ? null : user;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }
 
         public async Task<bool> UpdateUser(AppUser user)
         {
-// AspNetCore.Identity.UserManager.
+            // AspNetCore.Identity.UserManager.
 
             try
             {
                 var existing = await _context.AppUsers.FindAsync(user.Id);
-                
+
                 if (existing == null)
                 {
-                    return false;   
+                    return false;
                 }
-                
+
                 existing.UserName = user.UserName;
                 // existing.Password = user.Password;
                 existing.FirstName = user.FirstName;
                 existing.LastName = user.LastName;
                 existing.Email = user.Email;
                 existing.PictureUrl = user.PictureUrl;
-                
+
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -363,13 +404,14 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<bool> DeleteUser(AppUser user)
+        public async Task<bool> DeleteUser(string userID)
         {
             try
             {
-                var existing = await _context.AppUsers.FindAsync(user.Id);
+                var existing = await _context.AppUsers.FindAsync(userID);
 
-                if(existing is null) {
+                if (existing is null)
+                {
                     return false;
                 }
 
@@ -401,62 +443,72 @@ namespace JustDoIt.Repository
         #region Labels
 
         public async Task<IEnumerable<Label>> GetLabels(
-            string? title, 
-            string? description, 
+            string? title,
+            string? description,
             int? taskID,
-            int page = 1, 
-            int pageSize = 5) {
-            try {
+            int page = 1,
+            int pageSize = 5)
+        {
+            try
+            {
                 var query = _context.Labels.AsQueryable();
 
-                if(!string.IsNullOrEmpty(title)) {
-                    query = query.Where(l => l.Title.Contains(title)); 
+                if (!string.IsNullOrEmpty(title))
+                {
+                    query = query.Where(l => l.Title.Contains(title));
                 }
 
-                if(!string.IsNullOrEmpty(description)) {
-                    query = query.Where(l => 
+                if (!string.IsNullOrEmpty(description))
+                {
+                    query = query.Where(l =>
                     l.Description != null &&
                     l.Description.Contains(description));
                 }
 
-                if(taskID.HasValue) {
+                if (taskID.HasValue)
+                {
                     query = query.Where(l => l.TaskId == taskID);
                 }
-            
+
                 var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
                 return results;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
-            } 
+            }
         }
 
         public async Task<Label> GetLabel(int id)
         {
-            try {
+            try
+            {
                 var result = await _context.Labels.FirstOrDefaultAsync(l => l.Id == id);
                 return result;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }
 
         public async Task<bool> UpdateLabel(Label label)
         {
-             try
+            try
             {
                 var existing = await _context.Labels.FindAsync(label.Id);
-                
+
                 if (existing == null)
                 {
-                    return false;   
+                    return false;
                 }
-                
+
                 existing.Title = label.Title;
                 existing.Description = label.Description;
-                
+
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -465,13 +517,14 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<bool> DeleteLabel(Label label)
+        public async Task<bool> DeleteLabel(int labelID)
         {
             try
             {
-                var existing = await _context.Labels.FindAsync(label.Id);
+                var existing = await _context.Labels.FindAsync(labelID);
 
-                if(existing is null) {
+                if (existing is null)
+                {
                     return false;
                 }
 
@@ -503,63 +556,73 @@ namespace JustDoIt.Repository
         #region Comments
 
         public async Task<IEnumerable<Comment>> GetComments(
-            string? text, 
+            string? text,
             int? taskID,
             string? userID,
-            int page = 1, 
-            int pageSize = 5) {
-            try {
+            int page = 1,
+            int pageSize = 5)
+        {
+            try
+            {
                 var query = _context.Comments.AsQueryable();
 
-                if(!string.IsNullOrEmpty(text)) {
-                    query = query.Where(l => 
+                if (!string.IsNullOrEmpty(text))
+                {
+                    query = query.Where(l =>
                     l.Text != null &&
-                    l.Text.Contains(text)); 
+                    l.Text.Contains(text));
                 }
 
-                if(taskID.HasValue) {
+                if (taskID.HasValue)
+                {
                     query = query.Where(l => l.TaskId == taskID);
                 }
 
-                if(!userID.IsNullOrEmpty()) {
+                if (!userID.IsNullOrEmpty())
+                {
                     query = query.Where(l => l.UserId == userID);
                 }
-            
+
                 var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
                 return results;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
-            } 
+            }
         }
 
         public async Task<Comment> GetComment(int id)
         {
-            try {
+            try
+            {
                 var result = await _context.Comments.FirstOrDefaultAsync(l => l.Id == id);
                 return result;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }
 
         public async Task<bool> UpdateComment(Comment comment)
         {
-             try
+            try
             {
                 var existing = await _context.Comments.FindAsync(comment.Id);
-                
+
                 if (existing == null)
                 {
-                    return false;   
+                    return false;
                 }
-                
+
                 existing.Text = comment.Text;
                 existing.UserId = comment.UserId;
                 existing.TaskId = comment.TaskId;
-                
+
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -568,13 +631,14 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<bool> DeleteComment(Comment comment)
+        public async Task<bool> DeleteComment(int commentID)
         {
             try
             {
-                var existing = await _context.Comments.FindAsync(comment.Id);
+                var existing = await _context.Comments.FindAsync(commentID);
 
-                if(existing is null) {
+                if (existing is null)
+                {
                     return false;
                 }
 
@@ -606,62 +670,72 @@ namespace JustDoIt.Repository
         #region Attachments
 
         public async Task<IEnumerable<Attachment>> GetAttachments(
-            string? filepath, 
+            string? filepath,
             int? taskID,
             int? projectID,
-            int page = 1, 
-            int pageSize = 5) {
-            try {
+            int page = 1,
+            int pageSize = 5)
+        {
+            try
+            {
                 var query = _context.Attachments.AsQueryable();
 
-                if(!string.IsNullOrEmpty(filepath)) {
-                    query = query.Where(l => 
-                    l.Filepath.Contains(filepath)); 
+                if (!string.IsNullOrEmpty(filepath))
+                {
+                    query = query.Where(l =>
+                    l.Filepath.Contains(filepath));
                 }
 
-                if(taskID.HasValue) {
+                if (taskID.HasValue)
+                {
                     query = query.Where(l => l.TaskId == taskID);
                 }
 
-                if(projectID.HasValue) {
+                if (projectID.HasValue)
+                {
                     query = query.Where(l => l.ProjectId == projectID);
                 }
-            
+
                 var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
                 return results;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
-            } 
+            }
         }
 
         public async Task<Attachment> GetAttachment(int id)
         {
-            try {
+            try
+            {
                 var result = await _context.Attachments.FirstOrDefaultAsync(a => a.Id == id);
                 return result;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }
 
         public async Task<bool> UpdateAttachment(Attachment attachment)
         {
-             try
+            try
             {
                 var existing = await _context.Attachments.FindAsync(attachment.Id);
-                
+
                 if (existing == null)
                 {
-                    return false;   
+                    return false;
                 }
-                
+
                 existing.Filepath = attachment.Filepath;
                 existing.ProjectId = attachment.ProjectId;
                 existing.TaskId = attachment.TaskId;
-                
+
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -670,17 +744,18 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<bool> DeleteAttachment(Attachment attachment)
+        public async Task<bool> DeleteAttachment(int attachmentID)
         {
             try
             {
-                var existing = await _context.Attachments.FindAsync(attachment.Id);
+                var existing = await _context.Attachments.FindAsync(attachmentID);
 
-                if(existing is null) {
+                if (existing is null)
+                {
                     return false;
                 }
 
-                _context.Attachments.Remove(attachment);
+                _context.Attachments.Remove(existing);
                 await _context.SaveChangesAsync();
                 return true;
             }

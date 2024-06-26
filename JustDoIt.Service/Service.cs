@@ -5,7 +5,7 @@ using JustDoIt.Service.Common;
 
 namespace JustDoIt.Service
 {
-    public class Service: IService
+    public class Service : IService
     {
         #region Properties
 
@@ -41,18 +41,19 @@ namespace JustDoIt.Service
             int? projectID,
             int page = 1,
             int pageSize = 5
-        ) {
+        )
+        {
             return await _repository.GetTasks(
-                title:title,
+                title: title,
                 description: description,
-                pictureURL:pictureURL,
-                deadlineStart:deadlineStart,
-                deadlineEnd:deadlineEnd,
-                state:state,
-                adminID:adminID,
-                projectID:projectID,
-                page:page,
-                pageSize:pageSize
+                pictureURL: pictureURL,
+                deadlineStart: deadlineStart,
+                deadlineEnd: deadlineEnd,
+                state: state,
+                adminID: adminID,
+                projectID: projectID,
+                page: page,
+                pageSize: pageSize
                 );
         }
 
@@ -61,14 +62,14 @@ namespace JustDoIt.Service
             return await _repository.PutTask(task);
         }
 
-         public async Task<bool> CreateTask(Model.Task task)
+        public async Task<bool> CreateTask(Model.Task task)
         {
             return await _repository.CreateTask(task);
         }
 
-        public async Task<bool> DeleteTask(Model.Task task)
+        public async Task<bool> DeleteTask(int taskID)
         {
-            return await _repository.DeleteTask(task);
+            return await _repository.DeleteTask(taskID);
         }
 
         #endregion Tasks
@@ -82,18 +83,19 @@ namespace JustDoIt.Service
             string? adminID,
             int page = 1,
             int pageSize = 5
-            ) {
+            )
+        {
             return await _repository.GetProjects(
-                title:title,
+                title: title,
                 description: description,
                 pictureURL: pictureURL,
-                adminID:adminID,
-                page:page,
+                adminID: adminID,
+                page: page,
                 pageSize: pageSize
             );
         }
 
-        
+
         public async Task<Project> GetProject(int id)
         {
             return await _repository.GetProject(id);
@@ -104,9 +106,9 @@ namespace JustDoIt.Service
             return await _repository.UpdateProject(project);
         }
 
-        public async Task<bool> DeleteProject(Project project)
+        public async Task<bool> DeleteProject(int projectID)
         {
-            return await _repository.DeleteProject(project);
+            return await _repository.DeleteProject(projectID);
         }
 
         public async Task<bool> CreateProject(Project project)
@@ -118,22 +120,23 @@ namespace JustDoIt.Service
         #region Users
 
         public async Task<IEnumerable<AppUser>> GetUsers(
-            string? username, 
-            string? firstName, 
-            string? lastName, 
-            string? email, 
-            string? pictureURL, 
-            int page = 1, 
-            int pageSize = 5) {
-            
+            string? username,
+            string? firstName,
+            string? lastName,
+            string? email,
+            string? pictureURL,
+            int page = 1,
+            int pageSize = 5)
+        {
+
             return await _repository.GetUsers(
-                username:username,
-                firstName:firstName,
-                lastName:lastName,
-                email:email,
-                pictureURL:pictureURL,
-                page:page,
-                pageSize:pageSize
+                username: username,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                pictureURL: pictureURL,
+                page: page,
+                pageSize: pageSize
             );
         }
 
@@ -147,9 +150,9 @@ namespace JustDoIt.Service
             return await _repository.UpdateUser(user);
         }
 
-        public async Task<bool> DeleteUser(AppUser user)
+        public async Task<bool> DeleteUser(string userID)
         {
-            return await _repository.DeleteUser(user);
+            return await _repository.DeleteUser(userID);
         }
 
         public async Task<bool> CreateUser(AppUser user)
@@ -158,17 +161,18 @@ namespace JustDoIt.Service
         }
 
         public async Task<IEnumerable<Label>> GetLabels(
-            string? title, 
-            string? description, 
+            string? title,
+            string? description,
             int? taskID,
-            int page = 1, 
-            int pageSize = 5) {
+            int page = 1,
+            int pageSize = 5)
+        {
             return await _repository.GetLabels(
-                title:title,
-                description:description,
+                title: title,
+                description: description,
                 taskID: taskID,
-                page:page,
-                pageSize:pageSize
+                page: page,
+                pageSize: pageSize
             );
         }
 
@@ -182,9 +186,9 @@ namespace JustDoIt.Service
             return _repository.UpdateLabel(label);
         }
 
-        public async Task<bool> DeleteLabel(Label label)
+        public async Task<bool> DeleteLabel(int labelID)
         {
-            return await _repository.DeleteLabel(label);
+            return await _repository.DeleteLabel(labelID);
         }
 
         public async Task<bool> CreateLabel(Label label)
@@ -193,11 +197,12 @@ namespace JustDoIt.Service
         }
 
         public async Task<IEnumerable<Comment>> GetComments(
-            string? text, 
-            int? taskID, 
-            string? userID, 
-            int page = 1, 
-            int pageSize = 5) {
+            string? text,
+            int? taskID,
+            string? userID,
+            int page = 1,
+            int pageSize = 5)
+        {
             return await _repository.GetComments(
                 text: text,
                 taskID: taskID,
@@ -217,9 +222,9 @@ namespace JustDoIt.Service
             return await _repository.UpdateComment(comment);
         }
 
-        public async Task<bool> DeleteComment(Comment comment)
+        public async Task<bool> DeleteComment(int commentID)
         {
-            return await _repository.DeleteComment(comment);
+            return await _repository.DeleteComment(commentID);
         }
 
         public async Task<bool> CreateComment(Comment comment)
@@ -233,12 +238,13 @@ namespace JustDoIt.Service
         #region Attachments
 
         public async Task<IEnumerable<Attachment>> GetAttachments(
-            string? filepath, 
-            int? taskID, 
-            int? projectID, 
-            int page = 1, 
-            int pageSize = 5) {
-                
+            string? filepath,
+            int? taskID,
+            int? projectID,
+            int page = 1,
+            int pageSize = 5)
+        {
+
             return await _repository.GetAttachments(
                 filepath: filepath,
                 taskID: taskID,
@@ -258,9 +264,9 @@ namespace JustDoIt.Service
             return await _repository.UpdateAttachment(attachment);
         }
 
-        public async Task<bool> DeleteAttachment(Attachment attachment)
+        public async Task<bool> DeleteAttachment(int attachmentID)
         {
-            return await _repository.DeleteAttachment(attachment);
+            return await _repository.DeleteAttachment(attachmentID);
         }
 
         public async Task<bool> CreateAttachment(Attachment attachment)

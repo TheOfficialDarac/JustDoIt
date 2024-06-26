@@ -1,88 +1,150 @@
+using JustDoIt.API.ViewModel;
 using JustDoIt.Model;
 using JustDoIt.Service.Common;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
 {
-    [ApiController, Route("api/auth")]
-    public class AppUserController : Controller {
+    [ApiController, Route("api/user")]
+    public class AppUserController : Controller
+    {
         #region Properties
 
         private IService _service { get; set; }
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         #endregion Properties
 
         #region Constructors
 
-        public AppUserController(IService service)
+        public AppUserController(IService service, UserManager<AppUser> userManager,
+                                  SignInManager<AppUser> signInManager)
         {
             _service = service;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
         #endregion Constructors
 
         #region Methods
 
-        [HttpGet("", Name = "GetUsers")]
+        #region testing
+
+        [HttpPost("logout"), Authorize]
+        public async Task<ActionResult> Logout(SignInManager<AppUser> signInManager)
+        {
+            await _signInManager.SignOutAsync().ConfigureAwait(false);
+            return Ok();
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult> Register(AppUserRegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new AppUser
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    PhoneNumber = model.PhoneNumber,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PictureUrl = model.PictureURL
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, false);
+                    return Ok();
+                }
+
+            }
+            return BadRequest();
+        }
+        #endregion testing
+
+
+
+        [HttpGet("all", Name = "GetUsers")]
         public async Task<ActionResult> GetUsers(
-           string? username, 
-            string? firstName, 
-            string? lastName, 
-            string? email, 
-            string? pictureURL, 
-            int page = 1, 
-            int pageSize = 5) {
+           string? username,
+            string? firstName,
+            string? lastName,
+            string? email,
+            string? pictureURL,
+            int page = 1,
+            int pageSize = 5)
+        {
 
             //TODO(Dario)   sanitize possible input scenarios
-            
-            try {
 
-            var response = await _service.GetUsers(
-                username:username,
-                firstName:firstName,
-                lastName:lastName,
-                email:email,
-                pictureURL:pictureURL,
-                page:page,
-                pageSize:pageSize
-            );
+            try
+            {
 
-            return (response is null) ? NotFound() : Ok(response);
-            } catch (Exception e){
+                var response = await _service.GetUsers(
+                    username: username,
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    pictureURL: pictureURL,
+                    page: page,
+                    pageSize: pageSize
+                );
+
+                return (response is null) ? NotFound() : Ok(response);
+            }
+            catch (Exception e)
+            {
                 return BadRequest(e.Message);
             }
         }
 
         [HttpGet("{id}", Name = "GetUser")]
-        public async Task<ActionResult> GetUser(string id) {
-            try {
+        public async Task<ActionResult> GetUser(string id)
+        {
+            try
+            {
 
-            var task = await _service.GetUser(id);
-            
-            return task is null ? NotFound() : Ok(task);
-            } catch (Exception e) {
+                var task = await _service.GetUser(id);
+
+                return task is null ? NotFound() : Ok(task);
+            }
+            catch (Exception e)
+            {
                 return BadRequest(e.Message);
             }
         }
 
         [HttpPut("update", Name = "UpdateUser")]
-        public async Task<ActionResult> UpdateUser([FromBody]AppUser user) {
-            try {
+        public async Task<ActionResult> UpdateUser([FromBody] AppUser user)
+        {
+            try
+            {
 
-                if (user == null) {
+                if (user == null)
+                {
                     return NotFound();
                 }
 
                 var success = await _service.UpdateUser(user);
                 return Ok(success);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 return BadRequest(e.Message);
             }
         }
 
         [HttpPost("create", Name = "CreateUser")]
-        public async Task<IActionResult> CreateUser([FromBody] AppUser user) {
+        public async Task<IActionResult> CreateUser([FromBody] AppUser user)
+        {
             try
             {
-                if(user is null) {
+                if (user is null)
+                {
                     return NotFound();
                 }
 
@@ -96,15 +158,16 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpDelete("delete", Name = "DeleteUser")]
-        public async Task<IActionResult> DeleteUser(AppUser user)
+        public async Task<IActionResult> DeleteUser(string userID)
         {
             try
             {
-                if(user is null) {
+                if (string.IsNullOrEmpty(userID))
+                {
                     return NotFound();
                 }
 
-                var success = await _service.DeleteUser(user);
+                var success = await _service.DeleteUser(userID);
                 return Ok(success);
             }
             catch (Exception e)

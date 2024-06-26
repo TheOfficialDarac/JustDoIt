@@ -22,6 +22,7 @@ public partial class Task
 
     public string? State { get; set; }
 
+    [JsonIgnore]
     public virtual AppUser? Admin { get; set; }
 
     [JsonIgnore]
@@ -33,6 +34,7 @@ public partial class Task
     [JsonIgnore]
 
     public virtual ICollection<Label> Labels { get; set; } = new List<Label>();
+    [JsonIgnore]
 
     public virtual Project Project { get; set; } = null!;
 

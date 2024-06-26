@@ -4,23 +4,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
 {
-    [ApiController, Route("api/projects")]
-    public class ProjectController : Controller {
-        
+    [ApiController, Route("api/[controller]")]
+    public class ProjectController : Controller
+    {
+
         #region Properties
-        
+
         private readonly IService _service;
         #endregion Properties
 
         #region Contructors
 
-        public ProjectController(IService service) {
+        public ProjectController(IService service)
+        {
             _service = service;
         }
         #endregion Contructors
 
         #region Methods\
-        
+
         [HttpGet("", Name = "GetProjects")]
         public async Task<IActionResult> GetProjects(
             string? title,
@@ -29,16 +31,17 @@ namespace JustDoIt.API.Controllers
             string? adminID,
             int page = 1,
             int pageSize = 5
-        ) {
+        )
+        {
             try
             {
-                
+
                 var result = await _service.GetProjects(
-                    title:title,
+                    title: title,
                     description: description,
                     pictureURL: pictureURL,
-                    adminID:adminID,
-                    page:page,
+                    adminID: adminID,
+                    page: page,
                     pageSize: pageSize
                 );
 
@@ -46,42 +49,53 @@ namespace JustDoIt.API.Controllers
             }
             catch (Exception ex)
             {
-                 return BadRequest(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpGet("{id:int}", Name = "GetProject")]
-        public async Task<ActionResult> GetProject(int id) {
-            try {
+        public async Task<ActionResult> GetProject(int id)
+        {
+            try
+            {
 
-            var project = await _service.GetProject(id);
-            
-            return project is null ? NotFound() : Ok(project);
-            } catch (Exception e) {
+                var project = await _service.GetProject(id);
+
+                return project is null ? NotFound() : Ok(project);
+            }
+            catch (Exception e)
+            {
                 return BadRequest(e.Message);
             }
         }
 
         [HttpPut("update", Name = "UpdateProject")]
-        public async Task<ActionResult> UpdateProject([FromBody]Project project) {
-            try {
+        public async Task<ActionResult> UpdateProject([FromBody] Project project)
+        {
+            try
+            {
 
-                if (project == null) {
+                if (project == null)
+                {
                     return NotFound();
                 }
 
                 var success = await _service.UpdateProject(project);
                 return Ok(success);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 return BadRequest(e.Message);
             }
         }
 
         [HttpPost("create", Name = "CreateProject")]
-        public async Task<IActionResult> CreateProject([FromBody] Project project) {
+        public async Task<IActionResult> CreateProject([FromBody] Project project)
+        {
             try
             {
-                if(project is null) {
+                if (project is null)
+                {
                     return NotFound(project);
                 }
 
@@ -95,15 +109,15 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpDelete("delete", Name = "DeleteProject")]
-        public async Task<IActionResult> DeleteProject(Project project)
+        public async Task<IActionResult> DeleteProject(int projectID)
         {
             try
             {
-                if(project is null) {
-                    return NotFound();
-                }
+                // if(!projectID.HasValue) {
+                //     return NotFound();
+                // }
 
-                var success = await _service.DeleteProject(project);
+                var success = await _service.DeleteProject(projectID);
                 return Ok(success);
             }
             catch (Exception e)

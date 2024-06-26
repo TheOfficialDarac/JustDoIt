@@ -21,7 +21,7 @@ namespace JustDoIt.Service.Common
         Task<bool> UpdateTask(Model.Task task);
 
         Task<bool> CreateTask(Model.Task task);
-        Task<bool> DeleteTask(Model.Task task);
+        Task<bool> DeleteTask(int taskID);
         #endregion Tasks
 
         #region Projects
@@ -39,7 +39,7 @@ namespace JustDoIt.Service.Common
 
         Task<bool> UpdateProject(Project project);
 
-        Task<bool> DeleteProject(Project project);
+        Task<bool> DeleteProject(int projectID);
 
         Task<bool> CreateProject(Project project);
         #endregion Projects
@@ -59,13 +59,13 @@ namespace JustDoIt.Service.Common
 
         Task<bool> UpdateUser(AppUser user);
 
-        Task<bool> DeleteUser(AppUser user);
+        Task<bool> DeleteUser(string userID);
 
         Task<bool> CreateUser(AppUser user);
         #endregion Users
 
         #region Labels
-        
+
         Task<IEnumerable<Label>> GetLabels(
             string? title,
             string? description,
@@ -78,9 +78,9 @@ namespace JustDoIt.Service.Common
 
         Task<bool> UpdateLabel(Label label);
 
-        Task<bool> DeleteLabel(Label label);
+        Task<bool> DeleteLabel(int labelID);
 
-        Task<bool> CreateLabel(Label label);    
+        Task<bool> CreateLabel(Label label);
         #endregion Labels
 
         #region Comments
@@ -95,9 +95,9 @@ namespace JustDoIt.Service.Common
 
         Task<bool> UpdateComment(Comment comment);
 
-        Task<bool> DeleteComment(Comment comment);
+        Task<bool> DeleteComment(int commentID);
 
-        Task<bool> CreateComment(Comment comment); 
+        Task<bool> CreateComment(Comment comment);
         #endregion Comments
 
         #region Attachments
@@ -112,9 +112,9 @@ namespace JustDoIt.Service.Common
 
         Task<bool> UpdateAttachment(Attachment attachment);
 
-        Task<bool> DeleteAttachment(Attachment attachment);
+        Task<bool> DeleteAttachment(int attachmentID);
 
-        Task<bool> CreateAttachment(Attachment attachment); 
+        Task<bool> CreateAttachment(Attachment attachment);
         #endregion Attachments
     }
 }

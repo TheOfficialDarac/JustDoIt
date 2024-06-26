@@ -21,7 +21,7 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> PutTask(Model.Task task);
 
-        Task<bool> DeleteTask(Model.Task task);
+        Task<bool> DeleteTask(int taskID);
 
         Task<bool> CreateTask(Model.Task task);
         #endregion Tasks
@@ -37,11 +37,11 @@ namespace JustDoIt.Repository.Common
             int pageSize = 5
         );
 
-         Task<Project> GetProject(int id);
+        Task<Project> GetProject(int id);
 
         Task<bool> UpdateProject(Project task);
 
-        Task<bool> DeleteProject(Project task);
+        Task<bool> DeleteProject(int projectID);
 
         Task<bool> CreateProject(Project task);
         #endregion Projects
@@ -61,7 +61,7 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> UpdateUser(AppUser user);
 
-        Task<bool> DeleteUser(AppUser user);
+        Task<bool> DeleteUser(string userID);
 
         Task<bool> CreateUser(AppUser user);
         #endregion Users
@@ -79,9 +79,9 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> UpdateLabel(Label label);
 
-        Task<bool> DeleteLabel(Label label);
+        Task<bool> DeleteLabel(int labelID);
 
-        Task<bool> CreateLabel(Label label); 
+        Task<bool> CreateLabel(Label label);
         #endregion Labels
 
         #region Comments
@@ -96,11 +96,11 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> UpdateComment(Comment comment);
 
-        Task<bool> DeleteComment(Comment comment);
+        Task<bool> DeleteComment(int commentID);
 
-        Task<bool> CreateComment(Comment comment); 
+        Task<bool> CreateComment(Comment comment);
         #endregion Comments
-        
+
         #region Attachments
         public Task<IEnumerable<Attachment>> GetAttachments(
             string? filepath,
@@ -113,9 +113,9 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> UpdateAttachment(Attachment attachment);
 
-        Task<bool> DeleteAttachment(Attachment attachment);
+        Task<bool> DeleteAttachment(int attachmentID);
 
-        Task<bool> CreateAttachment(Attachment attachment); 
+        Task<bool> CreateAttachment(Attachment attachment);
         #endregion Attachments
     }
 }
