@@ -48,11 +48,11 @@ export const LoginPage = () => {
       setError("");
       // post data to the /register api
 
-      let loginurl = "http://localhost:5153/api";
-      if (rememberme == true) loginurl += "/auth/login?useCookies=true";
-      else loginurl += "/auth/login?useSessionCookies=true";
+      let loginurl = "";
+      if (rememberme == true) loginurl = "?useCookies=true";
+      else loginurl = "?useSessionCookies=true";
 
-      fetch(loginurl, {
+      fetch("api/auth/login", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         headers: {

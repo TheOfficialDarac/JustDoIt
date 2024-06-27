@@ -18,7 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddSwaggerGen(
+    options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
@@ -27,7 +28,8 @@ builder.Services.AddSwaggerGen(options =>
         Type = SecuritySchemeType.ApiKey
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
+}
+);
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IService, Service>();
@@ -44,7 +46,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
 {
     options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedEmail = true;
+    // options.SignIn.RequireConfirmedEmail = true;
 }
     )
     .AddEntityFrameworkStores<DataContext>();
@@ -62,11 +64,11 @@ builder.Services.AddAuthorizationBuilder()
 
 var app = builder.Build();
 
-app.MapGet("/pingauth", (ClaimsPrincipal user) =>
-            {
-                var email = user.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
-                return Results.Json(new { Email = email }); ; // return the email as a plain text response
-            }).RequireAuthorization();
+// app.MapGet("/pingauth", (ClaimsPrincipal user) =>
+//             {
+//                 var email = user.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
+//                 return Results.Json(new { Email = email }); ; // return the email as a plain text response
+//             }).RequireAuthorization();
 
 
 app.MapGroup("api/auth").MapIdentityApi<AppUser>();
@@ -79,7 +81,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+// app.UseStaticFiles();
+app.UseRouting();
+app.UseCors();
 app.UseAuthorization();
 app.UseAuthentication();
 
