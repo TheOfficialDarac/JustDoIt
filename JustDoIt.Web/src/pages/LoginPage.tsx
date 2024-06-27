@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-
-function Login() {
+export const LoginPage = () => {
   // state variables for email and passwords
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -9,6 +9,21 @@ function Login() {
   // state variable for error messages
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+
+  const { login } = useAuth();
+
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   // Here you would usually send a request to your backend to authenticate the user
+  //   // For the sake of this example, we're using a mock authentication
+
+  //   if (username === "user" && password === "password") {
+  //     // Replace with actual authentication logic
+  //     await login({ username });
+  //   } else {
+  //     alert("Invalid username or password");
+  //   }
+  // };
 
   // handle change events for input fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +38,7 @@ function Login() {
   };
 
   // handle submit event for the form
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // validate email and passwords
     if (!email || !password) {
@@ -33,13 +48,15 @@ function Login() {
       setError("");
       // post data to the /register api
 
-      var loginurl = "";
-      if (rememberme == true) loginurl = "/login?useCookies=true";
-      else loginurl = "/login?useSessionCookies=true";
+      let loginurl = "http://localhost:5153/api";
+      if (rememberme == true) loginurl += "/auth/login?useCookies=true";
+      else loginurl += "/auth/login?useSessionCookies=true";
 
       fetch(loginurl, {
         method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
         headers: {
+          // 'Content-Type': 'application/x-www-form-urlencoded'
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -47,50 +64,50 @@ function Login() {
           password: password,
         }),
       })
-        .then((data) => {
+        .then(async (data) => {
           // handle success or error from the server
           console.log(data);
           if (data.ok) {
             setError("Successful Login.");
-            window.location.href = "/";
+            await login({ email });
+            navigate("/secret");
+            // window.location.href = "/";
           } else setError("Error Logging In.");
         })
         .catch((error) => {
           // handle network error
-          console.error(error);
-          setError("Error Logging in.");
+          console.error(error.message);
+          setError("Error: Error Logging in.");
         });
     }
   };
-
   return (
-    <div className="containerbox">
-      <h3>Login</h3>
+    <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label className="forminput" htmlFor="email">
-            Email:
-          </label>
-        </div>
-        <div>
+          <label htmlFor="email">Email:</label>
           <input
-            type="email"
             id="email"
             name="email"
+            type="email"
             value={email}
-            onChange={handleChange}
+            onChange={(e) => {
+              // setEmail(e.target.value);
+              handleChange(e);
+            }}
           />
         </div>
         <div>
           <label htmlFor="password">Password:</label>
-        </div>
-        <div>
           <input
-            type="password"
-            id="password"
             name="password"
+            id="password"
+            type="password"
             value={password}
-            onChange={handleChange}
+            onChange={(e) => {
+              // setPassword(e.target.value);
+              handleChange(e);
+            }}
           />
         </div>
         <div>
@@ -103,9 +120,7 @@ function Login() {
           />
           <span>Remember Me</span>
         </div>
-        <div>
-          <button type="submit">Login</button>
-        </div>
+        <button type="submit">Login</button>
         <div>
           <button onClick={handleRegisterClick}>Register</button>
         </div>
@@ -113,6 +128,4 @@ function Login() {
       {error && <p className="error">{error}</p>}
     </div>
   );
-}
-
-export default Login;
+};

@@ -1,6 +1,3 @@
-// import Login from "../pages/Login";
-// import Testing from "../LoginModal";
-
 import Footer from "./Footer";
 import Header from "./Header";
 

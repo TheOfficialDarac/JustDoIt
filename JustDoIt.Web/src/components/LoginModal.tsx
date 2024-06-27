@@ -14,8 +14,8 @@ import React from "react";
 
 export default function LoginModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  let [email, setEmail] = React.useState("");
-  let [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   const performLogin = () => {
     fetch(

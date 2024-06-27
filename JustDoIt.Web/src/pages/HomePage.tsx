@@ -1,9 +1,9 @@
 import React from "react";
 
-// type Props = {}
+// interface Props {}
 
 const Home = () => {
-  return <div>Home</div>;
+  return <div>this is the default home page</div>;
 };
 
 export default Home;

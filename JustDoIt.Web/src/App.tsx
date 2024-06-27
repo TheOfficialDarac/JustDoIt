@@ -1,50 +1,33 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AuthorizeView, { AuthorizedUser } from "./components/AuthorizeView";
-import LogoutLink from "./components/LogoutLink";
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import RegisterPage from "./pages/RegisterPage";
+import { LoginPage } from "./pages/LoginPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Secret } from "./pages/SecretPage";
+import { AuthProvider } from "./hooks/useAuth";
 import Layout from "./components/Layout";
-import Register from "./pages/Register";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
 
 export default function App() {
   // const isUserLoggedIn = true;
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <AuthorizeView>
-                <span>
-                  <LogoutLink>
-                    Logout <AuthorizedUser value="email" />
-                    <Layout>
-                      <Home></Home>
-                    </Layout>
-                  </LogoutLink>
-                </span>
-              </AuthorizeView>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <Layout>
-                <Login />
-              </Layout>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <Layout>
-                <Register />
-              </Layout>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <Layout>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route
+              path="/secret"
+              element={
+                <ProtectedRoute>
+                  <Secret />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </AuthProvider>
+      </Layout>
     </>
   );
 }

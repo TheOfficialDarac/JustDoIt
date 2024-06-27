@@ -69,7 +69,7 @@ export default defineConfig({
         secure: false,
       },
       "^/auth/login": {
-        target: targetPort,
+        target: "https://localhost:5153/api",
         secure: false,
       },
       "^/auth/logout": {
