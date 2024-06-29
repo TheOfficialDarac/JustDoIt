@@ -64,13 +64,6 @@ builder.Services.AddAuthorizationBuilder()
 
 var app = builder.Build();
 
-// app.MapGet("/pingauth", (ClaimsPrincipal user) =>
-//             {
-//                 var email = user.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
-//                 return Results.Json(new { Email = email }); ; // return the email as a plain text response
-//             }).RequireAuthorization();
-
-
 app.MapGroup("api/auth").MapIdentityApi<AppUser>();
 
 // Configure the HTTP request pipeline.

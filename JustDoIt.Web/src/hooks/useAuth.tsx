@@ -1,14 +1,25 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
-const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+interface AuthContextType {
+  user: object | null;
+  login: (data: string) => Promise<void>;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+interface Props {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useLocalStorage("user", null);
   const navigate = useNavigate();
 
   // call this function when you want to authenticate the user
-  const login = async (data) => {
+  const login = async (data: string) => {
     setUser(data);
     navigate("/profile");
   };
@@ -27,9 +38,14 @@ export const AuthProvider = ({ children }) => {
     }),
     [user]
   );
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

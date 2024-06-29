@@ -19,7 +19,7 @@ export default function LoginModal() {
 
   const performLogin = () => {
     fetch(
-      "http://localhost:5153/api/auth/login?useCookies=true&useSessionCookies=true",
+      "https://localhost:7010/api/auth/login?useCookies=true&useSessionCookies=true",
       {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin

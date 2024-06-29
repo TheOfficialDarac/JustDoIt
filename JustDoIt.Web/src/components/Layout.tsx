@@ -1,10 +1,14 @@
 import Footer from "./Footer";
 import Header from "./Header";
 
-function Layout({ children }: any) {
+interface Props {
+  children: React.ReactNode;
+}
+
+function Layout({ children }: Props) {
   return (
     <>
-      <Header name="header" />
+      <Header />
       <main className="max-w-screen-xl w-full flex-1">{children}</main>
       <Footer name="footer" />
     </>

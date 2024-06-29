@@ -10,7 +10,9 @@ export const Secret = () => {
   return (
     <div>
       <h1>This is a Secret page</h1>
-      <button onClick={handleLogout}>Logout</button>
+      <button type="button" onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 };

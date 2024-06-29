@@ -58,7 +58,7 @@ const Register = () => {
 
     //! TODO add password validations
     return true;
-  }, [repeatPassword]);
+  }, [repeatPassword, password]);
 
   const validatePhoneNum = React.useMemo(() => {
     if (phoneNum === "") return false;
@@ -80,20 +80,26 @@ const Register = () => {
   //#region register
 
   //#endregiion register
+
+  const handlePictureChange = (e) => {
+    setProfilePic(e.target.files[0].name);
+    console.log(e.target.files[0]);
+  };
+
   return (
     <>
       <br />
       <br />
       <h3 className="text-center p-2 m-2">Register</h3>
       <form
-        className="flex flex-col items-center p-4 gap-4 border border-neutral-300 border-solid rounded-xl w-full border-2 shadow-sm"
+        className="flex flex-col items-center p-4 gap-4 border-neutral-300 border-solid rounded-xl w-full border-2 shadow-sm"
         onSubmit={(e) => {
           e.preventDefault();
           console.log("Has been submitted");
         }}
       >
         <Avatar
-          src={""}
+          src={profilePic}
           name=""
           className="w-20 h-20 cursor-pointer"
           onClick={() => {
@@ -113,6 +119,7 @@ const Register = () => {
             errorMessage="Please enter a valid username"
             onValueChange={setUsername}
             className="max-w-xs"
+            isRequired
           />
 
           <Input
@@ -125,6 +132,7 @@ const Register = () => {
             errorMessage="Please enter a valid email"
             onValueChange={setEmail}
             className="max-w-xs"
+            isRequired
           />
         </div>
 
@@ -139,6 +147,7 @@ const Register = () => {
             errorMessage="Please enter a valid password"
             onValueChange={setPassword}
             className="max-w-xs"
+            isRequired
           />
 
           <Input
@@ -151,6 +160,7 @@ const Register = () => {
             errorMessage="Please repeated password"
             onValueChange={setRepeatPassword}
             className="max-w-xs"
+            isRequired
           />
         </div>
         <div className="flex gap-3">
@@ -196,7 +206,9 @@ const Register = () => {
           accept="image/*"
           style={{ display: "none" }}
           // onChangeCapture={}
-          // onChange={setProfilePic}
+          onChange={(e) => {
+            handlePictureChange(e);
+          }}
           ref={hiddenFileInput}
           name="profilePicture"
         />
@@ -212,7 +224,7 @@ const Register = () => {
          */}
         <button
           type="submit"
-          className="border border-2 border-solid rounded-xl border-gray-200 p-4 text-foreground-500 hover:text-sky-400 text-small hover:border-sky-400"
+          className="border-2 border-solid rounded-xl border-gray-200 p-4 text-foreground-500 hover:text-sky-400 text-small hover:border-sky-400"
         >
           Register
         </button>
