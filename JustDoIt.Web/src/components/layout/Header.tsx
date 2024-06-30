@@ -10,15 +10,15 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@nextui-org/react";
-import DummyLogo from "../assets/DummyLogo";
-import { useNavigate } from "react-router-dom";
-import UserIcon from "./UserIcon";
-import { AuthProvider } from "../hooks/useAuth";
+import DummyLogo from "../../assets/icons/DummyLogo.tsx";
+import UserIcon from "./UserIcon.tsx";
+import { MagnifyingGlas } from "../../assets/icons/MagnifyingGlas.tsx";
+import { useAuth } from "../../hooks/useAuth.tsx";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  let { user } = useAuth();
 
   const menuItems = [
     "Profile",
@@ -47,25 +47,24 @@ function Header() {
             className="sm:hidden"
           />
           <NavbarBrand>
-            <DummyLogo />
-            <p className="font-bold text-inherit">Just Do It</p>
+            <Link href="/" color="foreground">
+              <DummyLogo />
+              <p className="font-bold text-inherit">Just Do It</p>
+            </Link>
           </NavbarBrand>
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
+          {user ? (
+            <NavbarItem>
+              <Link color="foreground" href="/secret">
+                SecretTest
+              </Link>
+            </NavbarItem>
+          ) : null}
           <NavbarItem>
             <Link color="foreground" href="/">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="/">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="/secret">
-              secret
+              Home
             </Link>
           </NavbarItem>
         </NavbarContent>
@@ -80,25 +79,9 @@ function Header() {
             }}
             placeholder="Type to search..."
             size="sm"
-            startContent={
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-            }
+            startContent={<MagnifyingGlas />}
             type="search"
           />
-          {/* is user signed up checker */}
           {<UserIcon />}
         </NavbarContent>
 

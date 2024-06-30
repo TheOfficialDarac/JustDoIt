@@ -45,7 +45,6 @@ export const LoginPage = () => {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         headers: {
-          // 'Content-Type': 'application/x-www-form-urlencoded'
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

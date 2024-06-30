@@ -1,34 +1,33 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { Secret } from "./pages/SecretPage";
+import { SecretPage } from "./pages/SecretPage";
 import { AuthProvider } from "./hooks/useAuth";
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
+import SettingsPage from "./pages/SettingsPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import { usePreferences } from "./hooks/usePreferences";
 import { useEffect, useState } from "react";
 
 export default function App() {
-  // let isLoggedIn = false;
+  const { preferences } = usePreferences();
+  // console.log(preferences.theme);
+  const [classList, setClassList] = useState<string | undefined>(
+    "min-h-screen flex flex-col items-center text-foreground bg-background "
+  );
 
-  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  // const toggleButton = () => {
-  //   setIsLoggedIn((prev) => !prev);
-  // };
-
-  // useEffect(() => {
-  //   const user = window.localStorage.getItem("user");
-  //   console.log(user);
-  //   toggleButton();
-  // }, []);
-
+  useEffect(() => {
+    setClassList(
+      "min-h-screen flex flex-col items-center text-foreground bg-background " +
+        preferences?.theme
+    );
+  }, [preferences]);
   return (
-    <>
+    <div id="app" className={classList}>
       <AuthProvider>
-        <Layout
-        // isLoggedIn={isLoggedIn} toggle={toggleButton}
-        >
+        <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -37,14 +36,22 @@ export default function App() {
               path="/secret"
               element={
                 <ProtectedRoute>
-                  <Secret />
+                  <SecretPage />
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Layout>
       </AuthProvider>
-    </>
+    </div>
   );
 }

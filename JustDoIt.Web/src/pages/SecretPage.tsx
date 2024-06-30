@@ -1,6 +1,6 @@
 import { useAuth } from "../hooks/useAuth";
 
-export const Secret = () => {
+export const SecretPage = () => {
   const { logout } = useAuth();
 
   const handleLogout = () => {

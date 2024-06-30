@@ -7,14 +7,8 @@ import {
 } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
-import { ProtectedRoute } from "./ProtectedRoute";
-import { AuthProvider, useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { ReactNode, useEffect, useState } from "react";
-
-// interface Props {
-//   isLoggedIn: boolean;
-//   toggle: () => void;
-// }
 
 export default function UserIcon() {
   let navigate = useNavigate();
@@ -55,7 +49,7 @@ export default function UserIcon() {
               aria-label="Profile Actions"
               variant="flat"
               onAction={(key) => {
-                navigate(`${key}`);
+                navigate(`/${key}`);
               }}
             >
               <DropdownItem key="profile" className="h-8 gap-2">
@@ -81,10 +75,16 @@ export default function UserIcon() {
               src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
             />
           </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
+          <DropdownMenu
+            aria-label="Profile Actions"
+            variant="flat"
+            onAction={(key) => {
+              key !== "logout" ? navigate(`/${key}`) : null;
+            }}
+          >
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">zoey@example.com</p>
+              <p className="font-semibold">user@example.com</p>
             </DropdownItem>
             <DropdownItem key="settings">My Settings</DropdownItem>
             <DropdownItem key="logout" color="danger">
