@@ -10,6 +10,7 @@ import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { usePreferences } from "./hooks/usePreferences";
 import { useEffect, useState } from "react";
+import ProjectsPage from "./pages/ProjectsPage";
 
 export default function App() {
   const { preferences } = usePreferences();
@@ -45,6 +46,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <ProtectedRoute>
+                  <ProjectsPage />
                 </ProtectedRoute>
               }
             />

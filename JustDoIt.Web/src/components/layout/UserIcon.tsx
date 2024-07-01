@@ -3,6 +3,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownSection,
   DropdownTrigger,
 } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { ReactNode, useEffect, useState } from "react";
 
 export default function UserIcon() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [display, setDisplay] = useState<ReactNode>();
@@ -82,14 +83,20 @@ export default function UserIcon() {
               key !== "logout" ? navigate(`/${key}`) : null;
             }}
           >
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">user@example.com</p>
-            </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              <Logout />
-            </DropdownItem>
+            <DropdownSection showDivider>
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">user@example.com</p>
+              </DropdownItem>
+              <DropdownItem key="projects">My Projects</DropdownItem>
+              <DropdownItem key="settings">My Settings</DropdownItem>
+              {/* <Divider className="my-4" /> */}
+            </DropdownSection>
+            <DropdownSection>
+              <DropdownItem key="logout" color="danger">
+                <Logout />
+              </DropdownItem>
+            </DropdownSection>
           </DropdownMenu>
         </Dropdown>
       );

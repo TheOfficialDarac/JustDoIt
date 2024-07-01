@@ -7,7 +7,8 @@ import GithubLogo from "../../assets/icons/GithubLogo";
 import RedditLogo from "../../assets/icons/RedditLogo";
 
 const Footer = () => {
-  const iconStyle = "text-base w-8 h-8 object-cover inline-block";
+  const iconStyle =
+    "text-base w-8 h-8 object-cover inline-block cursor-pointer";
   return (
     <>
       <footer className="max-w-screen-xl w-full m-4 p-4">

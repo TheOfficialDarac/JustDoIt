@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLocalStorage } from "./useLocalStorage";
+// import { useLocalStorage } from "./useLocalStorage";
+import { useSessionStorage } from "./useSessionStorage";
 
 interface AuthContextType {
   user: object | null;
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useLocalStorage("user", null);
+  const [user, setUser] = useSessionStorage("user", null);
   const navigate = useNavigate();
 
   // call this function when you want to authenticate the user
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }: Props) => {
   // call this function to sign out logged in user
   const logout = () => {
     setUser(null);
+    console.log("i get called");
     navigate("/", { replace: true });
   };
 
