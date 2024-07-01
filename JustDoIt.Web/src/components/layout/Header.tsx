@@ -10,7 +10,7 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@nextui-org/react";
-import DummyLogo from "../../assets/icons/DummyLogo.tsx";
+import DummyLogo from "../../assets/icons/AppLogo.tsx";
 import UserIcon from "./UserIcon.tsx";
 import { MagnifyingGlas } from "../../assets/icons/MagnifyingGlas.tsx";
 import { useAuth } from "../../hooks/useAuth.tsx";
