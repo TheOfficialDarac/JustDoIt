@@ -88,6 +88,28 @@ namespace JustDoIt.API.Controllers
             }
             return BadRequest();
         }
+
+        // [HttpPost("login")]
+        // public async Task<ActionResult> Login(LoginViewModel model)
+        // {
+        //     if (ModelState.IsValid)
+        //     {
+        //         var user = new AppUser
+        //         {
+        //             Email = model.Email,
+        //             Password = model.Password,
+        //         };
+
+        //         var result = await _userManager.FindByEmailAsync(user.Email);
+        //         if (result.Succeeded)
+        //         {
+        //             await _signInManager.UserManager.FindByEmailAsync(model.Email);
+        //             return Ok();
+        //         }
+
+        //     }
+        //     return BadRequest();
+        // }
         #endregion testing
 
 

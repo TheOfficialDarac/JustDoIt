@@ -57,7 +57,7 @@ export const LoginPage = () => {
           console.log(data);
           if (data.ok) {
             setError("Successful Login.");
-            await login({ email });
+            await login(JSON.stringify({ email }));
             navigate("/secret");
             // window.location.href = "/";
           } else setError("Error Logging In.");
