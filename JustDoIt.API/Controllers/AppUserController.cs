@@ -1,3 +1,7 @@
+using System.Drawing;
+using System.Net;
+using System.Net.Mime;
+using Azure.Core;
 using JustDoIt.API.ViewModel;
 using JustDoIt.Model;
 using JustDoIt.Service.Common;
@@ -39,6 +43,26 @@ namespace JustDoIt.API.Controllers
             return Ok();
         }
 
+        [HttpPost("upload-image")]
+        public async Task<ActionResult> uploadImage(IFormFile file)
+        {
+            if (!file.ContentType.Contains("image/"))
+            {
+                return BadRequest("You have not uploaded an image");
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                using (var img = Image.FromStream(memoryStream))
+                {
+                    // TODO: ResizeImage(img, 100, 100);
+                    // img.set
+                    img.Save(Directory.GetCurrentDirectory() + "/testFile.png", System.Drawing.Imaging.ImageFormat.Png);
+                }
+            }
+            return Ok(Directory.GetCurrentDirectory());
+        }
         [HttpPost("register")]
         public async Task<ActionResult> Register(AppUserRegisterViewModel model)
         {
@@ -51,7 +75,7 @@ namespace JustDoIt.API.Controllers
                     PhoneNumber = model.PhoneNumber,
                     UserName = model.UserName,
                     Email = model.Email,
-                    PictureUrl = model.PictureURL
+                    // PictureUrl = model.PictureURL
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);

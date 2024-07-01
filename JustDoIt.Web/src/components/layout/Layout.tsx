@@ -9,8 +9,8 @@ function Layout({ children }: Props) {
   return (
     <>
       <Header />
-      <main className="max-w-screen-xl w-full flex-1">{children}</main>
-      <Footer name="footer" />
+      <main className="max-w-screen-xl w-full flex-1 m-2 p-3">{children}</main>
+      <Footer />
     </>
   );
 }
