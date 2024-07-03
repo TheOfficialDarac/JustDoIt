@@ -1,4 +1,5 @@
-﻿using JustDoIt.Model;
+﻿using JustDoIt.API.ViewModel;
+using JustDoIt.Model;
 using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -103,17 +104,36 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost("create", Name = "CreateTask")]
-        public async Task<IActionResult> CreateTask([FromBody] Model.Task task)
+        public async Task<IActionResult> CreateTask(TaskViewModel model)
         {
             try
             {
-                if (task is null)
+                if (model is null)
                 {
                     return NotFound();
                 }
+                else if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    var task = new Model.Task
+                    {
+                        Title = model.Title,
+                        Description = model.Description,
+                        ProjectId = model.ProjectId,
+                        AdminId = model.AdminId,
+                        PictureUrl = model.PictureUrl,
+                        Deadline = model.Deadline,
+                        State = model.State
+                    };
 
-                var success = await _service.CreateTask(task);
-                return Ok(success);
+                    var success = await _service.CreateTask(task);
+                    // return Ok(task);
+                    return Ok(true);
+                }
+
             }
             catch (Exception e)
             {

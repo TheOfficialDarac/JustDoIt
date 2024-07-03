@@ -35,6 +35,49 @@ namespace JustDoIt.API.Controllers
         #region Methods
 
         #region testing
+        [HttpGet("tasks", Name = "GetTasksOfUser")]
+        public async Task<ActionResult> GetTasksOfUser(
+                    string userID)
+        {
+            //TODO(Dario)   sanitize possible input scenarios
+
+            try
+            {
+
+                var response = await _service.GetTasksOfUser(
+                    userID: userID
+                );
+
+                return response is null ? NotFound() : Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("projects", Name = "GetProjectsOfUser")]
+        public async Task<ActionResult> GetProjectsOfUser(
+                    string userID)
+        {
+
+            //TODO(Dario)   sanitize possible input scenarios
+
+            try
+            {
+
+                var response = await _service.GetProjectsOfUser(
+                    userID: userID
+                );
+
+                return response is null ? NotFound() : Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         [HttpPost("logout"), Authorize]
         public async Task<ActionResult> Logout(SignInManager<AppUser> signInManager)
@@ -89,27 +132,40 @@ namespace JustDoIt.API.Controllers
             return BadRequest();
         }
 
-        // [HttpPost("login")]
-        // public async Task<ActionResult> Login(LoginViewModel model)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         var user = new AppUser
-        //         {
-        //             Email = model.Email,
-        //             Password = model.Password,
-        //         };
 
-        //         var result = await _userManager.FindByEmailAsync(user.Email);
-        //         if (result.Succeeded)
-        //         {
-        //             await _signInManager.UserManager.FindByEmailAsync(model.Email);
-        //             return Ok();
-        //         }
+        [HttpGet("user_projects", Name = "GetUserProjects")]
+        public async Task<ActionResult> GetUserProjects(
+            string? userId,
+            int? projectID,
+            bool? isVerified,
+            string? token,
+            string? role,
+            int page = 1,
+            int pageSize = 5)
+        {
 
-        //     }
-        //     return BadRequest();
-        // }
+            //TODO(Dario)   sanitize possible input scenarios
+
+            try
+            {
+
+                var response = await _service.GetUserProjects(
+                    userId: userId,
+                    projectID: projectID,
+                    isVerified: isVerified,
+                    token: token,
+                    role: role,
+                    page: page,
+                    pageSize: pageSize
+                );
+
+                return (response is null) ? NotFound() : Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion testing
 
 

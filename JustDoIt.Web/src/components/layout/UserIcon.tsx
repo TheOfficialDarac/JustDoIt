@@ -71,9 +71,8 @@ export default function UserIcon() {
               as="button"
               className="transition-transform"
               color="secondary"
-              name="Jason Hughes"
               size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              src={user?.pictureUrl}
             />
           </DropdownTrigger>
           <DropdownMenu
@@ -86,7 +85,7 @@ export default function UserIcon() {
             <DropdownSection showDivider>
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">user@example.com</p>
+                <p className="font-semibold">{user?.userName}</p>
               </DropdownItem>
               <DropdownItem key="projects">My Projects</DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>

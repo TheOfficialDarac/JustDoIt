@@ -33,7 +33,7 @@ public partial class DataContext : IdentityDbContext<AppUser>
 
     public virtual DbSet<UserProject> UserProjects { get; set; }
 
-//  is override is useless as same is set in Program.cs
+    //  is override is useless as same is set in Program.cs
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //     => optionsBuilder.UseSqlServer(Configuration[""]);
     //         // "Server=localhost;Database=task_manager;Trusted_Connection=True; TrustServerCertificate=True;");
@@ -67,7 +67,7 @@ public partial class DataContext : IdentityDbContext<AppUser>
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_Comment");
+            entity.HasKey(e => e.Id).HasName("PK__comments");
 
             entity.ToTable("comments");
 
@@ -82,12 +82,10 @@ public partial class DataContext : IdentityDbContext<AppUser>
 
             entity.HasOne(d => d.Task).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.TaskId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CommentTask");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CommentUser");
         });
 
@@ -116,7 +114,7 @@ public partial class DataContext : IdentityDbContext<AppUser>
         {
             entity.HasKey(e => e.Id).HasName("PK_Project");
 
-            entity.ToTable("project");
+            entity.ToTable("project", tb => tb.HasTrigger("USERPROJTRIGGER"));
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AdminId)
@@ -144,7 +142,7 @@ public partial class DataContext : IdentityDbContext<AppUser>
         {
             entity.HasKey(e => e.Id).HasName("PK__task");
 
-            entity.ToTable("task");
+            entity.ToTable("task", tb => tb.HasTrigger("UserTaskOnCreateTrigger"));
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AdminId)

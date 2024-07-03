@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JustDoIt.Model;
 
@@ -15,7 +16,9 @@ public partial class UserProject
 
     public string? ProjectRole { get; set; }
 
+    [JsonIgnore]
     public virtual Project Project { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual AppUser User { get; set; } = null!;
 }

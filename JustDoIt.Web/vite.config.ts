@@ -68,6 +68,22 @@ export default defineConfig({
         target,
         secure: false,
       },
+      "^/api/user/user_projects": {
+        target,
+        secure: false,
+      },
+      "^/api/Task": {
+        target,
+        secure: false,
+      },
+      "^/api/Task/tasks": {
+        target,
+        secure: false,
+      },
+      "^/api/user/projects": {
+        target,
+        secure: false,
+      },
     },
     port: 5173,
     https: {

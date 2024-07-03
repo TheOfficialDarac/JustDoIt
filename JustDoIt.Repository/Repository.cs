@@ -209,7 +209,7 @@ namespace JustDoIt.Repository
 
                 if (!string.IsNullOrEmpty(pictureURL))
                 {
-                    query = query.Where(t => t.PictureUrl == pictureURL);
+                    query = query.Where(p => p.PictureUrl != null && p.PictureUrl == pictureURL);
                 }
 
                 if (!adminID.IsNullOrEmpty())
@@ -307,6 +307,38 @@ namespace JustDoIt.Repository
         #endregion Projects
 
         #region Users
+
+        public async Task<IEnumerable<Model.Task>> GetTasksOfUser(string userID)
+        {
+            try
+            {
+                var results = await _context.Users
+                .Where(u => u.Id == userID)
+                .SelectMany(u => u.Tasks)
+                .ToListAsync();
+                return results;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<IEnumerable<Project>> GetProjectsOfUser(string userID)
+        {
+            try
+            {
+                var results = await _context.Users
+               .Where(u => u.Id == userID)
+               .SelectMany(u => u.Projects)
+               .ToListAsync();
+                return results;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
 
         public async Task<IEnumerable<AppUser>> GetUsers(
             string? username,
@@ -776,6 +808,49 @@ namespace JustDoIt.Repository
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<UserProject>> GetUserProjects(string? userId, int? projectID, bool? isVerified, string? token, string? role, int page = 1, int pageSize = 5)
+        {
+            try
+            {
+                var query = _context.UserProjects.AsQueryable();
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    query = query.Where(up =>
+                    up.UserId.Contains(userId));
+                }
+
+                if (projectID.HasValue)
+                {
+                    query = query.Where(up => up.ProjectId == projectID);
+                }
+
+                if (isVerified.HasValue)
+                {
+                    query = query.Where(up => up.IsVerified == isVerified);
+                }
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    query = query.Where(up => up.Token != null &&
+                    up.Token.Contains(token));
+                }
+
+                if (!string.IsNullOrEmpty(role))
+                {
+                    query = query.Where(up => up.ProjectRole != null &&
+                    up.ProjectRole.Contains(role));
+                }
+
+                var results = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                return results;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
         #endregion Attachments

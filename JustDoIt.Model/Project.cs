@@ -15,6 +15,7 @@ public partial class Project
     public string? PictureUrl { get; set; }
 
     public string? Description { get; set; }
+    [JsonIgnore]
 
     public virtual AppUser? Admin { get; set; }
     [JsonIgnore]

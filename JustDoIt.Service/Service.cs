@@ -72,6 +72,10 @@ namespace JustDoIt.Service
             return await _repository.DeleteTask(taskID);
         }
 
+        public async Task<IEnumerable<Model.Task>> GetTasksOfUser(string userID)
+        {
+            return await _repository.GetTasksOfUser(userID: userID);
+        }
         #endregion Tasks
 
         #region Projects
@@ -118,6 +122,10 @@ namespace JustDoIt.Service
         #endregion Projects
 
         #region Users
+        public async Task<IEnumerable<Project>> GetProjectsOfUser(string userID)
+        {
+            return await _repository.GetProjectsOfUser(userID);
+        }
 
         public async Task<IEnumerable<AppUser>> GetUsers(
             string? username,
@@ -272,6 +280,17 @@ namespace JustDoIt.Service
         public async Task<bool> CreateAttachment(Attachment attachment)
         {
             return await _repository.CreateAttachment(attachment);
+        }
+
+        public async Task<List<UserProject>> GetUserProjects(string? userId, int? projectID, bool? isVerified, string? token, string? role, int page = 1, int pageSize = 5)
+        {
+            return await _repository.GetUserProjects(userId: userId,
+                    projectID: projectID,
+                    isVerified: isVerified,
+                    token: token,
+                    role: role,
+                    page: page,
+                    pageSize: pageSize);
         }
         #endregion Attachments
         #endregion Methods

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSessionStorage } from "./useSessionStorage";
 
 interface AuthContextType {
-  user: object | null;
+  user: User | null;
   login: (data: string) => Promise<void>;
   logout: () => void;
 }
@@ -16,46 +16,50 @@ interface Props {
 }
 
 interface User {
-  username: string;
+  userName: string;
   email: string;
   password: string;
   firstName: string;
-  lastNAme: string;
-  phone: string;
+  lastName: string;
+  phoneNumber: string;
   pictureUrl: string;
+  id: string;
 }
 
 export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useSessionStorage("user", null);
   const navigate = useNavigate();
 
-  const getUserObject = async (email: string): Promise<User> => {
-    const url = new URL("https://localhost:7010/api/user/all");
-    url.searchParams.set("email", email);
+  const getUserObject = async (email: string): Promise<boolean> => {
     await fetch(
-      // "/api/user/all" + "?" + new URLSearchParams({ email: email }).toString()
-      url
+      "/api/user/all" + "?" + new URLSearchParams({ email: email }).toString(),
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     )
       .then(async (response) => {
         // handle success or error from the server
-        console.log(response);
         if (response.ok) {
           return response.json().then((data) => {
-            console.log(data);
-            return data;
+            setUser(data[0]);
+            return true;
           });
         } else return null;
       })
       .catch((error) => {
         console.log(error);
       });
+    return false;
   };
 
   // call this function when you want to authenticate the user
   const login = async (email: string) => {
-    const res: User | null = await getUserObject(email);
+    const res = await getUserObject(JSON.parse(email).email);
     if (res) {
-      setUser(res);
       navigate("/profile");
     }
   };

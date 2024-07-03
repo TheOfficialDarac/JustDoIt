@@ -54,13 +54,11 @@ export const LoginPage = () => {
       })
         .then(async (data) => {
           // handle success or error from the server
-          console.log(data);
           if (data.ok) {
-            setError("Successful Login.");
-            await login(JSON.stringify({ email }));
-            navigate("/secret");
-            // window.location.href = "/";
-          } else setError("Error Logging In.");
+            // setError("Successful Login.");
+            await login(JSON.stringify({ email })).then(() => navigate("/"));
+            // navigate("/secret");
+          } else setError("Username or password incorrect.");
         })
         .catch((error) => {
           // handle network error

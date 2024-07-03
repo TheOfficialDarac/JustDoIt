@@ -5,6 +5,10 @@ namespace JustDoIt.Service.Common
     public interface IService
     {
         #region Tasks
+
+        Task<IEnumerable<Model.Task>> GetTasksOfUser(
+            string userID
+        );
         Task<IEnumerable<Model.Task>> GetTasks(
             string? title,
             string? description,
@@ -45,6 +49,9 @@ namespace JustDoIt.Service.Common
         #endregion Projects
 
         #region Users
+
+        Task<IEnumerable<Project>> GetProjectsOfUser(string userID);
+
         Task<IEnumerable<AppUser>> GetUsers(
             string? username,
             string? firstName,
@@ -62,6 +69,14 @@ namespace JustDoIt.Service.Common
         Task<bool> DeleteUser(string userID);
 
         Task<bool> CreateUser(AppUser user);
+
+        Task<List<UserProject>> GetUserProjects(string? userId,
+            int? projectID,
+            bool? isVerified,
+            string? token,
+            string? role,
+            int page = 1,
+            int pageSize = 5);
         #endregion Users
 
         #region Labels
