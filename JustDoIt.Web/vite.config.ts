@@ -96,6 +96,14 @@ export default defineConfig({
         target,
         secure: false,
       },
+      "^/api/Task/create": {
+        target,
+        secure: false,
+      },
+      "^/api/user/register": {
+        target,
+        secure: false,
+      },
     },
     port: 5173,
     https: {

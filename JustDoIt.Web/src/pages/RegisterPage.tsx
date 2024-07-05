@@ -20,51 +20,58 @@ const Register = () => {
     email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
 
   const isInvalid = React.useMemo(() => {
-    if (email === "") return false;
+    // if (email === "") return false;
 
     return validateEmail(email) ? false : true;
   }, [email]);
 
   const validateUsername = React.useMemo(() => {
-    if (username === "") return false;
+    if (username !== "") return false;
 
     //! TODO add username validations
     return true;
   }, [username]);
 
   const validateFirstName = React.useMemo(() => {
-    if (firstName === "") return false;
+    return false;
 
-    //! TODO add Name validations
-    return true;
+    return firstName.match("([a-zA-Z]{3,30}\\s*)+") ? false : true;
   }, [firstName]);
 
   const validateLastName = React.useMemo(() => {
-    if (lastName === "") return false;
+    return false;
 
-    //! TODO add Name validations
-    return true;
+    return lastName.match("[a-zA-Z]{3,30}") ? false : true;
   }, [lastName]);
 
   const validatePassword = React.useMemo(() => {
-    if (password === "") return false;
+    return false;
 
-    //! TODO add password validations
-    return true;
+    // return repeatPassword.match(
+    //   "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$"
+    // )
+    //   ? false
+    //   : true;
   }, [password]);
 
   const validateRepeatPassword = React.useMemo(() => {
     if (password === repeatPassword) return false;
 
-    //! TODO add password validations
-    return true;
+    // return repeatPassword.match(
+    //   "^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$"
+    // )
+    //   ? false
+    //   : true;
   }, [repeatPassword, password]);
 
   const validatePhoneNum = React.useMemo(() => {
-    if (phoneNum === "") return false;
+    // if (phoneNum === "") return false;
 
-    //! TODO add password validations
-    return true;
+    return phoneNum.match(
+      "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$"
+    )
+      ? false
+      : true;
   }, [phoneNum]);
 
   // const validateProfilePic = React.useMemo(() => {
@@ -82,8 +89,46 @@ const Register = () => {
   //#endregiion register
 
   const handlePictureChange = (e) => {
-    setProfilePic(e.target.files[0].name);
-    console.log(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      // console.log("imageURL", URL.createObjectURL(e.target.files[0]));
+      setProfilePic(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updatedTask = {
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      userName: username,
+      phoneNumber: phoneNum,
+      password: password,
+      confirmPassword: repeatPassword,
+      pictureURL: profilePic,
+    };
+    console.log("final user:", updatedTask);
+    return;
+    try {
+      const response = await fetch("/api/Task/create", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
+
+      if (response.ok) {
+        setError("");
+        // Optionally navigate or show a success message
+      } else {
+        setError("Failed to craete task.");
+      }
+    } catch (error) {
+      console.error("Error creating task:", error);
+      setError("Error: Error creating task.");
+    }
   };
 
   return (
@@ -95,7 +140,7 @@ const Register = () => {
         className="flex flex-col items-center p-4 gap-4 border-neutral-300 border-solid rounded-xl w-full border-2 shadow-sm"
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("Has been submitted");
+          handleSubmit(e);
         }}
       >
         <Avatar
@@ -143,7 +188,7 @@ const Register = () => {
             variant="bordered"
             isInvalid={validatePassword}
             color={validatePassword ? "danger" : "default"}
-            errorMessage="Please enter a valid password"
+            errorMessage="Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
             onValueChange={setPassword}
             className="max-w-xs"
             isRequired
@@ -156,7 +201,7 @@ const Register = () => {
             variant="bordered"
             isInvalid={validateRepeatPassword}
             color={validateRepeatPassword ? "danger" : "default"}
-            errorMessage="Please repeated password"
+            errorMessage="Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
             onValueChange={setRepeatPassword}
             className="max-w-xs"
             isRequired

@@ -153,6 +153,11 @@ const ProjectTasksPage = () => {
           )}
         </ModalContent>
       </Modal>
+      <div className="p-4">
+        <Button type="button" onClick={() => navigate("/tasks/create/" + id)}>
+          Create task
+        </Button>
+      </div>
       <div className="grid grid-cols-3 p-4 gap-2 max-sm:grid-cols-1 max-sm:text-center">
         <div className="w-full border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100">
           <Listbox

@@ -18,7 +18,6 @@ namespace JustDoIt.API.ViewModel
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = string.Empty;
 
-        [Required]
         [Phone]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; } = string.Empty;

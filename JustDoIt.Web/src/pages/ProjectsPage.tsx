@@ -127,6 +127,15 @@ const ProjectsPage = () => {
                   <p className="text-md">TITLE: {selected?.title}</p>
                   <p className="text-small text-default-500">MY ROLE: admin</p>
                 </div>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    navigate("/tasks/" + selected?.id);
+                  }}
+                  className="ml-auto"
+                >
+                  See Tasks
+                </Button>
               </CardHeader>
               <Divider />
               <CardBody className="my-3">
@@ -143,14 +152,6 @@ const ProjectsPage = () => {
                     <ProjectMembers project={selected} />
                   </AccordionItem>
                 </Accordion>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    navigate("/tasks/" + selected?.id);
-                  }}
-                >
-                  See Tasks
-                </Button>
               </CardFooter>
             </Card>
           </div>
