@@ -41,7 +41,7 @@ export const LoginPage = () => {
       if (rememberme == true) loginurl = "?useCookies=true";
       else loginurl = "?useSessionCookies=true";
 
-      fetch("api/auth/login" + loginurl, {
+      await fetch("api/auth/login" + loginurl, {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         headers: {

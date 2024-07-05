@@ -100,7 +100,6 @@ const Register = () => {
       >
         <Avatar
           src={profilePic}
-          name=""
           className="w-20 h-20 cursor-pointer"
           onClick={() => {
             hiddenFileInput.current.click();

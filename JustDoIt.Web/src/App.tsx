@@ -12,6 +12,8 @@ import { usePreferences } from "./hooks/usePreferences";
 import { useEffect, useState } from "react";
 import ProjectsPage from "./pages/ProjectsPage";
 import TasksPage from "./pages/TasksPage";
+import ProjectTasksPage from "./pages/ProjectTasksPage";
+import EditTaskPage from "./pages/EditTaskPage";
 
 export default function App() {
   const { preferences } = usePreferences();
@@ -59,10 +61,18 @@ export default function App() {
               }
             />
             <Route
-              path="/tasks"
+              path="/tasks/edit/:id"
               element={
                 <ProtectedRoute>
-                  <TasksPage />
+                  <EditTaskPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tasks/:id"
+              element={
+                <ProtectedRoute>
+                  <ProjectTasksPage />
                 </ProtectedRoute>
               }
             />

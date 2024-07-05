@@ -20,13 +20,13 @@ public partial class Task
 
     public virtual AppUser? Admin { get; set; }
 
-    public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
+    public virtual ICollection<Attachment>? Attachments { get; set; } = new List<Attachment>();
 
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public virtual ICollection<Comment>? Comments { get; set; } = new List<Comment>();
 
-    public virtual ICollection<Label> Labels { get; set; } = new List<Label>();
+    public virtual ICollection<Label>? Labels { get; set; } = new List<Label>();
 
-    public virtual Project Project { get; set; } = null!;
+    public virtual Project? Project { get; set; } = null!;
 
-    public virtual ICollection<AppUser> Users { get; set; } = new List<AppUser>();
+    public virtual ICollection<AppUser>? Users { get; set; } = new List<AppUser>();
 }

@@ -8,6 +8,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { PreferenceProvider } from "./hooks/usePreferences.tsx";
+import React from "react";
 
 const ToRender = () => {
   return (
@@ -24,7 +25,7 @@ const ToRender = () => {
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
-  <ToRender />
-  /* </React.StrictMode> */
+  <React.StrictMode>
+    <ToRender />
+  </React.StrictMode>
 );

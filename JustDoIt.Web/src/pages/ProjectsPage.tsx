@@ -10,16 +10,10 @@ import {
   CardHeader,
   Divider,
   Image,
-  User,
 } from "@nextui-org/react";
+import { ProjectMembers } from "../components/ProjectMembers";
+import { Navigate, useNavigate } from "react-router-dom";
 
-interface UserInProject {
-  userId: string;
-  projectId: number;
-  isVerified: boolean;
-  token: string;
-  projectRole: string;
-}
 interface Project {
   id: string;
   title: string;
@@ -34,6 +28,8 @@ const ProjectsPage = () => {
   const [display, setDisplay] = useState<ReactNode>(null);
 
   const [selected, setSelected] = useState<Project | null>(null);
+
+  let navigate = useNavigate();
 
   useEffect(() => {
     const getProjects = async () => {
@@ -53,7 +49,7 @@ const ProjectsPage = () => {
 
           if (response.ok) {
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             setProjects(data);
           } else {
             console.error("Failed to fetch projects");
@@ -67,44 +63,47 @@ const ProjectsPage = () => {
     getProjects();
   }, [user]);
 
-  const setSelection = (project: Project) => {
-    setSelected(project);
-  };
-
   useEffect(() => {
     if (projects) {
       setDisplay(
-        <div className="box-border flex gap-4 flex-col min-w-[300px] p-5 max-sm:max-w-full">
-          {projects.map((project, index) => (
-            <>
-              <Card
-                isPressable
-                onPress={() => setSelection(project)}
-                key={index}
-                className="box-border py-4 rounded-lg hover:border-2 hover:border-grey-300"
-              >
-                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                  <p className="text-tiny uppercase font-bold">Tag? myRole?</p>
-                  <h4 className="font-bold text-large">{project?.title}</h4>
-                  <small className="text-default-500">
-                    {project?.description}
-                  </small>
-                </CardHeader>
-                <CardBody className="overflow-visible py-2">
-                  <Image
-                    alt="Card background"
-                    className="object-cover rounded-xl"
-                    src={
-                      project?.pictureUrl ||
-                      "https://nextui.org/images/hero-card-complete.jpeg"
-                    }
-                    width={270}
-                  />
-                </CardBody>
-              </Card>
-            </>
-          ))}
-        </div>
+        <>
+          <div
+            className="box-border flex gap-4 flex-col min-w-[300px] p-5 max-sm:max-w-full"
+            key="projects"
+          >
+            {projects.map((project, index) => (
+              <>
+                <Card
+                  isPressable
+                  onPress={() => setSelected(project)}
+                  key={index}
+                  className="box-border py-4 rounded-lg hover:border-2 hover:border-grey-300"
+                >
+                  <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+                    <p className="text-tiny uppercase font-bold">
+                      Tag? myRole?
+                    </p>
+                    <h4 className="font-bold text-large">{project?.title}</h4>
+                    <small className="text-default-500">
+                      {project?.description}
+                    </small>
+                  </CardHeader>
+                  <CardBody className="overflow-visible py-2">
+                    <Image
+                      alt="Card background"
+                      className="object-cover rounded-xl"
+                      src={
+                        project?.pictureUrl ||
+                        "https://nextui.org/images/hero-card-complete.jpeg"
+                      }
+                      width={270}
+                    />
+                  </CardBody>
+                </Card>
+              </>
+            ))}
+          </div>
+        </>
       );
     }
   }, [projects]);
@@ -135,72 +134,23 @@ const ProjectsPage = () => {
               </CardBody>
               <Divider />
               <CardFooter className="justify-start items-start">
-                <Accordion fullWidth className="h-100">
+                <Accordion fullWidth className="h-100" key="accordion">
                   <AccordionItem
                     key="members"
                     aria-label="Members"
                     title="Members"
                   >
-                    <div className="grid-cols-5 gap-4">
-                      <User
-                        name="Jane Doe"
-                        description="TITLE"
-                        avatarProps={{
-                          src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                        }}
-                        className="w-[200px]"
-                      />
-                      <User
-                        name="Jane Doe"
-                        description="TITLE"
-                        avatarProps={{
-                          src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                        }}
-                        className="w-[200px]"
-                      />
-                      <User
-                        name="Jane Doe"
-                        description="TITLE"
-                        avatarProps={{
-                          src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                        }}
-                        className="w-[200px]"
-                      />
-                      <User
-                        name="Jane Doe"
-                        description="TITLE"
-                        avatarProps={{
-                          src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                        }}
-                        className="w-[200px]"
-                      />
-                      <User
-                        name="Jane Doe"
-                        description="TITLE"
-                        avatarProps={{
-                          src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                        }}
-                        className="w-[200px]"
-                      />
-                      <User
-                        name="Jane Doe"
-                        description="TITLE"
-                        avatarProps={{
-                          src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                        }}
-                        className="w-[200px]"
-                      />
-                      <User
-                        name="Jane Doe"
-                        description="TITLE"
-                        avatarProps={{
-                          src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-                        }}
-                        className="w-[200px]"
-                      />
-                    </div>
+                    <ProjectMembers project={selected} />
                   </AccordionItem>
                 </Accordion>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    navigate("/tasks/" + selected?.id);
+                  }}
+                >
+                  See Tasks
+                </Button>
               </CardFooter>
             </Card>
           </div>

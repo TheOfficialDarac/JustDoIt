@@ -23,6 +23,22 @@ namespace JustDoIt.API.Controllers
 
         #region Methods\
 
+        [HttpGet("users", Name = "GetProjectUsers")]
+        public async Task<IActionResult> GetProjectUsers(int projectID)
+        {
+            try
+            {
+
+                var result = await _service.GetProjectUsers(projectID);
+
+                return (result is null) ? NotFound() : Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("", Name = "GetProjects")]
         public async Task<IActionResult> GetProjects(
             string? title,

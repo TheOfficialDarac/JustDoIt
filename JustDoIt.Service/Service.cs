@@ -80,6 +80,11 @@ namespace JustDoIt.Service
 
         #region Projects
 
+        public async Task<IEnumerable<AppUser>> GetProjectUsers(int projectID)
+        {
+            return await _repository.GetProjectUsers(projectID);
+        }
+
         public async Task<IEnumerable<Project>> GetProjects(
             string? title,
             string? description,

@@ -30,6 +30,7 @@ namespace JustDoIt.Service.Common
 
         #region Projects
 
+        Task<IEnumerable<AppUser>> GetProjectUsers(int projectID);
         Task<IEnumerable<Project>> GetProjects(
             string? title,
             string? description,

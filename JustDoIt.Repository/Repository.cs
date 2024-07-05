@@ -183,6 +183,21 @@ namespace JustDoIt.Repository
 
         #region Projects
 
+        public async Task<IEnumerable<AppUser>> GetProjectUsers(int projectID)
+        {
+            try
+            {
+                var results = await _context.Projects
+                .Where(u => u.Id == projectID)
+                .SelectMany(u => u.UserProjects).Select(up => up.User).ToListAsync();
+                return results;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task<IEnumerable<Project>> GetProjects(
             string? title,
             string? description,
