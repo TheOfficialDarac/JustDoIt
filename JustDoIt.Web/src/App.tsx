@@ -15,6 +15,8 @@ import TasksPage from "./pages/TasksPage";
 import ProjectTasksPage from "./pages/ProjectTasksPage";
 import EditTaskPage from "./pages/EditTaskPage";
 import CreateTaskPage from "./pages/CreateTaskPage";
+import CreateProjectPage from "./pages/CreateProjectPage";
+import EditProjectPage from "./pages/EditProjectPage";
 
 export default function App() {
   const { preferences } = usePreferences();
@@ -82,6 +84,22 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <CreateTaskPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects/create"
+              element={
+                <ProtectedRoute>
+                  <CreateProjectPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/project/edit/:id"
+              element={
+                <ProtectedRoute>
+                  <EditProjectPage />
                 </ProtectedRoute>
               }
             />

@@ -12,7 +12,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { ProjectMembers } from "../components/ProjectMembers";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Project {
   id: string;
@@ -71,36 +71,48 @@ const ProjectsPage = () => {
             className="box-border flex gap-4 flex-col min-w-[300px] p-5 max-sm:max-w-full"
             key="projects"
           >
+            <div className="p-5 flex">
+              <Button
+                type="button"
+                onClick={() => {
+                  navigate("/projects/create");
+                }}
+                className="flex-1"
+              >
+                Create Project
+              </Button>
+            </div>
             {projects.map((project, index) => (
-              <>
-                <Card
-                  isPressable
-                  onPress={() => setSelected(project)}
-                  key={index}
-                  className="box-border py-4 rounded-lg hover:border-2 hover:border-grey-300"
-                >
-                  <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                    <p className="text-tiny uppercase font-bold">
-                      Tag? myRole?
-                    </p>
-                    <h4 className="font-bold text-large">{project?.title}</h4>
-                    <small className="text-default-500">
-                      {project?.description}
-                    </small>
-                  </CardHeader>
-                  <CardBody className="overflow-visible py-2">
-                    <Image
-                      alt="Card background"
-                      className="object-cover rounded-xl"
-                      src={
-                        project?.pictureUrl ||
-                        "https://nextui.org/images/hero-card-complete.jpeg"
-                      }
-                      width={270}
-                    />
-                  </CardBody>
-                </Card>
-              </>
+              <Card
+                isPressable
+                onPress={() => setSelected(project)}
+                key={index}
+                className="box-border py-4 rounded-lg hover:border-gray-300 hover:border-[2px] border-[2px] border-transparent"
+                // style={{
+                //   borderWidth: "2px",
+                //   borderStyle: "solid",
+                //   borderColor: "transparent",
+                // }} // Add default border to maintain size
+              >
+                <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+                  <p className="text-tiny uppercase font-bold">Tag? myRole?</p>
+                  <h4 className="font-bold text-large">{project?.title}</h4>
+                  <small className="text-default-500">
+                    {project?.description}
+                  </small>
+                </CardHeader>
+                <CardBody className="overflow-visible py-2">
+                  <Image
+                    alt="Card background"
+                    className="object-cover rounded-xl"
+                    src={
+                      project?.pictureUrl ||
+                      "https://nextui.org/images/hero-card-complete.jpeg"
+                    }
+                    width={270}
+                  />
+                </CardBody>
+              </Card>
             ))}
           </div>
         </>
@@ -135,6 +147,14 @@ const ProjectsPage = () => {
                   className="ml-auto"
                 >
                   See Tasks
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    navigate("/project/edit/" + selected?.id);
+                  }}
+                >
+                  Edit Project
                 </Button>
               </CardHeader>
               <Divider />

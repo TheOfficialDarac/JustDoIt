@@ -104,6 +104,18 @@ export default defineConfig({
         target,
         secure: false,
       },
+      "^/api/Project/create": {
+        target,
+        secure: false,
+      },
+      "^/api/Project": {
+        target,
+        secure: false,
+      },
+      "^/api/Project/update": {
+        target,
+        secure: false,
+      },
     },
     port: 5173,
     https: {

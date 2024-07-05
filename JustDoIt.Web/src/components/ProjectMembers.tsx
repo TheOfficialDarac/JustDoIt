@@ -80,7 +80,7 @@ export const ProjectMembers = ({ project }: Props) => {
               description={`${usr.firstName} ${usr.lastName}`}
               name={usr.projectRole}
               avatarProps={{
-                src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+                src: "",
               }}
               className="w-[200px]"
             />

@@ -14,24 +14,14 @@ import DummyLogo from "../../assets/icons/AppLogo.tsx";
 import UserIcon from "./UserIcon.tsx";
 import { MagnifyingGlas } from "../../assets/icons/MagnifyingGlas.tsx";
 import { useAuth } from "../../hooks/useAuth.tsx";
+import Logout from "./Logout.tsx";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   let { user } = useAuth();
 
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
+  const menuItems = ["settings", "projects", "Log Out"];
 
   return (
     <>
@@ -88,20 +78,24 @@ function Header() {
         <NavbarMenu>
           {menuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === menuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-                }
-                className="w-full"
-                href="#"
-                size="lg"
-              >
-                {item}
-              </Link>
+              {item == "Log Out" ? (
+                <Logout />
+              ) : (
+                <Link
+                  color={
+                    index === 2
+                      ? "primary"
+                      : index === menuItems.length - 1
+                      ? "danger"
+                      : "foreground"
+                  }
+                  className="w-full"
+                  href={"/" + item}
+                  size="lg"
+                >
+                  {item.normalize()}
+                </Link>
+              )}
             </NavbarMenuItem>
           ))}
         </NavbarMenu>
