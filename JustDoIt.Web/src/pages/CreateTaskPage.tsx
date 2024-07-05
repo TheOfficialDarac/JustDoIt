@@ -81,7 +81,7 @@ const EditTaskPage = () => {
       });
 
       if (response.ok) {
-        setError("");
+        setError("Task created successfully");
         // Optionally navigate or show a success message
       } else {
         setError("Failed to craete task.");

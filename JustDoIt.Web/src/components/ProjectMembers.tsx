@@ -58,19 +58,18 @@ export const ProjectMembers = ({ project }: Props) => {
     usersInProject: UserInProject[],
     users: User[]
   ) => {
-    const result = usersInProject
-      .map((up) => {
-        const user = users.find((user) => user.id === up.userId);
-        if (user) {
-          return {
-            ...user,
-            projectId: up.projectId,
-            projectRole: up.projectRole,
-          };
-        }
-        return null;
-      })
-      .filter((usr): usr is ProjectUser => usr !== null);
+    const result = usersInProject.map((up) => {
+      const user = users.find((user) => user.id === up.userId);
+      if (user) {
+        return {
+          ...user,
+          projectId: up.projectId,
+          projectRole: up.projectRole,
+        };
+      }
+      return null;
+    });
+    // .filter((usr): usr is ProjectUser => usr !== null);
 
     setDisplayMembers(
       <>
@@ -80,7 +79,7 @@ export const ProjectMembers = ({ project }: Props) => {
               description={`${usr.firstName} ${usr.lastName}`}
               name={usr.projectRole}
               avatarProps={{
-                src: "",
+                src: usr?.pictureUrl,
               }}
               className="w-[200px]"
             />

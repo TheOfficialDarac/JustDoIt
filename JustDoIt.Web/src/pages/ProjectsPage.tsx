@@ -139,23 +139,34 @@ const ProjectsPage = () => {
                   <p className="text-md">TITLE: {selected?.title}</p>
                   <p className="text-small text-default-500">MY ROLE: admin</p>
                 </div>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    navigate("/tasks/" + selected?.id);
-                  }}
-                  className="ml-auto"
-                >
-                  See Tasks
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    navigate("/project/edit/" + selected?.id);
-                  }}
-                >
-                  Edit Project
-                </Button>
+                <div className="flex p-2 m-2 gap-1 flex-col">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      navigate("/project/members/add/" + selected?.id);
+                    }}
+                  >
+                    Members
+                  </Button>
+
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      navigate("/tasks/" + selected?.id);
+                    }}
+                    className="ml-auto"
+                  >
+                    See Tasks
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      navigate("/project/edit/" + selected?.id);
+                    }}
+                  >
+                    Edit Project
+                  </Button>
+                </div>
               </CardHeader>
               <Divider />
               <CardBody className="my-3">
