@@ -19,9 +19,9 @@ import Logout from "./Logout.tsx";
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  let { user } = useAuth();
+  const { user } = useAuth();
 
-  const menuItems = ["settings", "projects", "Log Out"];
+  const menuItems = ["settings", "projects", "shutdown", "Log Out"];
 
   return (
     <>

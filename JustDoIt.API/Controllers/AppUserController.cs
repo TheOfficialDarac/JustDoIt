@@ -2,8 +2,8 @@ using System.Drawing;
 using System.Net;
 using System.Net.Mime;
 using Azure.Core;
-using JustDoIt.API.ViewModel;
 using JustDoIt.Model;
+using JustDoIt.Model.DTOs;
 using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -107,7 +107,7 @@ namespace JustDoIt.API.Controllers
             return Ok(Directory.GetCurrentDirectory());
         }
         [HttpPost("register")]
-        public async Task<ActionResult> Register(AppUserRegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterDTO model)
         {
             if (ModelState.IsValid)
             {

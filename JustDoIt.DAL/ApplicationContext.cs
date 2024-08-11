@@ -6,14 +6,14 @@ using JustDoIt.Model;
 
 namespace JustDoIt.DAL;
 
-public partial class DataContext : IdentityDbContext<AppUser>
+public partial class ApplicationContext : IdentityDbContext<AppUser>
 {
-    public DataContext()
+    public ApplicationContext()
     {
         ChangeTracker.LazyLoadingEnabled = false;
     }
 
-    public DataContext(DbContextOptions<DataContext> options)
+    public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {
         ChangeTracker.LazyLoadingEnabled = false;

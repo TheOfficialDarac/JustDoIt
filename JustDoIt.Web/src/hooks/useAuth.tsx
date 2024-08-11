@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   const getUserObject = async (email: string): Promise<boolean> => {
     await fetch(
-      "/api/user/all" + "?" + new URLSearchParams({ email: email }).toString(),
+      "/api/user/all?" + new URLSearchParams({ email: email }).toString(),
       {
         method: "GET",
         mode: "cors",

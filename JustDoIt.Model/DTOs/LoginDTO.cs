@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+namespace JustDoIt.Model.DTOs;
 
-public class LoginViewModel
+public class LoginDTO
 {
     [Required]
     [EmailAddress]

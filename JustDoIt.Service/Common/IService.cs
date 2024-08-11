@@ -1,9 +1,13 @@
 ﻿using JustDoIt.Model;
+using JustDoIt.Model.DTOs;
+using JustDoIt.Common;
 
 namespace JustDoIt.Service.Common
 {
-    public interface IService
+    public interface IService<T> where T:class
     {
+        //Tuple<Task<T>, IEnumerable<ErrorMessage>> GetAll();
+
         #region Tasks
 
         Task<IEnumerable<Model.Task>> GetTasksOfUser(
@@ -24,10 +28,9 @@ namespace JustDoIt.Service.Common
         Task<Model.Task> GetTask(int id);
         Task<bool> UpdateTask(Model.Task task);
 
-        Task<bool> CreateTask(Model.Task task);
+        Task<bool> CreateTask(TaskDTO taskDTO);
         Task<bool> DeleteTask(int taskID);
         #endregion Tasks
-
         #region Projects
 
         Task<IEnumerable<AppUser>> GetProjectUsers(int projectID);

@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JustDoIt.API.ViewModel
+namespace JustDoIt.Model.DTOs
 {
-    public class AppUserRegisterViewModel
+    public class RegisterDTO
     {
         [Required]
         [Display(Name = "Username")]

@@ -1,5 +1,5 @@
-﻿using JustDoIt.API.ViewModel;
-using JustDoIt.Model;
+﻿using JustDoIt.Model;
+using JustDoIt.Model.DTOs;
 using JustDoIt.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -23,8 +23,6 @@ namespace JustDoIt.API.Controllers
         #endregion Constructors
 
         #region Methods
-
-        #region Tasks
 
         [HttpGet("", Name = "GetTasks")]
         public async Task<ActionResult> GetTasks(
@@ -104,7 +102,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost("create", Name = "CreateTask")]
-        public async Task<IActionResult> CreateTask(TaskViewModel model)
+        public async Task<IActionResult> CreateTask(TaskDTO model)
         {
             try
             {
@@ -118,20 +116,20 @@ namespace JustDoIt.API.Controllers
                 }
                 else
                 {
-                    var task = new Model.Task
-                    {
-                        Title = model.Title,
-                        Description = model.Description,
-                        ProjectId = model.ProjectId,
-                        AdminId = model.AdminId,
-                        PictureUrl = model.PictureUrl,
-                        Deadline = model.Deadline,
-                        State = model.State
-                    };
+                    //var task = new Model.Task
+                    //{
+                    //    Title = model.Title,
+                    //    Description = model.Description,
+                    //    ProjectId = model.ProjectId,
+                    //    AdminId = model.AdminId,
+                    //    PictureUrl = model.PictureUrl,
+                    //    Deadline = model.Deadline,
+                    //    State = model.State
+                    //};
 
-                    var success = await _service.CreateTask(task);
+                    var success = await _service.CreateTask(model);
                     // return Ok(task);
-                    return Ok(true);
+                    return Ok(success);
                 }
 
             }
@@ -157,330 +155,7 @@ namespace JustDoIt.API.Controllers
                 return BadRequest(e.Message);
             }
         }
-        #endregion Tasks
+        #endregion
 
-        #region Labels
-        [HttpGet("labels", Name = "GetLabels")]
-        public async Task<ActionResult> GetLabels(
-            string? title,
-            string? description,
-            int? taskID,
-            int page = 1,
-            int pageSize = 5
-        )
-        {
-
-            //TODO(Dario)   sanitize possible input scenarios
-
-            try
-            {
-
-                var response = await _service.GetLabels(
-                    title: title,
-                    description: description,
-                    taskID: taskID,
-                    page: page,
-                    pageSize: pageSize
-                );
-
-                return response is null ? NotFound() : Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("labels/{id:int}", Name = "GetLabel")]
-        public async Task<ActionResult> GetLabel(int id)
-        {
-            try
-            {
-
-                var result = await _service.GetLabel(id);
-
-                return result is null ? NotFound() : Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPut("labels/update", Name = "UpdateLabel")]
-        public async Task<ActionResult> UpdateLabel([FromBody] Model.Label label)
-        {
-            try
-            {
-
-                if (label == null)
-                {
-                    return NotFound(label);
-                }
-
-                var success = await _service.UpdateLabel(label);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPost("labels/create", Name = "CreateLabel")]
-        public async Task<IActionResult> CreateLabel([FromBody] Model.Label label)
-        {
-            try
-            {
-                if (label is null)
-                {
-                    return NotFound(label);
-                }
-
-                var success = await _service.CreateLabel(label);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpDelete("labels/delete", Name = "DeleteLabel")]
-        public async Task<IActionResult> DeleteLabel(int labelID)
-        {
-            try
-            {
-                // if (label is null)
-                // {
-                //     return NotFound(label);
-                // }
-
-                var success = await _service.DeleteLabel(labelID);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        #endregion Labels
-
-        #region Comments
-
-        [HttpGet("comments", Name = "GetComments")]
-        public async Task<ActionResult> GetComments(
-            string? text,
-            int? taskID,
-            string? userID,
-            int page = 1,
-            int pageSize = 5
-        )
-        {
-
-            //TODO(Dario)   sanitize possible input scenarios
-
-            try
-            {
-
-                var response = await _service.GetComments(
-                    text: text,
-                    taskID: taskID,
-                    userID: userID,
-                    page: page,
-                    pageSize: pageSize
-                );
-
-                return response is null ? NotFound() : Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("comments/{id:int}", Name = "GetComment")]
-        public async Task<ActionResult> GetComment(int id)
-        {
-            try
-            {
-
-                var result = await _service.GetComment(id);
-
-                return result is null ? NotFound() : Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPut("comments/update", Name = "UpdateComment")]
-        public async Task<ActionResult> UpdateComment([FromBody] Comment comment)
-        {
-            try
-            {
-
-                if (comment == null)
-                {
-                    return NotFound(comment);
-                }
-
-                var success = await _service.UpdateComment(comment);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPost("comments/create", Name = "CreateComment")]
-        public async Task<IActionResult> CreateComment([FromBody] Comment comment)
-        {
-            try
-            {
-                if (comment is null)
-                {
-                    return NotFound(comment);
-                }
-
-                var success = await _service.CreateComment(comment);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpDelete("comments/delete", Name = "DeleteComment")]
-        public async Task<IActionResult> DeleteComment(int commentID)
-        {
-            try
-            {
-                // if (comment is null)
-                // {
-                //     return NotFound(comment);
-                // }
-
-                var success = await _service.DeleteComment(commentID);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        #endregion Comments
-
-        #region Attachments
-
-        #endregion Attachments
-
-        [HttpGet("attachments", Name = "GetAttachments")]
-        public async Task<ActionResult> GetAttachments(
-            string? filepath,
-            int? taskID,
-            int? projectID,
-            int page = 1,
-            int pageSize = 5)
-        {
-
-            //TODO(Dario)   sanitize possible input scenarios
-
-            try
-            {
-
-                var response = await _service.GetAttachments(
-                    filepath: filepath,
-                    taskID: taskID,
-                    projectID: projectID,
-                    page: page,
-                    pageSize: pageSize
-                );
-
-                return response is null ? NotFound() : Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("attachments/{id:int}", Name = "GetAttachment")]
-        public async Task<ActionResult> GetAttachment(int id)
-        {
-            try
-            {
-
-                var result = await _service.GetAttachment(id);
-
-                return result is null ? NotFound() : Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPut("attachments/update", Name = "UpdateAttachments")]
-        public async Task<ActionResult> UpdateAttachments([FromBody] Attachment attachment)
-        {
-            try
-            {
-
-                if (attachment == null)
-                {
-                    return NotFound(attachment);
-                }
-
-                var success = await _service.UpdateAttachment(attachment);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPost("attachments/create", Name = "CreateAttachment")]
-        public async Task<IActionResult> CreateComment([FromBody] Attachment attachment)
-        {
-            try
-            {
-                if (attachment is null)
-                {
-                    return NotFound(attachment);
-                }
-
-                var success = await _service.CreateAttachment(attachment);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpDelete("attachments/delete", Name = "DeleteAttachment")]
-        public async Task<IActionResult> DeleteAttachment(int attachmentID)
-        {
-            try
-            {
-                // if (attachment is null)
-                // {
-                //     return NotFound(attachment);
-                // }
-
-                var success = await _service.DeleteAttachment(attachmentID);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        #endregion Methods
     }
 }

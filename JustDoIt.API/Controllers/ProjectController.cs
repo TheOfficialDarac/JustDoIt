@@ -21,7 +21,7 @@ namespace JustDoIt.API.Controllers
         }
         #endregion Contructors
 
-        #region Methods\
+        #region Methods
 
         [HttpGet("users", Name = "GetProjectUsers")]
         public async Task<IActionResult> GetProjectUsers(int projectID)
@@ -141,6 +141,6 @@ namespace JustDoIt.API.Controllers
                 return BadRequest(e.Message);
             }
         }
-        #endregion Methods
+        #endregion
     }
 }

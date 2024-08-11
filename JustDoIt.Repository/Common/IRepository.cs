@@ -1,4 +1,5 @@
 ﻿using JustDoIt.Model;
+using JustDoIt.Model.DTOs;
 
 namespace JustDoIt.Repository.Common
 {
@@ -27,7 +28,7 @@ namespace JustDoIt.Repository.Common
 
         Task<bool> DeleteTask(int taskID);
 
-        Task<bool> CreateTask(Model.Task task);
+        Task<bool> CreateTask(TaskDTO taskDTO);
         #endregion Tasks
 
         #region Projects

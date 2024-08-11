@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen(
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IService, Service>();
 builder.Services.AddCors();
-builder.Services.AddDbContext<DataContext>(options =>
+builder.Services.AddDbContext<ApplicationContext>(options =>
 {
     var connection = builder.Configuration.GetConnectionString("DevelopmentConnection");
     options.UseSqlServer(connection);
@@ -49,7 +49,7 @@ builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
     // options.SignIn.RequireConfirmedEmail = true;
 }
     )
-    .AddEntityFrameworkStores<DataContext>();
+    .AddEntityFrameworkStores<ApplicationContext>();
 
 
 // builder.Services.AddAuthentication()

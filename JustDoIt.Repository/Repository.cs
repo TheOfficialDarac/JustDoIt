@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using JustDoIt.DAL;
+using JustDoIt.Mapperly;
 using JustDoIt.Model;
+using JustDoIt.Model.DTOs;
 using JustDoIt.Repository.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
@@ -12,12 +14,12 @@ namespace JustDoIt.Repository
     {
         #region Properties
 
-        private readonly DataContext _context;
+        private readonly ApplicationContext _context;
         #endregion Properties
 
         #region Constructor
 
-        public Repository(DataContext context)
+        public Repository(ApplicationContext context)
         {
             _context = context;
         }
@@ -26,6 +28,14 @@ namespace JustDoIt.Repository
         #region Methods
 
         #region Tasks
+
+        //  for testing
+        public Model.Task test(TaskDTO taskDTO)
+        {
+            var mapper = new MapperlyMapper();
+            var task = mapper.TaskDTOToTask(taskDTO);
+            return _context.Entry<Model.Task>(task).Entity;
+        }
 
         public async Task<IEnumerable<Model.Task>> GetTasks(
             string? title,
@@ -166,10 +176,13 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<bool> CreateTask(Model.Task task)
+        public async Task<bool> CreateTask(TaskDTO taskDTO)
         {
             try
             {
+                var mapper = new MapperlyMapper();
+                var task = mapper.TaskDTOToTask(taskDTO);
+
                 await _context.Tasks.AddAsync(task);
                 await _context.SaveChangesAsync();
                 return true;

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using JustDoIt.Model;
+using JustDoIt.Model.DTOs;
 using JustDoIt.Repository.Common;
 using JustDoIt.Service.Common;
 
@@ -62,9 +63,9 @@ namespace JustDoIt.Service
             return await _repository.PutTask(task);
         }
 
-        public async Task<bool> CreateTask(Model.Task task)
+        public async Task<bool> CreateTask(TaskDTO taskDTO)
         {
-            return await _repository.CreateTask(task);
+            return await _repository.CreateTask(taskDTO);
         }
 
         public async Task<bool> DeleteTask(int taskID)
