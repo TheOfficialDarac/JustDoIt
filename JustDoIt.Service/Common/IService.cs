@@ -4,9 +4,8 @@ using JustDoIt.Common;
 
 namespace JustDoIt.Service.Common
 {
-    public interface IService<T> where T:class
+    public interface IService
     {
-        //Tuple<Task<T>, IEnumerable<ErrorMessage>> GetAll();
 
         #region Tasks
 
