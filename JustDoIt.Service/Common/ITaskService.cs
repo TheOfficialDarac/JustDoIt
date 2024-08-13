@@ -1,10 +1,5 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustDoIt.Service.Common
 {
@@ -15,6 +10,15 @@ namespace JustDoIt.Service.Common
         Tuple<Task<IEnumerable<Model.Task>>, IEnumerable<ErrorMessage>> GetUserTasks(
             string userID
         );
+        Task<IEnumerable<TaskDTO>> GetAll(string? title,
+            string? description,
+            string? pictureURL,
+            DateTime? deadlineStart,
+            DateTime? deadlineEnd,
+            string? state,
+            string? adminID,
+            int? projectID);
+
         //Task<IEnumerable<Model.Task>> GetTasks(
         //    string? title,
         //    string? description,

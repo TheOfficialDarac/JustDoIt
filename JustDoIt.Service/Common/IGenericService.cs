@@ -1,9 +1,4 @@
 ﻿using JustDoIt.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustDoIt.Service.Common
 {
@@ -17,7 +12,7 @@ namespace JustDoIt.Service.Common
 
         Task<Tuple<bool, IEnumerable<ErrorMessage>>> Create(T entity);
         Task<Tuple<IEnumerable<T>, IEnumerable<ErrorMessage>>> GetAll();
-        Task<Tuple<T, IEnumerable<ErrorMessage>>> GetSingle(string id);
+        Task<Tuple<T, IEnumerable<ErrorMessage>>> GetSingle(int id);
         Task<Tuple<bool, IEnumerable<ErrorMessage>>> Update(T entity);
         Task<Tuple<bool, IEnumerable<ErrorMessage>>> Delete(T entity);
     }

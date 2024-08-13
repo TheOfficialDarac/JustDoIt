@@ -32,8 +32,8 @@ namespace JustDoIt.Repository
         //  for testing
         public Model.Task test(TaskDTO taskDTO)
         {
-            var mapper = new MapperlyMapper();
-            var task = mapper.TaskDTOToTask(taskDTO);
+            var mapper = new TaskMapper();
+            var task = mapper.MapToType(taskDTO);
             return _context.Entry<Model.Task>(task).Entity;
         }
 
@@ -180,8 +180,8 @@ namespace JustDoIt.Repository
         {
             try
             {
-                var mapper = new MapperlyMapper();
-                var task = mapper.TaskDTOToTask(taskDTO);
+                var mapper = new TaskMapper();
+                var task = mapper.MapToType(taskDTO);
 
                 await _context.Tasks.AddAsync(task);
                 await _context.SaveChangesAsync();

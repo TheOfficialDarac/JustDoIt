@@ -2,11 +2,6 @@
 using JustDoIt.Model.DTOs;
 using JustDoIt.Repository.Common;
 using JustDoIt.Service.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustDoIt.Service
 {
@@ -14,7 +9,7 @@ namespace JustDoIt.Service
     {
         #region Properties
 
-        private IRepository _repository { get; set; }
+        private ITask _repository { get; set; }
         #endregion
 
         public TaskService(IRepository repository)
@@ -29,6 +24,11 @@ namespace JustDoIt.Service
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<TaskDTO>> GetAll(string? title, string? description, string? pictureURL, DateTime? deadlineStart, DateTime? deadlineEnd, string? state, string? adminID, int? projectID)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Tuple<bool, IEnumerable<ErrorMessage>>> Create(TaskDTO entity)
         {
             throw new NotImplementedException();
@@ -39,7 +39,7 @@ namespace JustDoIt.Service
             throw new NotImplementedException();
         }
 
-        public Task<Tuple<TaskDTO, IEnumerable<ErrorMessage>>> GetSingle(string id)
+        public Task<Tuple<TaskDTO, IEnumerable<ErrorMessage>>> GetSingle(int id)
         {
             throw new NotImplementedException();
         }

@@ -6,11 +6,6 @@ using JustDoIt.Model.DTOs;
 using JustDoIt.Repository.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustDoIt.Repository
 {
@@ -31,6 +26,7 @@ namespace JustDoIt.Repository
         public async Task<bool> Create(TaskDTO entity)
         {
             // basic exceptions already handled up to repository
+            // here only database errors exist
             try
             {
                 var mapper = new TaskMapper();
@@ -41,7 +37,7 @@ namespace JustDoIt.Repository
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
                 //Logger?
                 return false;
@@ -110,26 +106,81 @@ namespace JustDoIt.Repository
                 return results;
 
             }
-            catch (Exception)
+            catch
             {
                 return null;
             }
-            throw new NotImplementedException();
         }
 
-        public Task<TaskDTO> GetSingle(string id)
+        public async Task<TaskDTO> GetSingle(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var mapper = new TaskMapper();
+                var result = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+
+                if (result == null)
+                {
+                    return null;
+                }
+                return mapper.MapToDTO(result);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public Task<bool> Update(TaskDTO entity)
+        public async Task<bool> Update(TaskDTO entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
+
+                if (existing == null)
+                {
+                    return false;
+                }
+
+                existing.Title = entity.Title;
+                existing.AdminId = entity.AdminId;
+                existing.Description = entity.Description;
+                existing.ProjectId = entity.ProjectId;
+                existing.PictureUrl = entity.PictureUrl;
+                existing.Deadline = entity.Deadline;
+                existing.State = entity.State;
+
+
+                _context.ChangeTracker.DetectChanges();
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<bool> Delete(TaskDTO entity)
+        public async Task<bool> Delete(TaskDTO entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
+
+                if (existing is null)
+                {
+                    return false;
+                }
+
+                _context.Tasks.Remove(existing);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion
