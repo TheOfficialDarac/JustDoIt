@@ -4,7 +4,7 @@ using System.Net.Mime;
 using Azure.Core;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Service.Common;
+using JustDoIt.Service.Definitions.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +16,7 @@ namespace JustDoIt.API.Controllers
     {
         #region Properties
 
-        private IService _service { get; set; }
+        private readonly IService _service;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         #endregion Properties
@@ -62,6 +62,8 @@ namespace JustDoIt.API.Controllers
         {
 
             //TODO(Dario)   sanitize possible input scenarios
+            //- this happens in service
+            // controllers only puropse is to direct calls
 
             try
             {

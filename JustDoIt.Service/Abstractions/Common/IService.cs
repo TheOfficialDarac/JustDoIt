@@ -2,7 +2,7 @@
 using JustDoIt.Model.DTOs;
 using JustDoIt.Common;
 
-namespace JustDoIt.Service.Common
+namespace JustDoIt.Service.Definitions.Common
 {
     public interface IService
     {

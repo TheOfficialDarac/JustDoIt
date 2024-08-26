@@ -1,6 +1,6 @@
 ﻿using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Service.Common;
+using JustDoIt.Service.Definitions.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 

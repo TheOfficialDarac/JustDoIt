@@ -1,5 +1,5 @@
 using JustDoIt.Model;
-using JustDoIt.Service.Common;
+using JustDoIt.Service.Definitions.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers

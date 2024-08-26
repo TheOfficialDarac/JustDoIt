@@ -1,16 +1,17 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
+using JustDoIt.Service.Definitions.Common;
 
-namespace JustDoIt.Service.Common
+namespace JustDoIt.Service.Definitions
 {
-    interface ITaskService
+    interface ITaskService : IGenericService<TaskDTO>
     {
         #region Tasks
 
-        Tuple<Task<IEnumerable<Model.Task>>, IEnumerable<ErrorMessage>> GetUserTasks(
+        Task<Tuple<IEnumerable<TaskDTO>, Result>> GetUserTasks(
             string userID
         );
-        Task<IEnumerable<TaskDTO>> GetAll(string? title,
+        Task<Tuple<IEnumerable<TaskDTO>, Result>> GetAll(string? title,
             string? description,
             string? pictureURL,
             DateTime? deadlineStart,

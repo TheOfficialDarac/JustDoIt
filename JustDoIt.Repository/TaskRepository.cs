@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace JustDoIt.Repository
 {
-    class TaskRepository : IGenericRepository<TaskDTO>
+    class TaskRepository : ITaskRepository
     {
         #region Properties
 
@@ -23,7 +23,7 @@ namespace JustDoIt.Repository
 
         #region Methods
 
-        public async Task<bool> Create(TaskDTO entity)
+        public async Task<TaskDTO> Create(TaskDTO entity)
         {
             // basic exceptions already handled up to repository
             // here only database errors exist
@@ -31,20 +31,14 @@ namespace JustDoIt.Repository
             {
                 var mapper = new TaskMapper();
                 var task = mapper.MapToType(entity);
-                
+
                 var result = await _context.Tasks.AddAsync(task);
                 await _context.SaveChangesAsync();
-
-                return true;
             }
-            catch
-            {
-                //Logger?
-                return false;
-            }
+            catch { /*Logger? */ }
         }
 
-        public async Task<IEnumerable<TaskDTO>> GetAll(
+        public async Task<IEnumerable<TaskDTO>?> GetAll(
             string? title,
             string? description,
             string? pictureURL,
@@ -52,7 +46,8 @@ namespace JustDoIt.Repository
             DateTime? deadlineEnd,
             string? state,
             string? adminID,
-            int? projectID) {
+            int? projectID)
+        {
             try
             {
                 var query = _context.Tasks.AsQueryable();
@@ -104,15 +99,15 @@ namespace JustDoIt.Repository
                 var results = mapper.MapToDTOList(tasks);
 
                 return results;
-
             }
             catch
             {
+                /*Logger */
                 return null;
             }
         }
 
-        public async Task<TaskDTO> GetSingle(int id)
+        public async Task<TaskDTO?> GetSingle(int id)
         {
             try
             {
@@ -127,20 +122,19 @@ namespace JustDoIt.Repository
             }
             catch
             {
+                /*Logger */
                 return null;
             }
         }
 
-        public async Task<bool> Update(TaskDTO entity)
+        public async Task<TaskDTO?> Update(TaskDTO entity)
         {
             try
             {
                 var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
 
-                if (existing == null)
-                {
-                    return false;
-                }
+                // entity is not in db, nothing to update
+                if (existing is null) return;
 
                 existing.Title = entity.Title;
                 existing.AdminId = entity.AdminId;
@@ -153,34 +147,28 @@ namespace JustDoIt.Repository
 
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-
-                return true;
             }
-            catch
-            {
-                return false;
-            }
+            catch { /*Logger */ }
         }
 
-        public async Task<bool> Delete(TaskDTO entity)
+        public async Task<TaskDTO?> Delete(TaskDTO entity)
         {
             try
             {
                 var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
 
-                if (existing is null)
-                {
-                    return false;
-                }
+                // entity is not in db, nothing to delete
+                if (existing is null) return null;
 
                 _context.Tasks.Remove(existing);
                 await _context.SaveChangesAsync();
-                return true;
             }
-            catch
-            {
-                return false;
-            }
+            catch { /*Logger */ }
+        }
+
+        public Task<IEnumerable<Model.Task>?> GetUserTasks(string userID)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

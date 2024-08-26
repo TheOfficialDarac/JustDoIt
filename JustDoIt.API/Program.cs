@@ -3,8 +3,8 @@ using JustDoIt.Model;
 
 using JustDoIt.Repository;
 using JustDoIt.Repository.Common;
-using JustDoIt.Service;
-using JustDoIt.Service.Common;
+using JustDoIt.Service.Definitions.Common;
+using JustDoIt.Service.Implementations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -48,7 +48,7 @@ builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
     options.User.RequireUniqueEmail = true;
     // options.SignIn.RequireConfirmedEmail = true;
 }
-    )
+    ).AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationContext>();
 
 

@@ -1,4 +1,4 @@
-﻿using JustDoIt.Service.Common;
+﻿using JustDoIt.Service.Definitions.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,9 +2,9 @@
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Repository.Common;
-using JustDoIt.Service.Common;
+using JustDoIt.Service.Definitions.Common;
 
-namespace JustDoIt.Service
+namespace JustDoIt.Service.Implementations
 {
     public class Service : IService
     {
