@@ -2,7 +2,9 @@ using JustDoIt.DAL;
 using JustDoIt.Model;
 
 using JustDoIt.Repository;
-using JustDoIt.Repository.Common;
+using JustDoIt.Repository.Abstractions;
+using JustDoIt.Repository.Abstractions.Common;
+using JustDoIt.Service.Definitions;
 using JustDoIt.Service.Definitions.Common;
 using JustDoIt.Service.Implementations;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +35,8 @@ builder.Services.AddSwaggerGen(
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddCors();
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
@@ -43,7 +47,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 // builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
 {
     options.User.RequireUniqueEmail = true;
     // options.SignIn.RequireConfirmedEmail = true;
@@ -64,7 +68,7 @@ builder.Services.AddAuthorizationBuilder()
 
 var app = builder.Build();
 
-app.MapGroup("api/auth").MapIdentityApi<AppUser>();
+app.MapGroup("api/auth").MapIdentityApi<ApplicationUser>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

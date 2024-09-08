@@ -2,101 +2,138 @@
 using JustDoIt.Common;
 using JustDoIt.DAL;
 using JustDoIt.Mapperly;
+using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Repository.Common;
+using JustDoIt.Model.ViewModels;
+using JustDoIt.Repository.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace JustDoIt.Repository
 {
-    class TaskRepository : ITaskRepository
+    public class TaskRepository : ITaskRepository
     {
         #region Properties
 
         private ApplicationContext _context { get; set; }
+        private TaskMapper _mapper { get; set; }
         #endregion
 
         public TaskRepository(ApplicationContext context)
         {
             _context = context;
+            _mapper = new TaskMapper();
         }
 
         #region Methods
 
-        public async Task<TaskDTO> Create(TaskDTO entity)
+        public async Task<TaskDTO?> Create(TaskDTO entity)
         {
             // basic exceptions already handled up to repository
             // here only database errors exist
             try
             {
-                var mapper = new TaskMapper();
-                var task = mapper.MapToType(entity);
+                var task = _mapper.MapToType(entity);
 
-                var result = await _context.Tasks.AddAsync(task);
+                await _context.Tasks.AddAsync(task);
                 await _context.SaveChangesAsync();
+
+                await _context.UserTasks.AddAsync(
+                    new UserTask {
+                        TaskId = task.Id,
+                        UserId = task.IssuerId,
+                        AssignDate = DateTime.Now,
+                        IsActive = true
+                    });
+                await _context.SaveChangesAsync();
+
+                return _mapper.MapToDTO(task);
             }
             catch { /*Logger? */ }
+            return null;
+        }
+        public async Task<IEnumerable<TaskDTO>?> GetAll()
+        {
+            var query = _context.Tasks.AsQueryable();
+            var result = await query.ToListAsync();
+            return _mapper.MapToDTOList(result);
         }
 
         public async Task<IEnumerable<TaskDTO>?> GetAll(
-            string? title,
-            string? description,
-            string? pictureURL,
-            DateTime? deadlineStart,
-            DateTime? deadlineEnd,
-            string? state,
-            string? adminID,
-            int? projectID)
+        TaskSearchParams searchParams)
         {
             try
             {
                 var query = _context.Tasks.AsQueryable();
-                if (!string.IsNullOrEmpty(title))
+
+                if (!string.IsNullOrEmpty(searchParams.Title))
                 {
-                    query = query.Where(t => t.Title.Contains(title));
+                    query = query.Where(t => !string.IsNullOrEmpty(t.Title) && t.Title.Contains(searchParams.Title));
                 }
 
-                if (!string.IsNullOrEmpty(description))
+                if (!string.IsNullOrEmpty(searchParams.IssuerId))
                 {
-                    query = query.Where(t => t.Description.Contains(description));
+                    query = query.Where(t => t.IssuerId.Contains(searchParams.IssuerId));
                 }
 
-                if (!string.IsNullOrEmpty(pictureURL))
+                if (!string.IsNullOrEmpty(searchParams.Summary))
                 {
-                    query = query.Where(t => t.PictureUrl == pictureURL);
+                    query = query.Where(t => !string.IsNullOrEmpty(t.Summary) && t.Summary.Contains(searchParams.Summary));
                 }
 
-                if (!string.IsNullOrEmpty(state))
+                if (!string.IsNullOrEmpty(searchParams.Description))
                 {
-                    query = query.Where(t => t.State == state);
+                    query = query.Where(t => !string.IsNullOrEmpty(t.Description) && t.Description.Contains(searchParams.Description));
                 }
 
-                if (deadlineStart.HasValue)
+                if (searchParams.ProjectId.HasValue)
                 {
-                    deadlineStart = DateTime.SpecifyKind(deadlineStart.Value, DateTimeKind.Utc);
-                    query = query.Where(t => t.Deadline >= deadlineStart);
+                    query = query.Where(t => t.ProjectId == searchParams.ProjectId);
                 }
 
-                if (deadlineEnd.HasValue)
+                // search by picture?
+                //if (!string.IsNullOrEmpty(searchParams.Description))
+                //{
+                //    query = query.Where(t => t.Description.Contains(searchParams.Description));
+                //}
+
+                if (searchParams.DeadlineStart.HasValue)
                 {
-                    deadlineEnd = DateTime.SpecifyKind(deadlineEnd.Value, DateTimeKind.Utc);
-                    query = query.Where(t => t.Deadline <= deadlineEnd);
+                    searchParams.DeadlineStart = DateTime.SpecifyKind(searchParams.DeadlineStart.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.Deadline >= searchParams.DeadlineStart);
                 }
 
-                if (!adminID.IsNullOrEmpty())
+                if (searchParams.DeadlineEnd.HasValue)
                 {
-                    query = query.Where(t => t.AdminId == adminID);
+                    searchParams.DeadlineEnd = DateTime.SpecifyKind(searchParams.DeadlineEnd.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.Deadline <= searchParams.DeadlineEnd);
                 }
 
-                if (projectID.HasValue)
+                if (searchParams.MinCreatedDate.HasValue)
                 {
-                    query = query.Where(t => t.ProjectId == projectID);
+                    searchParams.MinCreatedDate = DateTime.SpecifyKind(searchParams.MinCreatedDate.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.CreatedDate >= searchParams.MinCreatedDate);
+                }
+
+                if (searchParams.MaxCreatedDate.HasValue)
+                {
+                    searchParams.MaxCreatedDate = DateTime.SpecifyKind(searchParams.MaxCreatedDate.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.CreatedDate <= searchParams.MaxCreatedDate);
+                }
+
+
+                if (searchParams.IsActive.HasValue)
+                {
+                    query = query.Where(t => t.IsActive == searchParams.IsActive);
+                }
+
+                if (!string.IsNullOrEmpty(searchParams.State))
+                {
+                    query = query.Where(t => !string.IsNullOrEmpty(t.State) && t.State.Contains(searchParams.State));
                 }
 
                 var tasks = await query.ToListAsync();
-                var mapper = new TaskMapper();
-
-                var results = mapper.MapToDTOList(tasks);
+                var results = _mapper.MapToDTOList(tasks);
 
                 return results;
             }
@@ -111,14 +148,13 @@ namespace JustDoIt.Repository
         {
             try
             {
-                var mapper = new TaskMapper();
                 var result = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
 
                 if (result == null)
                 {
                     return null;
                 }
-                return mapper.MapToDTO(result);
+                return _mapper.MapToDTO(result);
             }
             catch
             {
@@ -133,22 +169,27 @@ namespace JustDoIt.Repository
             {
                 var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
 
-                // entity is not in db, nothing to update
-                if (existing is null) return;
+                // entity is not found in db, nothing to update
+                if (existing is null) return null;
 
                 existing.Title = entity.Title;
-                existing.AdminId = entity.AdminId;
+                existing.Summary = entity.Summary;
                 existing.Description = entity.Description;
                 existing.ProjectId = entity.ProjectId;
                 existing.PictureUrl = entity.PictureUrl;
                 existing.Deadline = entity.Deadline;
+                existing.IsActive = entity.IsActive;
                 existing.State = entity.State;
 
 
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
+                return entity;
             }
-            catch { /*Logger */ }
+            catch
+            { /*Logger */
+                return null;
+            }
         }
 
         public async Task<TaskDTO?> Delete(TaskDTO entity)
@@ -158,17 +199,56 @@ namespace JustDoIt.Repository
                 var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
 
                 // entity is not in db, nothing to delete
-                if (existing is null) return null;
+                if (existing is null) return entity;
 
                 _context.Tasks.Remove(existing);
                 await _context.SaveChangesAsync();
+                return null;
             }
-            catch { /*Logger */ }
+            catch
+            { /*Logger */
+                return entity;
+            }
         }
 
-        public Task<IEnumerable<Model.Task>?> GetUserTasks(string userID)
+        public async Task<IEnumerable<TaskDTO>?> GetUserTasks(string userID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = _context.UserTasks
+                    .Where(ut => ut.UserId.Equals(userID))
+                    .Select(t => t.Task);
+
+                var tasks = await query.ToListAsync();
+                return _mapper.MapToDTOList(tasks);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<TaskDTO>?> GetUserProjectTasks(string userID, int projectID)
+        {
+            try
+            {
+                //  get project find all tasks
+                //  get user tasks
+                //  get common inputs
+
+                var query = _context.UserTasks
+                    .Where(ut => ut.UserId.Equals(userID))
+                    .Select(t => t.Task)
+                    .Where(t => t.ProjectId.Equals(projectID));
+
+                var tasks = await query.ToListAsync();
+                return _mapper.MapToDTOList(tasks);
+            }
+            catch
+            {
+                /* Logger */
+                return null;
+            }
         }
 
         #endregion

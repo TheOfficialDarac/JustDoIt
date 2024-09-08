@@ -20,5 +20,7 @@ namespace JustDoIt.Service.Errors
         //    "Already following");
 
         public static readonly Error Test = new Error("Tasks.Test", "This is a test errror");
+        public static readonly Error NotFound = new Error("404", "Task not found.");
+
     }
 }

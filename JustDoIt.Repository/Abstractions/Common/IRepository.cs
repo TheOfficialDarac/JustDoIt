@@ -1,17 +1,15 @@
 ﻿using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Common;
 
-namespace JustDoIt.Service.Definitions.Common
+namespace JustDoIt.Repository.Abstractions.Common
 {
-    public interface IService
+    public interface IRepository
     {
-
         //        #region Tasks
 
         //        Task<IEnumerable<Model.Task>> GetTasksOfUser(
-        //            string userID
-        //        );
+        //           string userID
+        //       );
         //        Task<IEnumerable<Model.Task>> GetTasks(
         //            string? title,
         //            string? description,
@@ -25,11 +23,14 @@ namespace JustDoIt.Service.Definitions.Common
         //            int pageSize = 5
         //        );
         //        Task<Model.Task> GetTask(int id);
-        //        Task<bool> UpdateTask(Model.Task task);
+
+        //        Task<bool> PutTask(Model.Task task);
+
+        //        Task<bool> DeleteTask(int taskID);
 
         //        Task<bool> CreateTask(TaskDTO taskDTO);
-        //        Task<bool> DeleteTask(int taskID);
         //        #endregion Tasks
+
         //        #region Projects
 
         //        Task<IEnumerable<AppUser>> GetProjectUsers(int projectID);
@@ -44,17 +45,15 @@ namespace JustDoIt.Service.Definitions.Common
 
         //        Task<Project> GetProject(int id);
 
-        //        Task<bool> UpdateProject(Project project);
+        //        Task<bool> UpdateProject(Project task);
 
         //        Task<bool> DeleteProject(int projectID);
 
-        //        Task<bool> CreateProject(Project project);
+        //        Task<bool> CreateProject(Project task);
         //        #endregion Projects
 
         //        #region Users
-
         //        Task<IEnumerable<Project>> GetProjectsOfUser(string userID);
-
         //        Task<IEnumerable<AppUser>> GetUsers(
         //            string? username,
         //            string? firstName,
@@ -73,7 +72,8 @@ namespace JustDoIt.Service.Definitions.Common
 
         //        Task<bool> CreateUser(AppUser user);
 
-        //        Task<List<UserProject>> GetUserProjects(string? userId,
+        //        Task<List<UserProject>> GetUserProjects(
+        //            string? userId,
         //            int? projectID,
         //            bool? isVerified,
         //            string? token,
@@ -83,7 +83,6 @@ namespace JustDoIt.Service.Definitions.Common
         //        #endregion Users
 
         //        #region Labels
-
         //        Task<IEnumerable<Label>> GetLabels(
         //            string? title,
         //            string? description,

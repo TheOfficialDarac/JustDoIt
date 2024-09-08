@@ -1,8 +1,9 @@
 ﻿using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
+using JustDoIt.Model.ViewModels;
+using JustDoIt.Service.Definitions;
 using JustDoIt.Service.Definitions.Common;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JustDoIt.API.Controllers
 {
@@ -11,51 +12,59 @@ namespace JustDoIt.API.Controllers
     {
         #region Properties
 
-        private IService _service { get; set; }
+        private ITaskService _service { get; set; }
         #endregion Properties
 
         #region Constructors
 
-        public TaskController(IService service)
+        public TaskController(ITaskService service)
         {
             _service = service;
         }
         #endregion Constructors
 
-        #region Methods
+        //#region Methods
 
-        [HttpGet("", Name = "GetTasks")]
-        public async Task<ActionResult> GetTasks(
-            string? title,
-            string? description,
-            string? pictureURL,
-            DateTime? deadlineStart,
-            DateTime? deadlineEnd,
-            string? state,
-            string? adminID,
-            int? projectID,
-            int page = 1,
-            int pageSize = 5
-        )
+        [HttpGet("", Name = "GetAll")]
+        public async Task<ActionResult> GetAll([FromQuery]TaskSearchParams searchParams)
         {
-
-            //TODO(Dario)   sanitize possible input scenarios
-
             try
             {
 
-                var response = await _service.GetTasks(
-                    title: title,
-                    description: description,
-                    pictureURL: pictureURL,
-                    deadlineStart: deadlineStart,
-                    deadlineEnd: deadlineEnd,
-                    state: state,
-                    adminID: adminID,
-                    projectID: projectID,
-                    page: page,
-                    pageSize: pageSize
+                var response = await _service.GetAll(searchParams
                 );
+
+                return response is null ? NotFound() : Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("user-tasks", Name = "GetUserTasks")]
+        public async Task<ActionResult> GetUserTasks([FromQuery] string userID)
+        {
+            try
+            {
+
+                var response = await _service.GetUserTasks(userID);
+
+                return response is null ? NotFound() : Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("user-project-tasks", Name = "GetUserProjectTasks")]
+        public async Task<ActionResult> GetUserProjectTasks([FromQuery] string userID, [FromQuery] int projectID)
+        {
+            try
+            {
+
+                var response = await _service.GetUserProjectTasks(userID, projectID);
 
                 return response is null ? NotFound() : Ok(response);
             }
@@ -71,7 +80,7 @@ namespace JustDoIt.API.Controllers
             try
             {
 
-                var task = await _service.GetTask(id);
+                var task = await _service.GetSingle(id);
 
                 return task is null ? NotFound() : Ok(task);
             }
@@ -82,7 +91,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut("update", Name = "UpdateTask")]
-        public async Task<ActionResult> UpdateTask([FromBody] Model.Task task)
+        public async Task<ActionResult> UpdateTask([FromBody] TaskDTO task)
         {
             try
             {
@@ -92,7 +101,7 @@ namespace JustDoIt.API.Controllers
                     return NotFound();
                 }
 
-                var success = await _service.UpdateTask(task);
+                var success = await _service.Update(task);
                 return Ok(success);
             }
             catch (Exception e)
@@ -102,7 +111,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost("create", Name = "CreateTask")]
-        public async Task<IActionResult> CreateTask(TaskDTO model)
+        public async Task<IActionResult> CreateTask([FromBody]TaskDTO model)
         {
             try
             {
@@ -116,19 +125,7 @@ namespace JustDoIt.API.Controllers
                 }
                 else
                 {
-                    //var task = new Model.Task
-                    //{
-                    //    Title = model.Title,
-                    //    Description = model.Description,
-                    //    ProjectId = model.ProjectId,
-                    //    AdminId = model.AdminId,
-                    //    PictureUrl = model.PictureUrl,
-                    //    Deadline = model.Deadline,
-                    //    State = model.State
-                    //};
-
-                    var success = await _service.CreateTask(model);
-                    // return Ok(task);
+                    var success = await _service.Create(model);
                     return Ok(success);
                 }
 
@@ -140,14 +137,12 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpDelete("delete", Name = "DeleteTask")]
-        public async Task<IActionResult> DeleteTask(int taskID)
+        public async Task<IActionResult> DeleteTask(TaskDTO dto)
         {
             ModelState.Remove("Project");
             try
             {
-                // iy
-
-                var success = await _service.DeleteTask(taskID);
+                var success = await _service.Delete(dto);
                 return Ok(success);
             }
             catch (Exception e)
@@ -155,7 +150,7 @@ namespace JustDoIt.API.Controllers
                 return BadRequest(e.Message);
             }
         }
-        #endregion
+        //#endregion
 
     }
 }

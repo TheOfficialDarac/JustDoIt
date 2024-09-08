@@ -20,112 +20,112 @@ namespace JustDoIt.API.Controllers
         }
         #endregion Constructors
 
-        #region Methods
+        //#region Methods
 
-        [HttpGet("comments", Name = "GetComments")]
-        public async Task<ActionResult> GetComments(
-            string? text,
-            int? taskID,
-            string? userID,
-            int page = 1,
-            int pageSize = 5
-        )
-        {
+        //[HttpGet("comments", Name = "GetComments")]
+        //public async Task<ActionResult> GetComments(
+        //    string? text,
+        //    int? taskID,
+        //    string? userID,
+        //    int page = 1,
+        //    int pageSize = 5
+        //)
+        //{
 
-            //TODO(Dario)   sanitize possible input scenarios
+        //    //TODO(Dario)   sanitize possible input scenarios
 
-            try
-            {
+        //    try
+        //    {
 
-                var response = await _service.GetComments(
-                    text: text,
-                    taskID: taskID,
-                    userID: userID,
-                    page: page,
-                    pageSize: pageSize
-                );
+        //        var response = await _service.GetComments(
+        //            text: text,
+        //            taskID: taskID,
+        //            userID: userID,
+        //            page: page,
+        //            pageSize: pageSize
+        //        );
 
-                return response is null ? NotFound() : Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //        return response is null ? NotFound() : Ok(response);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
 
-        [HttpGet("comments/{id:int}", Name = "GetComment")]
-        public async Task<ActionResult> GetComment(int id)
-        {
-            try
-            {
+        //[HttpGet("comments/{id:int}", Name = "GetComment")]
+        //public async Task<ActionResult> GetComment(int id)
+        //{
+        //    try
+        //    {
 
-                var result = await _service.GetComment(id);
+        //        var result = await _service.GetComment(id);
 
-                return result is null ? NotFound() : Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //        return result is null ? NotFound() : Ok(result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
 
-        [HttpPut("comments/update", Name = "UpdateComment")]
-        public async Task<ActionResult> UpdateComment([FromBody] Comment comment)
-        {
-            try
-            {
+        //[HttpPut("comments/update", Name = "UpdateComment")]
+        //public async Task<ActionResult> UpdateComment([FromBody] Comment comment)
+        //{
+        //    try
+        //    {
 
-                if (comment == null)
-                {
-                    return NotFound(comment);
-                }
+        //        if (comment == null)
+        //        {
+        //            return NotFound(comment);
+        //        }
 
-                var success = await _service.UpdateComment(comment);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //        var success = await _service.UpdateComment(comment);
+        //        return Ok(success);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
 
-        [HttpPost("comments/create", Name = "CreateComment")]
-        public async Task<IActionResult> CreateComment([FromBody] Comment comment)
-        {
-            try
-            {
-                if (comment is null)
-                {
-                    return NotFound(comment);
-                }
+        //[HttpPost("comments/create", Name = "CreateComment")]
+        //public async Task<IActionResult> CreateComment([FromBody] Comment comment)
+        //{
+        //    try
+        //    {
+        //        if (comment is null)
+        //        {
+        //            return NotFound(comment);
+        //        }
 
-                var success = await _service.CreateComment(comment);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //        var success = await _service.CreateComment(comment);
+        //        return Ok(success);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
 
-        [HttpDelete("comments/delete", Name = "DeleteComment")]
-        public async Task<IActionResult> DeleteComment(int commentID)
-        {
-            try
-            {
-                // if (comment is null)
-                // {
-                //     return NotFound(comment);
-                // }
+        //[HttpDelete("comments/delete", Name = "DeleteComment")]
+        //public async Task<IActionResult> DeleteComment(int commentID)
+        //{
+        //    try
+        //    {
+        //        // if (comment is null)
+        //        // {
+        //        //     return NotFound(comment);
+        //        // }
 
-                var success = await _service.DeleteComment(commentID);
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        #endregion Comments
+        //        var success = await _service.DeleteComment(commentID);
+        //        return Ok(success);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+        //#endregion Comments
     }
 }
