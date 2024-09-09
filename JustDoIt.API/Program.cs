@@ -8,8 +8,10 @@ using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Definitions;
 using JustDoIt.Service.Definitions.Common;
 using JustDoIt.Service.Implementations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
@@ -59,11 +61,26 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
     // options.SignIn.RequireConfirmedEmail = true;
 }
     ).AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationContext>();
+    .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateActor = true,
+        ValidateAudience = true,
+        ValidateIssuer = true,
+        RequireExpirationTime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
+        ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value
+    };
+});
 
-// builder.Services.AddAuthentication()
-//   .AddBearerToken(IdentityConstants.BearerScheme);
 
 builder.Services.AddAuthorizationBuilder()
   .AddPolicy("api", p =>
@@ -87,8 +104,8 @@ app.UseHttpsRedirection();
 // app.UseStaticFiles();
 app.UseRouting();
 app.UseCors();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

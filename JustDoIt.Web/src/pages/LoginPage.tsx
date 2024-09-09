@@ -22,13 +22,19 @@ export const LoginPage = () => {
     if (name === "rememberme") setRememberme(e.target.checked);
   };
 
-  const handleRegisterClick = () => {
-    navigate("/register");
-  };
+  // const handleRegisterClick = () => {
+  //   navigate("/register");
+  // };
 
   // handle submit event for the form
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+
+    // console.log({
+    //   email: email,
+    //   password: password,
+    // });
+    // return;
     // validate email and passwords
     if (!email || !password) {
       setError("Please fill in all fields.");
@@ -41,7 +47,7 @@ export const LoginPage = () => {
       if (rememberme == true) loginurl = "?useCookies=true";
       else loginurl = "?useSessionCookies=true";
 
-      await fetch("api/auth/login" + loginurl, {
+      await fetch("/api/auth/login" + loginurl, {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         headers: {
@@ -52,9 +58,10 @@ export const LoginPage = () => {
           password: password,
         }),
       })
-        .then(async (data) => {
+        .then(async (response) => {
           // handle success or error from the server
-          if (data.ok) {
+          console.log(response);
+          if (response.ok) {
             // setError("Successful Login.");
             await login(JSON.stringify({ email })).then(() => navigate("/"));
             // navigate("/secret");
@@ -135,10 +142,15 @@ export const LoginPage = () => {
           onValueChange={setPassword}
         />
         <div className="flex py-2 px-1 justify-around gap-2">
-          <Link color="primary" href="#" size="sm">
+          {/* <Link color="primary" size="sm">
             Forgot password?
-          </Link>
-          <Link color="primary" href="/register" size="sm">
+          </Link> */}
+          <Link
+            color="primary"
+            className="cursor-pointer"
+            onClick={handleSubmit}
+            size="sm"
+          >
             Create Account
           </Link>
         </div>

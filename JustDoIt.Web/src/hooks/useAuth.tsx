@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }: Props) => {
         // handle success or error from the server
         if (response.ok) {
           return response.json().then((data) => {
-            setUser(data[0]);
+            setUser(() => data[0]);
             return true;
           });
         } else return null;
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   // call this function when you want to authenticate the user
   const login = async (email: string) => {
-    const res = await getUserObject(JSON.parse(email).email);
+    const res = await getUserObject(email);
     if (res) {
       navigate("/profile");
     }
