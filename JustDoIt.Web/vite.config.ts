@@ -8,121 +8,120 @@ import child_process from "child_process";
 import { env } from "process";
 
 const baseFolder =
-  env.APPDATA !== undefined && env.APPDATA !== ""
-    ? `${env.APPDATA}/ASP.NET/https`
-    : `${env.HOME}/.aspnet/https`;
+	env.APPDATA !== undefined && env.APPDATA !== ""
+		? `${env.APPDATA}/ASP.NET/https`
+		: `${env.HOME}/.aspnet/https`;
 
 const certificateName = "JustDoIt.Web";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
 if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-  if (
-    0 !==
-    child_process.spawnSync(
-      "dotnet",
-      [
-        "dev-certs",
-        "https",
-        "--export-path",
-        certFilePath,
-        "--format",
-        "Pem",
-        "--no-password",
-      ],
-      { stdio: "inherit" }
-    ).status
-  ) {
-    throw new Error("Could not create certificate.");
-  }
+	if (
+		0 !==
+		child_process.spawnSync(
+			"dotnet",
+			[
+				"dev-certs",
+				"https",
+				"--export-path",
+				certFilePath,
+				"--format",
+				"Pem",
+				"--no-password",
+			],
+			{ stdio: "inherit" }
+		).status
+	) {
+		throw new Error("Could not create certificate.");
+	}
 }
 
-const target =
-  // "http://localhost:5153";
+const target = "https://localhost:7010";
+// "http://localhost:5153";
 
-  env.ASPNETCORE_HTTPS_PORT
-    ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
-    : env.ASPNETCORE_URLS
-    ? env.ASPNETCORE_URLS.split(";")[0]
-    : "https://localhost:7010";
+// env.ASPNETCORE_HTTPS_PORT
+//   ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
+//   : env.ASPNETCORE_URLS
+//   ? env.ASPNETCORE_URLS.split(";")[0]
 // https:vitejs.dev/config/
 
 export default defineConfig({
-  plugins: [plugin()],
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
-  },
-  server: {
-    proxy: {
-      "^/weatherforecast": {
-        target,
-        secure: false,
-      },
-      "^/api/auth/login": {
-        target,
-        secure: false,
-      },
-      "^/api/user/all": {
-        target,
-        secure: false,
-      },
-      "^/api/user/user_projects": {
-        target,
-        secure: false,
-      },
-      "^/api/Task": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/tasks": {
-        target,
-        secure: false,
-      },
-      "^/api/user/projects": {
-        target,
-        secure: false,
-      },
-      "^/api/Project/users": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/update": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/create": {
-        target,
-        secure: false,
-      },
-      "^/api/user/register": {
-        target,
-        secure: false,
-      },
-      "^/api/Project/create": {
-        target,
-        secure: false,
-      },
-      "^/api/Project": {
-        target,
-        secure: false,
-      },
-      "^/api/Project/update": {
-        target,
-        secure: false,
-      },
-    },
-    port: 5173,
-    https: {
-      key: fs.readFileSync(keyFilePath),
-      cert: fs.readFileSync(certFilePath),
-    },
-  },
+	plugins: [plugin()],
+	resolve: {
+		alias: {
+			"@": fileURLToPath(new URL("./src", import.meta.url)),
+		},
+	},
+	server: {
+		proxy: {
+			"^/api/auth/login": {
+				target,
+				secure: false,
+			},
+			"^/api/user/all": {
+				target,
+				secure: false,
+			},
+			"^/api/auth/register": {
+				target,
+				secure: false,
+			},
+			"^/api/user/user_projects": {
+				target,
+				secure: false,
+			},
+			"^/api/Task": {
+				target,
+				secure: false,
+			},
+			"^/api/Task/tasks": {
+				target,
+				secure: false,
+			},
+			"^/api/user/projects": {
+				target,
+				secure: false,
+			},
+			"^/api/Project/users": {
+				target,
+				secure: false,
+			},
+			"^/api/Task/": {
+				target,
+				secure: false,
+			},
+			"^/api/Task/update": {
+				target,
+				secure: false,
+			},
+			"^/api/Task/create": {
+				target,
+				secure: false,
+			},
+			"^/api/user/register": {
+				target,
+				secure: false,
+			},
+			"^/api/Project/create": {
+				target,
+				secure: false,
+			},
+			"^/api/Project": {
+				target,
+				secure: false,
+			},
+			"^/api/Project/update": {
+				target,
+				secure: false,
+			},
+		},
+		port: 5173,
+		https: {
+			key: fs.readFileSync(keyFilePath),
+			cert: fs.readFileSync(certFilePath),
+		},
+	},
 });
 
 // import { defineConfig } from 'vite'

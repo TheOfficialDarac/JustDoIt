@@ -1,5 +1,7 @@
-using JustDoIt.Model;
-using JustDoIt.Service.Definitions.Common;
+
+using JustDoIt.Model.DTOs;
+using JustDoIt.Model.ViewModels;
+using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
@@ -10,137 +12,106 @@ namespace JustDoIt.API.Controllers
 
         #region Properties
 
-        private readonly IService _service;
+        private readonly IProjectService _service;
         #endregion Properties
 
         #region Contructors
 
-        public ProjectController(IService service)
+        public ProjectController(IProjectService service)
         {
             _service = service;
         }
         #endregion Contructors
 
-        //#region Methods
+        #region Methods
 
-        //[HttpGet("users", Name = "GetProjectUsers")]
-        //public async Task<IActionResult> GetProjectUsers(int projectID)
-        //{
-        //    try
-        //    {
+        [HttpGet("users", Name = "GetUserProjects")]
+        public async Task<IActionResult> GetUserProjects([FromQuery]string userID)
+        {
+            try
+            {
+                var result = await _service.GetUserProjects(userID);
 
-        //        var result = await _service.GetProjectUsers(projectID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //        return (result is null) ? NotFound() : Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        [HttpGet("", Name = "GetProjects")]
+        public async Task<IActionResult> GetProjects([FromQuery]ProjectSearchParams searchParams
+        )
+        {
+            try
+            {
+                var result = await _service.GetAll(searchParams);
 
-        //[HttpGet("", Name = "GetProjects")]
-        //public async Task<IActionResult> GetProjects(
-        //    string? title,
-        //    string? description,
-        //    string? pictureURL,
-        //    string? adminID,
-        //    int page = 1,
-        //    int pageSize = 5
-        //)
-        //{
-        //    try
-        //    {
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //        var result = await _service.GetProjects(
-        //            title: title,
-        //            description: description,
-        //            pictureURL: pictureURL,
-        //            adminID: adminID,
-        //            page: page,
-        //            pageSize: pageSize
-        //        );
+        [HttpGet("{id:int}", Name = "GetProject")]
+        public async Task<ActionResult> GetProject(int id)
+        {
+            try
+            {
+                var response = await _service.GetSingle(id);
 
-        //        return (result is null) ? NotFound() : Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-        //[HttpGet("{id:int}", Name = "GetProject")]
-        //public async Task<ActionResult> GetProject(int id)
-        //{
-        //    try
-        //    {
+        [HttpPut("update", Name = "UpdateProject")]
+        public async Task<ActionResult> UpdateProject([FromBody] ProjectDTO dto)
+        {
+            try
+            {
+                var success = await _service.Update(dto);
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-        //        var project = await _service.GetProject(id);
+        [HttpPost("create", Name = "CreateProject")]
+        public async Task<IActionResult> CreateProject([FromBody] ProjectDTO dto, string userID)
+        {
+            try
+            {
+                var response = await _service.Create(dto, userID);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-        //        return project is null ? NotFound() : Ok(project);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-
-        //[HttpPut("update", Name = "UpdateProject")]
-        //public async Task<ActionResult> UpdateProject([FromBody] Project project)
-        //{
-        //    try
-        //    {
-
-        //        if (project == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        var success = await _service.UpdateProject(project);
-        //        return Ok(success);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-
-        //[HttpPost("create", Name = "CreateProject")]
-        //public async Task<IActionResult> CreateProject([FromBody] Project project)
-        //{
-        //    try
-        //    {
-        //        if (project is null)
-        //        {
-        //            return NotFound(project);
-        //        }
-
-        //        var success = await _service.CreateProject(project);
-        //        return Ok(success);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-
-        //[HttpDelete("delete", Name = "DeleteProject")]
-        //public async Task<IActionResult> DeleteProject(int projectID)
-        //{
-        //    try
-        //    {
-        //        // if(!projectID.HasValue) {
-        //        //     return NotFound();
-        //        // }
-
-        //        var success = await _service.DeleteProject(projectID);
-        //        return Ok(success);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-        //#endregion
+        [HttpDelete("delete", Name = "DeleteProject")]
+        public async Task<IActionResult> DeleteProject([FromBody] ProjectDTO dto)
+        {
+            try
+            {
+                var response = await _service.Delete(dto);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
     }
 }

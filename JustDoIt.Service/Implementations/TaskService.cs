@@ -40,13 +40,13 @@ namespace JustDoIt.Service.Implementations
             throw new NotImplementedException();
         }
 
-        public async Task<Tuple<TaskDTO, Result>> Create(TaskDTO entity)
+        public async Task<Tuple<TaskDTO?, Result>> Create(TaskDTO entity)
         {
             var errors = new List<Error>();
             var data = await _repository.Create(entity);
             if (data != null)
             {
-                return Tuple.Create(null, Result.Success());
+                return Tuple.Create(new TaskDTO(), Result.Success());
             }
             else errors.Add(TaskErrors.NotFound);
 

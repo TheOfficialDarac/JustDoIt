@@ -59,35 +59,79 @@ namespace JustDoIt.Repository
             return entity;
         }
 
-        public Task<IEnumerable<ProjectDTO>?> GetAll(ProjectSearchParams searchParams)
+        public async Task<IEnumerable<ProjectDTO>?> GetAll(ProjectSearchParams searchParams)
         {
-            throw new NotImplementedException();
+            var query = _context.Projects.AsQueryable();
+
+            if(!string.IsNullOrEmpty(searchParams.Title))
+            {
+                query = query.Where(x => x.Title.Contains(searchParams.Title));
+            }
+
+            if(searchParams.IsActive.HasValue)
+            {
+                query = query.Where(x => x.IsActive.Equals(searchParams.IsActive));
+            }
+
+            if(searchParams.MinCreatedDate.HasValue)
+            {
+                searchParams.MinCreatedDate = DateTime.SpecifyKind(searchParams.MinCreatedDate.Value, DateTimeKind.Utc);
+                query = query.Where(x => x.CreatedDate >= searchParams.MinCreatedDate);
+            }
+
+            if (searchParams.MaxCreatedDate.HasValue)
+            {
+                searchParams.MaxCreatedDate = DateTime.SpecifyKind(searchParams.MaxCreatedDate.Value, DateTimeKind.Utc);
+                query = query.Where(x => x.CreatedDate <= searchParams.MaxCreatedDate);
+            }
+
+            var result = await query.ToListAsync();
+            return _mapper.MapToDTOList(result);
         }
 
-        public Task<IEnumerable<ProjectDTO>?> GetAll()
+        public async Task<IEnumerable<ProjectDTO>?> GetAll()
         {
-            throw new NotImplementedException();
+            var result = await _context.Projects.ToListAsync();
+            return _mapper.MapToDTOList(result);
         }
 
-        public Task<ProjectDTO?> GetSingle(int id)
+        public async Task<ProjectDTO?> GetSingle(int id)
         {
-            throw new NotImplementedException();
+            var query = _context.Projects.AsQueryable();
+            query = query.Where(x => x.Id.Equals(id));
+
+            var result = await query.SingleOrDefaultAsync();
+            return _mapper.MapToDTO(result);
         }
 
-        public Task<IEnumerable<ProjectDTO>?> GetUserProjects(string userID)
-        {
-            throw new NotImplementedException();
+        public async Task<IEnumerable<ProjectDTO>?> GetUserProjects(string userID)
+        { 
+            var result = await _context.UserProjects.AsQueryable()
+                .Where(x => x.UserId.Equals(userID))
+                .Select(x => x.Project)
+                .ToListAsync();
+            return _mapper.MapToDTOList(result);
         }
 
-        public Task<ProjectDTO?> Update(ProjectDTO entity)
+        public async Task<ProjectDTO?> Update(ProjectDTO entity)
         {
-            throw new NotImplementedException();
+            var project = _mapper.MapToType(entity);
+
+            var found = await _context.Projects.FindAsync(project);
+            if(found is null) return null;
+
+            found.Title = entity.Title;
+            found.Description = entity.Description;
+            found.PictureUrl = entity.PictureUrl;
+            found.IsActive = entity.IsActive;
+
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
         public Task<ProjectDTO?> Create(ProjectDTO entity)
         {
             return null;
-            throw new NotImplementedException();
         }
     }
 }

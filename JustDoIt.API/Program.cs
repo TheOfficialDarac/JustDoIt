@@ -4,6 +4,7 @@ using JustDoIt.Model;
 using JustDoIt.Repository;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Abstractions.Common;
+using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Definitions;
 using JustDoIt.Service.Definitions.Common;
 using JustDoIt.Service.Implementations;
@@ -35,8 +36,13 @@ builder.Services.AddSwaggerGen(
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IService, Service>();
-builder.Services.AddScoped<ITaskService, TaskService>();
+
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+
 builder.Services.AddCors();
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {

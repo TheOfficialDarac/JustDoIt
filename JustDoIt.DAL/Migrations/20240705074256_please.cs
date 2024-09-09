@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace JustDoIt.API.Migrations
+namespace JustDoIt.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Inital : Migration
+    public partial class please : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

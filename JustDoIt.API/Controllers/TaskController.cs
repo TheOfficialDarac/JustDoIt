@@ -1,8 +1,6 @@
-﻿using JustDoIt.Model;
-using JustDoIt.Model.DTOs;
+﻿using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
 using JustDoIt.Service.Definitions;
-using JustDoIt.Service.Definitions.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
@@ -12,7 +10,7 @@ namespace JustDoIt.API.Controllers
     {
         #region Properties
 
-        private ITaskService _service { get; set; }
+        private readonly ITaskService _service;
         #endregion Properties
 
         #region Constructors
