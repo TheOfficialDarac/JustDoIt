@@ -63,23 +63,24 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
     ).AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateActor = true,
-        ValidateAudience = true,
-        ValidateIssuer = true,
-        RequireExpirationTime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
-        ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value
-    };
-});
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//}).AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters()
+//    {
+//        ValidateActor = true,
+//        ValidateAudience = true,
+//        ValidateIssuer = true,
+//        RequireExpirationTime = true,
+//        ValidateIssuerSigningKey = true,
+//        ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
+//        ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
+//        IssuerSigningKey=new SimmetricSecurityKey()
+//    };
+//});
 
 
 builder.Services.AddAuthorizationBuilder()

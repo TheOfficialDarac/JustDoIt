@@ -8,6 +8,8 @@ namespace JustDoIt.API.Controllers
     public class AuthController : ControllerBase
     {
         [HttpGet]
-        public async Task Login() { }
+        public async Task Login() { 
+        
+        }
     }
 }

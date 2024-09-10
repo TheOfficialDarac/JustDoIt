@@ -1,7 +1,9 @@
 
+using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
 using JustDoIt.Service.Abstractions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
@@ -13,26 +15,35 @@ namespace JustDoIt.API.Controllers
         #region Properties
 
         private readonly IProjectService _service;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         #endregion Properties
 
         #region Contructors
 
-        public ProjectController(IProjectService service)
+        public ProjectController(IProjectService service, UserManager<ApplicationUser> userManager,
+                                  SignInManager<ApplicationUser> signInManager)
         {
             _service = service;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
         #endregion Contructors
 
         #region Methods
 
         [HttpGet("users", Name = "GetUserProjects")]
-        public async Task<IActionResult> GetUserProjects([FromQuery]string userID)
+        public async Task<IActionResult> GetUserProjects()
         {
             try
             {
-                var result = await _service.GetUserProjects(userID);
+                string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                //_userManager.PasswordHasher 
+                var userId = await _userManager.GetUserIdAsync(new ApplicationUser { UserName = userName });
+                //var result = await _service.GetUserProjects(userID);
 
-                return Ok(result);
+                //return Ok(result);
+                return Ok(userId);
             }
             catch (Exception ex)
             {
