@@ -1,10 +1,13 @@
 
+using JustDoIt.DAL;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Principal;
 
 namespace JustDoIt.API.Controllers
 {
@@ -16,34 +19,30 @@ namespace JustDoIt.API.Controllers
 
         private readonly IProjectService _service;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         #endregion Properties
 
         #region Contructors
 
-        public ProjectController(IProjectService service, UserManager<ApplicationUser> userManager,
-                                  SignInManager<ApplicationUser> signInManager)
+        public ProjectController(IProjectService service, UserManager<ApplicationUser> userManager)
         {
             _service = service;
-            _signInManager = signInManager;
             _userManager = userManager;
         }
         #endregion Contructors
 
         #region Methods
 
-        [HttpGet("users", Name = "GetUserProjects")]
-        public async Task<IActionResult> GetUserProjects()
-        {
+        [HttpGet("user-projects", Name = "GetUserProjects")]
+        public async Task<IActionResult> GetUserProjects() { 
             try
             {
-                string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                //_userManager.PasswordHasher 
-                var userId = await _userManager.GetUserIdAsync(new ApplicationUser { UserName = userName });
-                //var result = await _service.GetUserProjects(userID);
+                var usr = await _userManager.GetUserAsync(User);
+                //var email = usr?.Email;
+                string? id = usr?.Id;
+                var result = await _service.GetUserProjects(id);
 
-                //return Ok(result);
-                return Ok(userId);
+                return Ok(result);
+                //return Ok(userId);
             }
             catch (Exception ex)
             {
@@ -97,11 +96,13 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost("create", Name = "CreateProject")]
-        public async Task<IActionResult> CreateProject([FromBody] ProjectDTO dto, string userID)
+        public async Task<IActionResult> CreateProject([FromBody] ProjectDTO dto)
         {
             try
             {
-                var response = await _service.Create(dto, userID);
+                var usr = await _userManager.GetUserAsync(User);
+                string? id = usr?.Id;
+                var response = await _service.Create(dto, id);
                 return Ok(response);
             }
             catch (Exception e)

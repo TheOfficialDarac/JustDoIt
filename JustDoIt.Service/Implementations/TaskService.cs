@@ -66,6 +66,7 @@ namespace JustDoIt.Service.Implementations
 
         public async Task<Tuple<TaskDTO, Result>> Update(TaskDTO entity)
         {
+            //if (ModelState.IsValid) { }
             var data = await _repository.Update(entity);
             if (data != null) { 
                 return Tuple.Create(data, Result.Success()); 

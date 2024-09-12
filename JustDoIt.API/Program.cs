@@ -1,3 +1,5 @@
+//using JustDoIt.API.Services;
+using JustDoIt.API.Services;
 using JustDoIt.DAL;
 using JustDoIt.Model;
 
@@ -11,14 +13,23 @@ using JustDoIt.Service.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddDbContext<ApplicationContext>(options =>
+{
+    var connection = builder.Configuration.GetConnectionString("DevelopmentConnection");
+    options.UseSqlServer(connection);
+    options.EnableSensitiveDataLogging();
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -36,8 +47,8 @@ builder.Services.AddSwaggerGen(
 }
 );
 
-builder.Services.AddScoped<IRepository, Repository>();
-builder.Services.AddScoped<IService, Service>();
+//builder.Services.AddScoped<IRepository, Repository>();
+//builder.Services.AddScoped<IService, Service>();
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
@@ -46,42 +57,43 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 
 builder.Services.AddCors();
-builder.Services.AddDbContext<ApplicationContext>(options =>
-{
-    var connection = builder.Configuration.GetConnectionString("DevelopmentConnection");
-    options.UseSqlServer(connection);
-    options.EnableSensitiveDataLogging();
-});
-// builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddAuthorization();
+//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+//{
+//    options.Password.RequiredLength = 5;
+//    options.User.RequireUniqueEmail = true;
+//})
+//    .AddEntityFrameworkStores<ApplicationContext>(
+//    ).AddDefaultTokenProviders();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
 {
+    options.Password.RequiredLength = 5;
     options.User.RequireUniqueEmail = true;
-    // options.SignIn.RequireConfirmedEmail = true;
-}
-    ).AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
+}).AddEntityFrameworkStores<ApplicationContext>()
+.AddDefaultTokenProviders();
+builder.Services.AddAuthorization();
 
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//}).AddJwtBearer(options =>
-//{
-//    options.TokenValidationParameters = new TokenValidationParameters()
-//    {
-//        ValidateActor = true,
-//        ValidateAudience = true,
-//        ValidateIssuer = true,
-//        RequireExpirationTime = true,
-//        ValidateIssuerSigningKey = true,
-//        ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
-//        ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
-//        IssuerSigningKey=new SimmetricSecurityKey()
-//    };
-//});
-
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        RequireExpirationTime = true,
+        ValidateActor = true,
+        ValidateAudience = true,
+        ValidateIssuer = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
+        ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:key").Value))
+    };
+});
+builder.Services.AddTransient<IAuthService, AuthService>();
 
 builder.Services.AddAuthorizationBuilder()
   .AddPolicy("api", p =>

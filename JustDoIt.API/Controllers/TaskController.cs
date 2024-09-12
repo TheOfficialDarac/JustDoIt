@@ -1,6 +1,8 @@
-﻿using JustDoIt.Model.DTOs;
+﻿using JustDoIt.Model;
+using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
 using JustDoIt.Service.Definitions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
@@ -11,13 +13,15 @@ namespace JustDoIt.API.Controllers
         #region Properties
 
         private readonly ITaskService _service;
+        private readonly UserManager<ApplicationUser> _userManager;
         #endregion Properties
 
         #region Constructors
 
-        public TaskController(ITaskService service)
+        public TaskController(ITaskService service, UserManager<ApplicationUser> userManager)
         {
             _service = service;
+            _userManager = userManager;
         }
         #endregion Constructors
 
@@ -41,12 +45,13 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpGet("user-tasks", Name = "GetUserTasks")]
-        public async Task<ActionResult> GetUserTasks([FromQuery] string userID)
+        public async Task<ActionResult> GetUserTasks()
         {
             try
             {
-
-                var response = await _service.GetUserTasks(userID);
+                var usr = await _userManager.GetUserAsync(User);
+                string? id = usr?.Id;
+                var response = await _service.GetUserTasks(id);
 
                 return response is null ? NotFound() : Ok(response);
             }
@@ -57,12 +62,13 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpGet("user-project-tasks", Name = "GetUserProjectTasks")]
-        public async Task<ActionResult> GetUserProjectTasks([FromQuery] string userID, [FromQuery] int projectID)
+        public async Task<ActionResult> GetUserProjectTasks([FromQuery] int projectID)
         {
             try
             {
-
-                var response = await _service.GetUserProjectTasks(userID, projectID);
+                var usr = await _userManager.GetUserAsync(User);
+                string? id = usr?.Id;
+                var response = await _service.GetUserProjectTasks(id, projectID);
 
                 return response is null ? NotFound() : Ok(response);
             }
@@ -135,7 +141,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpDelete("delete", Name = "DeleteTask")]
-        public async Task<IActionResult> DeleteTask(TaskDTO dto)
+        public async Task<IActionResult> DeleteTask(TaskDTO? dto)
         {
             ModelState.Remove("Project");
             try

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
 {
-    [ApiController, Route("api/user")]
+    [ApiController, Route("api/users")]
     public class AppUserController : Controller
     {
         #region Properties
