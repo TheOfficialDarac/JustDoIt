@@ -58,9 +58,10 @@ export const AuthProvider = ({ children }: Props) => {
 
   // call this function when you want to authenticate the user
   const login = async (email: string) => {
+    console.log("EMAIL: ", email);
     const res = await getUserObject(email);
     if (res) {
-      navigate("/profile");
+      navigate("/profil e");
     }
   };
 

@@ -1,40 +1,41 @@
-﻿using JustDoIt.API.Services;
-using JustDoIt.API.ViewModels;
-using Microsoft.AspNetCore.Http;
+﻿using JustDoIt.Model;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
 {
     [Route("api/[controller]-v2")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration configuration) : ControllerBase
     {
+        private readonly IConfiguration _configuration = configuration; 
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
 
-        private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        [HttpPost("Register")]
+        public async Task<ApplicationUser> RegisterAsync(ApplicationUser user)
         {
-            _authService = authService;
+            await _userManager.CreateAsync(user);
+            return user;
         }
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUser user) { 
-            if(!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            if (await _authService.Login(user))
-            {
-                var tokenString = _authService.GenereateTokenString(user);
-                return Ok(tokenString);
-            }
-            return BadRequest();
+        [HttpPost("Login")]
+        public async Task<string> LoginAsync(string email, string password)
+        {
+            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
 
-        }
-        [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser(LoginUser user)
-        {
-            if(await _authService.RegisterUser(user))
-            return Ok("Success.");
-            else return BadRequest("Something went wrong.");
+            if(user == null)
+            {
+                return "fail";
+            }
+
+            PasswordHasher<ApplicationUser> hasher = new PasswordHasher<ApplicationUser>();
+            hasher.HashPassword(user, password);
+
+            await _signInManager.SignInAsync(user, false);
+
+            //_signInManager.
+            var tokenString = new TokenProvider(_configuration).Create(user);
+            return tokenString;
         }
     }
 }

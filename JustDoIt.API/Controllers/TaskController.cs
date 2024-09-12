@@ -1,7 +1,7 @@
 ﻿using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
-using JustDoIt.Service.Definitions;
+using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,11 +2,10 @@
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Repository;
-using JustDoIt.Service.Definitions.Common;
 
 namespace JustDoIt.Service.Implementations
 {
-    public class Service : IService
+    public class Service //: IService
     {
 //        #region Properties
 

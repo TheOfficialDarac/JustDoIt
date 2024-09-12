@@ -3,34 +3,34 @@ using System.Net;
 using System.Net.Mime;
 using Azure.Core;
 using JustDoIt.Model;
-using JustDoIt.Model.DTOs;
-using JustDoIt.Service.Definitions.Common;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+//using JustDoIt.Model.DTOs;
+//using JustDoIt.Service.Definitions.Common;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNetCore.Mvc;
 
-namespace JustDoIt.API.Controllers
-{
-    [ApiController, Route("api/users")]
-    public class AppUserController : Controller
-    {
-        #region Properties
+//namespace JustDoIt.API.Controllers
+//{
+//    [ApiController, Route("api/users")]
+//    public class AppUserController : Controller
+//    {
+//        #region Properties
 
-        private readonly IService _service;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        #endregion Properties
+//        private readonly IService _service;
+//        private readonly UserManager<ApplicationUser> _userManager;
+//        private readonly SignInManager<ApplicationUser> _signInManager;
+//        #endregion Properties
 
-        #region Constructors
+//        #region Constructors
 
-        public AppUserController(IService service, UserManager<ApplicationUser> userManager,
-                                  SignInManager<ApplicationUser> signInManager)
-        {
-            _service = service;
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
-        #endregion Constructors
+//        public AppUserController(IService service, UserManager<ApplicationUser> userManager,
+//                                  SignInManager<ApplicationUser> signInManager)
+//        {
+//            _service = service;
+//            _signInManager = signInManager;
+//            _userManager = userManager;
+//        }
+//        #endregion Constructors
 
         //#region Methods
 
@@ -281,5 +281,5 @@ namespace JustDoIt.API.Controllers
         //}
 
         //#endregion Methods
-    }
-}
+//    }
+//}

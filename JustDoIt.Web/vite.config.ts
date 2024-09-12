@@ -59,59 +59,11 @@ export default defineConfig({
         target,
         secure: false,
       },
-      "^/api/user/all": {
-        target,
-        secure: false,
-      },
       "^/api/auth/register": {
         target,
         secure: false,
       },
-      "^/api/user/user_projects": {
-        target,
-        secure: false,
-      },
-      "^/api/Task": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/tasks": {
-        target,
-        secure: false,
-      },
-      "^/api/user/projects": {
-        target,
-        secure: false,
-      },
-      "^/api/Project/users": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/update": {
-        target,
-        secure: false,
-      },
-      "^/api/Task/create": {
-        target,
-        secure: false,
-      },
-      "^/api/user/register": {
-        target,
-        secure: false,
-      },
-      "^/api/Project/create": {
-        target,
-        secure: false,
-      },
-      "^/api/Project": {
-        target,
-        secure: false,
-      },
-      "^/api/Project/update": {
+      "^/api/user/all": {
         target,
         secure: false,
       },

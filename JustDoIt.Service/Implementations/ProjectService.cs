@@ -3,14 +3,7 @@ using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Service.Abstractions;
-using JustDoIt.Service.Definitions.Common;
 using JustDoIt.Service.Errors;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustDoIt.Service.Implementations
 {

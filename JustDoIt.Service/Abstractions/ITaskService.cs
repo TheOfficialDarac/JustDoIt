@@ -1,9 +1,9 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
-using JustDoIt.Service.Definitions.Common;
+using JustDoIt.Service.Abstractions.Common;
 
-namespace JustDoIt.Service.Definitions
+namespace JustDoIt.Service.Abstractions
 {
     public interface ITaskService : IGenericService<TaskDTO>
     {

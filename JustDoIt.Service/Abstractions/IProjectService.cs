@@ -1,12 +1,7 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
-using JustDoIt.Service.Definitions.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JustDoIt.Service.Abstractions.Common;
 
 namespace JustDoIt.Service.Abstractions
 {

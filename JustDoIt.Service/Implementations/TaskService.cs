@@ -2,10 +2,8 @@
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
 using JustDoIt.Repository.Abstractions;
-using JustDoIt.Service.Definitions;
+using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection.Metadata.Ecma335;
 
 namespace JustDoIt.Service.Implementations
 {
