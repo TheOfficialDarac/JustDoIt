@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import {
   Accordion,
   AccordionItem,
@@ -11,7 +11,7 @@ import {
   Divider,
   Image,
 } from "@nextui-org/react";
-import { ProjectMembers } from "../components/ProjectMembers";
+import { ProjectMembers } from "../../components/ProjectMembers";
 import { useNavigate } from "react-router-dom";
 
 interface Project {

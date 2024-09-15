@@ -9,11 +9,11 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { usePreferences } from "../hooks/usePreferences";
-import { useAuth } from "../hooks/useAuth";
+import { usePreferences } from "../../hooks/usePreferences";
+import { useAuth } from "../../hooks/useAuth";
 import { useEffect, useMemo, useRef } from "react";
 import React from "react";
-import DynamicModal from "../components/DynamicModel";
+import DynamicModal from "../../components/DynamicModel";
 
 const SettingsPage = () => {
   const { changeTheme } = usePreferences();

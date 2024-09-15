@@ -1,7 +1,7 @@
 import { Button, Input, Radio, RadioGroup } from "@nextui-org/react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 interface Task {
   id: number;

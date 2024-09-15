@@ -11,9 +11,9 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { Key, ReactNode, useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 interface Task {
   id: number;

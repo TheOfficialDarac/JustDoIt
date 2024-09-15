@@ -1,4 +1,4 @@
-import { Button, Input, Radio, RadioGroup } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 

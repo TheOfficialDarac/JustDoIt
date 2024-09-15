@@ -1,0 +1,15 @@
+﻿GET https://localhost:7010/api/Task
+Authorization: Bearer
+
+###
+POST https://localhost:7010/api/Auth-v2/Login
+Content-Type: application/json
+
+{
+"email": "test@vuv.hr",
+"password": "P@ssw0rd"
+}
+
+###
+GET https://localhost:7010/api/Auth-v2
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYjM2Njc1ZC1mYzk1LTRjZjktOTkxYy02ODY3NWJmNTkzMjIiLCJlbWFpbCI6InRlc3RAdnV2LmhyIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMTAiLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiZXhwIjoxNzI2NDM0MTc1LCJpYXQiOjE3MjY0MzIzNzUsIm5iZiI6MTcyNjQzMjM3NX0.3lxMu1eSHMQekEF4mggmLHRxIvtji3EhanuGGFmd7slq6qUEFVvf1TX2TJ_dIlD2llTRiHPCTJerIHw2T8zBsA

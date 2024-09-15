@@ -12,8 +12,8 @@ import {
 } from "@nextui-org/react";
 import { ReactNode, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { ProjectMembers } from "../components/ProjectMembers";
+import { useAuth } from "../../hooks/useAuth";
+import { ProjectMembers } from "../../components/ProjectMembers";
 
 interface Project {
   title: string;
