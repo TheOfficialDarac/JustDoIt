@@ -3,10 +3,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.Extensions.Configuration;
 
-namespace JustDoIt.API.Identity
+namespace JustDoIt.Service
 {
-    internal sealed class TokenProvider
+    public class TokenProvider
     {
         private readonly IConfiguration _configuration;
 
@@ -17,7 +18,7 @@ namespace JustDoIt.API.Identity
 
         public string Create(ApplicationUser user)
         {
-            string secretKey = _configuration.GetValue<string>("Jwt:Key")!;
+            string secretKey = _configuration.GetSection("Jwt:Key").Value!;
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
@@ -29,7 +30,7 @@ namespace JustDoIt.API.Identity
                     new Claim(JwtRegisteredClaimNames.Email, user.Email!.ToString()),
                     new Claim("email_verified", user.EmailConfirmed.ToString())
                 ]),
-                Expires = DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("Jwt:ExpirationInMinutes")),
+                Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration.GetSection("Jwt:ExpirationInMinutes").Value!)),
                 SigningCredentials = credentials,
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"]

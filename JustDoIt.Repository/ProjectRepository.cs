@@ -1,7 +1,7 @@
 ﻿using JustDoIt.DAL;
 using JustDoIt.Mapperly;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Model.ViewModels;
+using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Repository.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,7 +24,7 @@ namespace JustDoIt.Repository
             _mapper = new ProjectMapper();
         }
 
-        public async Task<bool> Create(ProjectDTO entity, string userID)
+        public async Task<ProjectDTO> Create(ProjectDTO entity, string userID)
         {
             try
             {
@@ -41,17 +41,18 @@ namespace JustDoIt.Repository
                     Token = "CREATOR",
                     RoleId = 1
                 });
-                return true;
+
+                return _mapper.MapToDTO(project);
             }
             catch
             {
-                return false;
+                return new ProjectDTO();
             }
         }
 
-        public Task<bool> Create(ProjectDTO entity)
+        public Task<ProjectDTO> Create(ProjectDTO entity)
         {
-            return Task.FromResult(false);
+            return Task.FromResult(entity);
         }
 
         public async Task<bool> Delete(ProjectDTO entity)
@@ -69,7 +70,7 @@ namespace JustDoIt.Repository
             return false;
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetAll(ProjectSearchParams searchParams)
+        public async Task<IEnumerable<ProjectDTO>> GetAll(GetProjectsRequest searchParams)
         {
             var query = _context.Projects.AsQueryable();
 

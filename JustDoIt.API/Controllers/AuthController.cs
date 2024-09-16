@@ -1,62 +1,52 @@
 ﻿using JustDoIt.API.Contracts;
-using JustDoIt.API.Identity;
-using JustDoIt.Model;
+using JustDoIt.Model.DTOs.Requests.Auth;
+using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 namespace JustDoIt.API.Controllers
 {
     [ApiController]
     [Route(ApiRoutes.Auth.Controller)]
-    public class AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration configuration) : ControllerBase
+    public class AuthController(IUserService service) : ControllerBase
     {
-        private readonly IConfiguration _configuration = configuration;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly IUserService _service = service;
+
 
         [HttpPost(ApiRoutes.Auth.Register)]
-        public async Task<ApplicationUser> RegisterAsync(ApplicationUser user)
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRegistrationRequest request)
         {
-            await _userManager.CreateAsync(user);
-            return user;
+            var response = await _service.RegisterAsync(request);
+
+            if (response.IsSuccess) return NoContent();
+
+            return BadRequest(response);
         }
 
         [HttpPost(ApiRoutes.Auth.Login)]
-        public async Task<string> LoginAsync([FromBody] UserLoginCredentials userCred)
+        public async Task<IActionResult> LoginAsync([FromBody] UserLoginRequest request)
         {
-            ApplicationUser? user = await _userManager.FindByEmailAsync(userCred.email);
+            var response = await _service.LoginAsync(request);
 
-            if (user == null)
-            {
-                return "fail";
-            }
-
-            PasswordHasher<ApplicationUser> hasher = new();
-            hasher.HashPassword(user, userCred.password);
-
-            await _signInManager.SignInAsync(user, false);
-
-            //_signInManager.
-
-            var tokenString = new TokenProvider(_configuration).Create(user);
-            return tokenString;
+            if(response.result.IsSuccess) return Ok(response.data);
+            return BadRequest(response.result);
         }
 
         [Authorize]
         [HttpPost(ApiRoutes.Auth.Logout)]
-        public async System.Threading.Tasks.Task LogoutAsync()
+        public async Task<IActionResult> LogoutAsync()
         {
-            //var user = User;
-            await _signInManager.SignOutAsync();
+            await _service.LogoutAsync();
+            return NoContent();
         }
 
         [HttpGet(ApiRoutes.Auth.Test)]
         [Authorize]
         public IActionResult GetHit() => Ok("We get hit");
 
-
+        [HttpPost(ApiRoutes.Auth.VerifyEmail)]
+        public System.Threading.Tasks.Task VerifyEmail() { 
+            return System.Threading.Tasks.Task.CompletedTask;
+        }
 
     }
-    public record UserLoginCredentials(string email, string password);
 }

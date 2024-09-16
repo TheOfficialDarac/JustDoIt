@@ -1,4 +1,4 @@
-﻿namespace JustDoIt.API.Contracts.Responses
+﻿namespace JustDoIt.Model.DTOs.Responses
 {
     public class TaskResponse
     {

@@ -4,7 +4,7 @@ using JustDoIt.DAL;
 using JustDoIt.Mapperly;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Model.ViewModels;
+using JustDoIt.Model.DTOs.Requests.Tasks;
 using JustDoIt.Repository.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,7 +27,7 @@ namespace JustDoIt.Repository
 
         #region Methods
 
-        public async Task<bool> Create(TaskDTO entity)
+        public async Task<TaskDTO> Create(TaskDTO entity)
         {
             // basic exceptions already handled up to repository
             // here only database errors exist
@@ -46,10 +46,11 @@ namespace JustDoIt.Repository
                 //    });
                 await _context.SaveChangesAsync();
 
-                return true;
+
+                return _mapper.MapToDTO(task);
             }
             catch { /*Logger? */ }
-            return false;
+            return new TaskDTO();
         }
         public async Task<IEnumerable<TaskDTO>> GetAll()
         {
@@ -59,76 +60,76 @@ namespace JustDoIt.Repository
         }
 
         public async Task<IEnumerable<TaskDTO>> GetAll(
-        TaskSearchParams searchParams)
+        GetTasksRequest request)
         {
             try
             {
                 var query = _context.Tasks.AsQueryable();
 
-                if (!string.IsNullOrEmpty(searchParams.Title))
+                if (!string.IsNullOrEmpty(request.Title))
                 {
-                    query = query.Where(t => !string.IsNullOrEmpty(t.Title) && t.Title.Contains(searchParams.Title));
+                    query = query.Where(t => !string.IsNullOrEmpty(t.Title) && t.Title.Contains(request.Title));
                 }
 
-                if (!string.IsNullOrEmpty(searchParams.IssuerId))
+                if (!string.IsNullOrEmpty(request.IssuerId))
                 {
-                    query = query.Where(t => t.IssuerId.Contains(searchParams.IssuerId));
+                    query = query.Where(t => t.IssuerId.Contains(request.IssuerId));
                 }
 
-                if (!string.IsNullOrEmpty(searchParams.Summary))
+                if (!string.IsNullOrEmpty(request.Summary))
                 {
-                    query = query.Where(t => !string.IsNullOrEmpty(t.Summary) && t.Summary.Contains(searchParams.Summary));
+                    query = query.Where(t => !string.IsNullOrEmpty(t.Summary) && t.Summary.Contains(request.Summary));
                 }
 
-                if (!string.IsNullOrEmpty(searchParams.Description))
-                {
-                    query = query.Where(t => !string.IsNullOrEmpty(t.Description) && t.Description.Contains(searchParams.Description));
-                }
+                //if (!string.IsNullOrEmpty(request.Description))
+                //{
+                //    query = query.Where(t => !string.IsNullOrEmpty(t.Description) && t.Description.Contains(request.Description));
+                //}
 
-                if (searchParams.ProjectId.HasValue)
+                if (request.ProjectId.HasValue)
                 {
-                    query = query.Where(t => t.ProjectId == searchParams.ProjectId);
+                    query = query.Where(t => t.ProjectId == request.ProjectId);
                 }
 
                 // search by picture?
-                //if (!string.IsNullOrEmpty(searchParams.Description))
+                //if (!string.IsNullOrEmpty(request.Description))
                 //{
-                //    query = query.Where(t => t.Description.Contains(searchParams.Description));
+                //    query = query.Where(t => t.Description.Contains(request.Description));
                 //}
 
-                if (searchParams.DeadlineStart.HasValue)
+                if (request.DeadlineStart.HasValue)
                 {
-                    searchParams.DeadlineStart = DateTime.SpecifyKind(searchParams.DeadlineStart.Value, DateTimeKind.Utc);
-                    query = query.Where(t => t.Deadline >= searchParams.DeadlineStart);
+                    request.DeadlineStart = DateTime.SpecifyKind(request.DeadlineStart.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.Deadline >= request.DeadlineStart);
                 }
 
-                if (searchParams.DeadlineEnd.HasValue)
+                if (request.DeadlineEnd.HasValue)
                 {
-                    searchParams.DeadlineEnd = DateTime.SpecifyKind(searchParams.DeadlineEnd.Value, DateTimeKind.Utc);
-                    query = query.Where(t => t.Deadline <= searchParams.DeadlineEnd);
+                    request.DeadlineEnd = DateTime.SpecifyKind(request.DeadlineEnd.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.Deadline <= request.DeadlineEnd);
                 }
 
-                if (searchParams.MinCreatedDate.HasValue)
+                if (request.MinCreatedDate.HasValue)
                 {
-                    searchParams.MinCreatedDate = DateTime.SpecifyKind(searchParams.MinCreatedDate.Value, DateTimeKind.Utc);
-                    query = query.Where(t => t.CreatedDate >= searchParams.MinCreatedDate);
+                    request.MinCreatedDate = DateTime.SpecifyKind(request.MinCreatedDate.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.CreatedDate >= request.MinCreatedDate);
                 }
 
-                if (searchParams.MaxCreatedDate.HasValue)
+                if (request.MaxCreatedDate.HasValue)
                 {
-                    searchParams.MaxCreatedDate = DateTime.SpecifyKind(searchParams.MaxCreatedDate.Value, DateTimeKind.Utc);
-                    query = query.Where(t => t.CreatedDate <= searchParams.MaxCreatedDate);
+                    request.MaxCreatedDate = DateTime.SpecifyKind(request.MaxCreatedDate.Value, DateTimeKind.Utc);
+                    query = query.Where(t => t.CreatedDate <= request.MaxCreatedDate);
                 }
 
 
-                if (searchParams.IsActive.HasValue)
+                if (request.IsActive.HasValue)
                 {
-                    query = query.Where(t => t.IsActive == searchParams.IsActive);
+                    query = query.Where(t => t.IsActive == request.IsActive);
                 }
 
-                if (!string.IsNullOrEmpty(searchParams.State))
+                if (!string.IsNullOrEmpty(request.State))
                 {
-                    query = query.Where(t => !string.IsNullOrEmpty(t.State) && t.State.Contains(searchParams.State));
+                    query = query.Where(t => !string.IsNullOrEmpty(t.State) && t.State.Contains(request.State));
                 }
 
                 var tasks = await query.ToListAsync();

@@ -4,7 +4,7 @@ namespace JustDoIt.Repository.Abstractions.Common
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<bool> Create(T entity);
+        Task<T> Create(T entity);
         Task<IEnumerable<T>> GetAll();
         Task<T> GetSingle(int id);
         Task<bool> Update(T entity);

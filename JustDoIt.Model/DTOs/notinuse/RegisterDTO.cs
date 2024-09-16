@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JustDoIt.Model.DTOs
+namespace JustDoIt.Model.DTOs.notinuse
 {
     public class RegisterDTO
     {

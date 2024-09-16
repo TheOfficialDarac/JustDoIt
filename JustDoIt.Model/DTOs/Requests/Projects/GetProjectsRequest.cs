@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JustDoIt.Model.ViewModels
+namespace JustDoIt.Model.DTOs.Requests.Projects
 {
-    public class ProjectSearchParams
+    public class GetProjectsRequest
     {
         //public int? Id { get; set; }
 

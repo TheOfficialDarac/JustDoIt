@@ -1,6 +1,6 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Model.ViewModels;
+using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Repository.Abstractions.Common;
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,8 @@ namespace JustDoIt.Repository.Abstractions
 {
     public interface IProjectRepository : IGenericRepository<ProjectDTO>
     {
-        Task<bool> Create(ProjectDTO entity, string userID);
+        Task<ProjectDTO> Create(ProjectDTO entity, string userID);
         Task<IEnumerable<ProjectDTO>> GetUserProjects(string userID);
-        Task<IEnumerable<ProjectDTO>> GetAll(ProjectSearchParams searchParams);
+        Task<IEnumerable<ProjectDTO>> GetAll(GetProjectsRequest searchParams);
     }
 }

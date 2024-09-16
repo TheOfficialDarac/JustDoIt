@@ -1,6 +1,6 @@
-﻿namespace JustDoIt.API.Contracts.Requests.Tasks
+﻿namespace JustDoIt.Model.DTOs.Requests.Tasks
 {
-    public class CreateTaskRequest
+    public class UpdateTaskRequest
     {
         public string? Title { get; set; }
 
@@ -8,10 +8,12 @@
 
         public string? Description { get; set; }
 
-        public int ProjectId { get; set; }
-
         public string? PictureUrl { get; set; }
 
         public DateTime? Deadline { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public string? State { get; set; }
     }
 }

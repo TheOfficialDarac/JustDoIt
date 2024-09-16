@@ -1,6 +1,6 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Model.ViewModels;
+using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
@@ -21,13 +21,13 @@ namespace JustDoIt.Service.Implementations
 
         #region Methods
 
-        public Task<Result> Create(ProjectDTO entity)
+        public Task<(ProjectDTO data,Result result)> Create(ProjectDTO entity)
         {
             var errors = new List<Error> { };
-            return Task.FromResult(Result.Failure(errors));
+            return Task.FromResult((new ProjectDTO(),Result.Failure(errors)));
         }
 
-        public async Task<Tuple<IEnumerable<ProjectDTO>, Result>> GetAll(ProjectSearchParams searchParams)
+        public async Task<(IEnumerable<ProjectDTO> data, Result result)> GetAll(GetProjectsRequest searchParams)
         {
             var errors = new List<Error>();
 
@@ -35,31 +35,31 @@ namespace JustDoIt.Service.Implementations
             {
                 var response = await _repository.GetAll(searchParams);
 
-                if (response.Any()) return Tuple.Create(response, Result.Success());
+                if (response.Any()) return (response, Result.Success());
                 else errors.Add(ProjectErrors.NotFound);
             }
             errors.Add(ProjectErrors.BadRequest);
 
-            return Tuple.Create(Enumerable.Empty<ProjectDTO>(), Result.Failure(errors));
+            return (Enumerable.Empty<ProjectDTO>(), Result.Failure(errors));
 
         }
 
-        public async Task<Tuple<IEnumerable<ProjectDTO>, Result>> GetAll()
+        public async Task<(IEnumerable<ProjectDTO> data, Result result)> GetAll()
         {
             var errors = new List<Error>();
             var response = await _repository.GetAll();
 
             if (response.Any())
             {
-                return Tuple.Create(response, Result.Success());
+                return (response, Result.Success());
             }
 
             errors.Add(ProjectErrors.NotFound);
             errors.Add(ProjectErrors.BadRequest);
-            return Tuple.Create(response, Result.Failure(errors));
+            return (response, Result.Failure(errors));
         }
 
-        public async Task<Tuple<ProjectDTO, Result>> GetSingle(int id)
+        public async Task<(ProjectDTO data, Result result)> GetSingle(int id)
         {
             var errors = new List<Error>();
             var response = await _repository.GetSingle(id);
@@ -68,29 +68,29 @@ namespace JustDoIt.Service.Implementations
             {
                 errors.Add(ProjectErrors.NotFound);
                 errors.Add(ProjectErrors.BadRequest);
-                return Tuple.Create(new ProjectDTO(), Result.Failure(errors));
+                return (new ProjectDTO(), Result.Failure(errors));
             }
 
-            return Tuple.Create(response, Result.Success());
+            return (response, Result.Success());
         }
 
-        public async Task<Tuple<IEnumerable<ProjectDTO>, Result>> GetUserProjects(string userID)
+        public async Task<(IEnumerable<ProjectDTO> data, Result result)> GetUserProjects(string userID)
         {
             var errors = new List<Error>();
             if (string.IsNullOrEmpty(userID))
             {
                 errors.Add(ProjectErrors.BadRequest);
-                return Tuple.Create(Enumerable.Empty<ProjectDTO>(), Result.Failure(errors));
+                return (Enumerable.Empty<ProjectDTO>(), Result.Failure(errors));
             }
             var response = await _repository.GetUserProjects(userID);
 
             if (response.Any())
             {
-                return Tuple.Create(response, Result.Success());
+                return (response, Result.Success());
             }
 
             errors.Add(ProjectErrors.NotFound);
-            return Tuple.Create(response, Result.Failure(errors));
+            return (response, Result.Failure(errors));
         }
 
         public async Task<Result> Update(ProjectDTO entity)
@@ -112,16 +112,16 @@ namespace JustDoIt.Service.Implementations
             return Result.Success();
         }
 
-        public async Task<Result> Create(ProjectDTO entity, string userID)
+        public async Task<(ProjectDTO data, Result result)> Create(ProjectDTO entity, string userID)
         {
             var result = await _repository.Create(entity, userID);
-            if (result == true)
+            if (result.Id.HasValue)
             {
-                return Result.Success();
+                return (result,Result.Success());
             }
             var errors = new List<Error> { ProjectErrors.NotFound };
 
-            return Result.Failure(errors);
+            return (new ProjectDTO(), Result.Failure(errors));
         }
 
         public async Task<Result> Delete(ProjectDTO entity)

@@ -1,20 +1,18 @@
-﻿namespace JustDoIt.Model.ViewModels
+﻿namespace JustDoIt.Model.DTOs.Requests.Tasks
 {
-    public class TaskSearchParams
+    public class GetTasksRequest
     {
-        public int Id { get; set; }
-
         public string? Title { get; set; }
 
         public string? IssuerId { get; set; }
 
         public string? Summary { get; set; }
 
-        public string? Description { get; set; }
+        //public string? Description { get; set; }
 
         public int? ProjectId { get; set; }
 
-        public string? PictureUrl { get; set; }
+        //public string? PictureUrl { get; set; }
 
         public DateTime? DeadlineStart { get; set; }
         public DateTime? DeadlineEnd { get; set; }

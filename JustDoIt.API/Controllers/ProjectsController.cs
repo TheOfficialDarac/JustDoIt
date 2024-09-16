@@ -1,7 +1,7 @@
 using JustDoIt.API.Contracts;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Model.ViewModels;
+using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,15 +17,13 @@ namespace JustDoIt.API.Controllers
         #region Properties
 
         private readonly IProjectService _service;
-        private readonly UserManager<ApplicationUser> _userManager;
         #endregion Properties
 
         #region Contructors
 
-        public ProjectsController(IProjectService service, UserManager<ApplicationUser> userManager)
+        public ProjectsController(IProjectService service)
         {
             _service = service;
-            _userManager = userManager;
         }
         #endregion Contructors
 
@@ -35,13 +33,9 @@ namespace JustDoIt.API.Controllers
         public async Task<IActionResult> GetUserProjects() { 
             try
             {
-                var usr = await _userManager.GetUserAsync(User);
-                //var email = usr?.Email;
-                string? id = usr?.Id;
-                var result = await _service.GetUserProjects(id);
+                var result = await _service.GetUserProjects(HttpContext.GetUserId());
 
                 return Ok(result);
-                //return Ok(userId);
             }
             catch (Exception ex)
             {
@@ -50,7 +44,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpGet(ApiRoutes.Projects.GetAll)]
-        public async Task<IActionResult> GetProjects([FromQuery]ProjectSearchParams searchParams
+        public async Task<IActionResult> GetProjects([FromQuery]GetProjectsRequest searchParams
         )
         {
             try
@@ -99,9 +93,8 @@ namespace JustDoIt.API.Controllers
         {
             try
             {
-                var usr = await _userManager.GetUserAsync(User);
-                string? id = usr?.Id;
-                var response = await _service.Create(dto, id);
+                var response = await _service.Create(dto, HttpContext.GetUserId());
+
                 return Ok(response);
             }
             catch (Exception e)

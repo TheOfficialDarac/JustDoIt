@@ -1,8 +1,8 @@
-using JustDoIt.API.Identity;
 using JustDoIt.DAL;
 using JustDoIt.Model;
 using JustDoIt.Repository;
 using JustDoIt.Repository.Abstractions;
+using JustDoIt.Service;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,6 +56,13 @@ builder.Services.AddSwaggerGen(
         };
 
         options.AddSecurityRequirement(securityRequirement);
+    //    options.SwaggerDoc("v1", new OpenApiInfo { Title = "JustDoIt API", Version = "v1", Description = "API for the JustDoIt Web App" });
+    //    var security = new Dictionary<string, IEnumerable<string>>
+    //    {
+    //        {"Bearer", new string[0] }
+    //    };
+
+    //options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme{ Description = "JWT Authorization header using the bearer scheme", Name = "Authorization", In = ParameterLocation.Header, Type = SecuritySchemeType.ApiKey });
     }
 );
 
@@ -80,6 +87,7 @@ builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSingleton<TokenProvider>();
 

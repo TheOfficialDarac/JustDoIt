@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-namespace JustDoIt.Model.DTOs;
+namespace JustDoIt.Model.DTOs.notinuse;
 
 public class LoginDTO
 {

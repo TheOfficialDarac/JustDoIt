@@ -1,6 +1,36 @@
-@JustDoIt.API_HostAddress = http://localhost:5153
+@JustDoIt.API_HostAddress = https://localhost:7010/api/v1
 
-GET {{JustDoIt.API_HostAddress}}/weatherforecast/
-Accept: application/json
+############################################################
+# AUTHENTIFICATION
 
+POST {{JustDoIt.API_HostAddress}}/auth/register
+Content-Type: application/json
+
+{
+"email": "test2@vuv.hr",
+"password": "P@ssw0rd"
+}
 ###
+POST {{JustDoIt.API_HostAddress}}/auth/login
+Content-Type: application/json
+
+{
+"email": "test2@vuv.hr",
+"password": "P@ssw0rd"
+}
+###
+
+GET {{JustDoIt.API_HostAddress}}/auth/test
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYjJiMzVjMS1kN2FjLTQ3ZTEtYmNmMy1iMGM1OTk1ODM5N2QiLCJlbWFpbCI6InRlc3QyQHZ1di5ociIsImVtYWlsX3ZlcmlmaWVkIjoiRmFsc2UiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImV4cCI6MTcyNjUxODg2NiwiaWF0IjoxNzI2NTE3MDY2LCJuYmYiOjE3MjY1MTcwNjZ9.75-2tqC8xnO-VnizDefam7-C5Refs_z6nm0_niQLKGHtdVf8QpLB51AhCIH0F7VLIP1MTtI7M3opZPrvs_AP7w
+####
+
+POST {{JustDoIt.API_HostAddress}}/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NjVkMGQwZC01YmU1LTRhN2UtYjU4YS1kZmY4MDM3NWVkNTQiLCJlbWFpbCI6InRlc3RAdnV2LmhyIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMTAiLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiZXhwIjoxNzI2NDY3NTM4LCJpYXQiOjE3MjY0NjU3MzgsIm5iZiI6MTcyNjQ2NTczOH0.Y0ciViRhCJgg47pW9tVjJ2RZBI7RpA5esM1ZRrzAs7oxYLIhAJtA-Oueg_kkloNjqFhPUpyi9HAGNRGeKYIAcA
+
+############################################################
+# TASKS
+GET {{JustDoIt.API_HostAddress}}/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NjVkMGQwZC01YmU1LTRhN2UtYjU4YS1kZmY4MDM3NWVkNTQiLCJlbWFpbCI6InRlc3RAdnV2LmhyIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMTAiLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiZXhwIjoxNzI2NDc3NjU4LCJpYXQiOjE3MjY0NzU4NTgsIm5iZiI6MTcyNjQ3NTg1OH0.lMaMOmOAda1wkRVpMcuFhjB9auwOE2KxFZQOw96ThcWqV7ktMGglaFTRr3vjmDqkDM4V2P7QNF_SlSS95Pz87A
+###
+
