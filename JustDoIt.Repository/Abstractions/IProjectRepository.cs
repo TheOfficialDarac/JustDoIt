@@ -12,8 +12,8 @@ namespace JustDoIt.Repository.Abstractions
 {
     public interface IProjectRepository : IGenericRepository<ProjectDTO>
     {
-        Task<ProjectDTO?> Create(ProjectDTO entity, string userID);
-        Task<IEnumerable<ProjectDTO>?> GetUserProjects(string userID);
-        Task<IEnumerable<ProjectDTO>?> GetAll(ProjectSearchParams searchParams);
+        Task<bool> Create(ProjectDTO entity, string userID);
+        Task<IEnumerable<ProjectDTO>> GetUserProjects(string userID);
+        Task<IEnumerable<ProjectDTO>> GetAll(ProjectSearchParams searchParams);
     }
 }

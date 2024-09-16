@@ -15,36 +15,46 @@ namespace JustDoIt.Repository
     public class ProjectRepository : IProjectRepository
     {
         #region Properties
-        private ProjectMapper _mapper {  get; set; }
-        private ApplicationContext _context { get; set; }
+        private readonly ProjectMapper _mapper;
+        private readonly ApplicationContext _context;
         #endregion
         public ProjectRepository(ApplicationContext context)
         {
             _context = context;
             _mapper = new ProjectMapper();
         }
-        
-        public async Task<ProjectDTO?> Create(ProjectDTO entity, string userID)
+
+        public async Task<bool> Create(ProjectDTO entity, string userID)
         {
-            var project = _mapper.MapToType(entity);
-
-            await _context.Projects.AddAsync(project);
-            await _context.SaveChangesAsync();
-
-            await _context.UserProjects.AddAsync(new Model.UserProject
+            try
             {
-                UserId = userID,
-                ProjectId = project.Id,
-                IsVerified = true,
-                Token = "CREATOR",
-                RoleId = 1
-            });
+                var project = _mapper.MapToType(entity);
 
-            return _mapper.MapToDTO(project);
+                await _context.Projects.AddAsync(project);
+                await _context.SaveChangesAsync();
 
+                await _context.UserProjects.AddAsync(new Model.UserProject
+                {
+                    UserId = userID,
+                    ProjectId = project.Id,
+                    IsVerified = true,
+                    Token = "CREATOR",
+                    RoleId = 1
+                });
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public async Task<ProjectDTO?> Delete(ProjectDTO entity)
+        public Task<bool> Create(ProjectDTO entity)
+        {
+            return Task.FromResult(false);
+        }
+
+        public async Task<bool> Delete(ProjectDTO entity)
         {
             var project = _mapper.MapToType(entity);
 
@@ -53,13 +63,13 @@ namespace JustDoIt.Repository
             {
                 _context.Remove(found);
                 await _context.SaveChangesAsync();
-                return null;
+                return true;
             }
 
-            return entity;
+            return false;
         }
 
-        public async Task<IEnumerable<ProjectDTO>?> GetAll(ProjectSearchParams searchParams)
+        public async Task<IEnumerable<ProjectDTO>> GetAll(ProjectSearchParams searchParams)
         {
             var query = _context.Projects.AsQueryable();
 
@@ -89,22 +99,22 @@ namespace JustDoIt.Repository
             return _mapper.MapToDTOList(result);
         }
 
-        public async Task<IEnumerable<ProjectDTO>?> GetAll()
+        public async Task<IEnumerable<ProjectDTO>> GetAll()
         {
             var result = await _context.Projects.ToListAsync();
             return _mapper.MapToDTOList(result);
         }
 
-        public async Task<ProjectDTO?> GetSingle(int id)
+        public async Task<ProjectDTO> GetSingle(int id)
         {
             var query = _context.Projects.AsQueryable();
             query = query.Where(x => x.Id.Equals(id));
 
             var result = await query.SingleOrDefaultAsync();
-            return _mapper.MapToDTO(result);
+            return result is null ? new ProjectDTO() : _mapper.MapToDTO(result);
         }
 
-        public async Task<IEnumerable<ProjectDTO>?> GetUserProjects(string userID)
+        public async Task<IEnumerable<ProjectDTO>> GetUserProjects(string userID)
         { 
             var result = await _context.UserProjects.AsQueryable()
                 .Where(x => x.UserId.Equals(userID))
@@ -113,25 +123,20 @@ namespace JustDoIt.Repository
             return _mapper.MapToDTOList(result);
         }
 
-        public async Task<ProjectDTO?> Update(ProjectDTO entity)
+        public async Task<bool> Update(ProjectDTO entity)
         {
             var project = _mapper.MapToType(entity);
 
             var found = await _context.Projects.FindAsync(project);
-            if(found is null) return null;
+            if(found is null) return false;
 
-            found.Title = entity.Title;
+            found.Title = entity.Title!;
             found.Description = entity.Description;
             found.PictureUrl = entity.PictureUrl;
-            found.IsActive = entity.IsActive;
+            found.IsActive = entity.IsActive!.Value;
 
             await _context.SaveChangesAsync();
-            return entity;
-        }
-
-        public Task<ProjectDTO?> Create(ProjectDTO entity)
-        {
-            return null;
+            return true;
         }
     }
 }

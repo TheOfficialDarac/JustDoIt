@@ -73,6 +73,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
     //opts.SignIn.RequireConfirmedEmail = true;
     opts.Password.RequiredLength = 8;
 })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationContext>();  
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
@@ -85,6 +86,7 @@ builder.Services.AddSingleton<TokenProvider>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
 {
     option.RequireHttpsMetadata = false;
+    option.SaveToken = true;
     option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value!)),
@@ -97,6 +99,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true
     };
 });
+builder.Services.AddAuthorization();
+
 //builder.Services.AddAuthorization( opt => {
 //    opt.AddPolicy(IdentityData.AdminUserPolicyName, p => p.RequireClaim(IdentityData.AdminUserClaimName));
 //});
@@ -105,7 +109,7 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-app.MapGroup("api/auth").MapIdentityApi<ApplicationUser>();
+//app.MapGroup("api/auth").MapIdentityApi<ApplicationUser>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -36,7 +36,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.Mapperly", "JustDo
 		{EE658171-E418-46D6-9B76-1E94C320C843} = {EE658171-E418-46D6-9B76-1E94C320C843}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt.Common", "JustDoIt.Common\JustDoIt.Common.csproj", "{D881CBA8-4695-4A97-B1DD-C890B6BAE15A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.Common", "JustDoIt.Common\JustDoIt.Common.csproj", "{D881CBA8-4695-4A97-B1DD-C890B6BAE15A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

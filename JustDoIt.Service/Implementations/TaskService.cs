@@ -11,7 +11,7 @@ namespace JustDoIt.Service.Implementations
     {
         #region Properties
 
-        private ITaskRepository _repository { get; set; }
+        private readonly ITaskRepository _repository;
         #endregion
 
         public TaskService(ITaskRepository repository)
@@ -21,40 +21,58 @@ namespace JustDoIt.Service.Implementations
 
         #region Methods
 
-        public async Task<Tuple<IEnumerable<TaskDTO>?, Result>> GetUserTasks(string userID)
+        public async Task<Tuple<IEnumerable<TaskDTO>, Result>> GetUserTasks(string userID)
         {
-            var data = await _repository.GetUserTasks(userID);
-            return Tuple.Create(data, Result.Success());
+            var errors = new List<Error>();
+
+            var result = await _repository.GetUserTasks(userID);
+
+            if (result.Any()) return Tuple.Create(result, Result.Success());
+
+            errors.Add(TaskErrors.NotFound);
+            return Tuple.Create(result, Result.Failure(errors));
+
         }
 
-        async Task<Tuple<IEnumerable<TaskDTO>?, Result>> ITaskService.GetAll(TaskSearchParams searchParams)
+        async Task<Tuple<IEnumerable<TaskDTO>, Result>> ITaskService.GetAll(TaskSearchParams searchParams)
         {
-                var data = await _repository.GetAll(searchParams);
-            return Tuple.Create(data, Result.Success());
+            var errors = new List<Error>();
+
+            var result = await _repository.GetAll(searchParams);
+
+            if (result.Any()) return Tuple.Create(result, Result.Success());
+
+            errors.Add(TaskErrors.NotFound);
+            return Tuple.Create(result, Result.Failure(errors));
         }
 
-        public Task<Tuple<IEnumerable<TaskDTO>?, Result>> GetAll()
+        public async Task<Tuple<IEnumerable<TaskDTO>, Result>> GetAll()
         {
-            throw new NotImplementedException();
+            var errors = new List<Error>();
+            var result = await _repository.GetAll();
+            
+            if(result.Any()) return Tuple.Create(result, Result.Success());
+
+            errors.Add(TaskErrors.NotFound);
+            return Tuple.Create(result, Result.Failure(errors));
+
         }
 
-        public async Task<Tuple<TaskDTO?, Result>> Create(TaskDTO entity)
+        public async Task<Result> Create(TaskDTO entity)
         {
             var errors = new List<Error>();
             var data = await _repository.Create(entity);
-            if (data != null)
-            {
-                return Tuple.Create(new TaskDTO(), Result.Success());
-            }
-            else errors.Add(TaskErrors.NotFound);
-
-            return Tuple.Create(entity, Result.Failure(errors));
+            
+            if (data == true) return Result.Success();
+            
+            errors.Add(TaskErrors.NotFound);
+            return Result.Failure(errors);
         }
 
-        public async Task<Tuple<TaskDTO?, Result>> GetSingle(int id)
+        public async Task<Tuple<TaskDTO, Result>> GetSingle(int id)
         {
             var data = await _repository.GetSingle(id);
-            if(data != null)
+            if(data.Id.HasValue)
             {
                 return Tuple.Create(data, Result.Success());
             }
@@ -62,34 +80,43 @@ namespace JustDoIt.Service.Implementations
             return Tuple.Create(data, Result.Failure(errors));
         }
 
-        public async Task<Tuple<TaskDTO, Result>> Update(TaskDTO entity)
+        public async Task<Result> Update(TaskDTO entity)
         {
-            //if (ModelState.IsValid) { }
-            var data = await _repository.Update(entity);
-            if (data != null) { 
-                return Tuple.Create(data, Result.Success()); 
-            }
-            var errors = new List<Error> { TaskErrors.NotFound };
-            return Tuple.Create(entity, Result.Failure(errors)); 
-        }
-
-        public async Task<Tuple<TaskDTO, Result>> Delete(TaskDTO entity)
-        {
-            //!TODO sanitize
+            //TODO sanitize
             var errors = new List<Error>();
-            await _repository.Delete(entity);
 
-            if (errors.Count > 0) { Result.Failure(errors); }
-            return Tuple.Create(entity, Result.Success());
+            //TODO checks done
+            var data = await _repository.Update(entity);
+            if (data == true) { 
+                return Result.Success(); 
+            }
+
+            errors.Add(TaskErrors.NotFound);
+            return Result.Failure(errors); 
         }
 
-        public async Task<Tuple<IEnumerable<TaskDTO>?, Result>> GetUserProjectTasks(string userID, int projectID)
+        public async Task<Result> Delete(TaskDTO entity)
+        {
+            //TODO sanitize
+            var errors = new List<Error>();
+            
+            //TODO checks done
+            var result = await _repository.Delete(entity);
+
+            if (result == true) return Result.Success();
+            
+            errors.Add(TaskErrors.NotFound);
+            return Result.Failure(errors); 
+            
+        }
+
+        public async Task<Tuple<IEnumerable<TaskDTO>, Result>> GetUserProjectTasks(string userID, int projectID)
         {
             var errors = new List<Error>();
 
             var data = await _repository.GetUserProjectTasks(userID, projectID);
 
-            if (data != null && data.Any())
+            if (data.Any())
             {
                 return Tuple.Create(data, Result.Success());
             }

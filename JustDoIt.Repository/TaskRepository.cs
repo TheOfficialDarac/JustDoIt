@@ -15,8 +15,8 @@ namespace JustDoIt.Repository
     {
         #region Properties
 
-        private ApplicationContext _context { get; set; }
-        private TaskMapper _mapper { get; set; }
+        private readonly ApplicationContext _context;
+        private readonly TaskMapper _mapper;
         #endregion
 
         public TaskRepository(ApplicationContext context)
@@ -27,7 +27,7 @@ namespace JustDoIt.Repository
 
         #region Methods
 
-        public async Task<TaskDTO?> Create(TaskDTO entity)
+        public async Task<bool> Create(TaskDTO entity)
         {
             // basic exceptions already handled up to repository
             // here only database errors exist
@@ -36,30 +36,29 @@ namespace JustDoIt.Repository
                 var task = _mapper.MapToType(entity);
 
                 await _context.Tasks.AddAsync(task);
+
+                //await _context.UserTasks.AddAsync(
+                //    new UserTask {
+                //        TaskId = task.Id,
+                //        UserId = task.IssuerId,
+                //        AssignDate = DateTime.Now,
+                //        IsActive = true
+                //    });
                 await _context.SaveChangesAsync();
 
-                await _context.UserTasks.AddAsync(
-                    new UserTask {
-                        TaskId = task.Id,
-                        UserId = task.IssuerId,
-                        AssignDate = DateTime.Now,
-                        IsActive = true
-                    });
-                await _context.SaveChangesAsync();
-
-                return _mapper.MapToDTO(task);
+                return true;
             }
             catch { /*Logger? */ }
-            return null;
+            return false;
         }
-        public async Task<IEnumerable<TaskDTO>?> GetAll()
+        public async Task<IEnumerable<TaskDTO>> GetAll()
         {
             var query = _context.Tasks.AsQueryable();
             var result = await query.ToListAsync();
             return _mapper.MapToDTOList(result);
         }
 
-        public async Task<IEnumerable<TaskDTO>?> GetAll(
+        public async Task<IEnumerable<TaskDTO>> GetAll(
         TaskSearchParams searchParams)
         {
             try
@@ -144,7 +143,7 @@ namespace JustDoIt.Repository
             }
         }
 
-        public async Task<TaskDTO?> GetSingle(int id)
+        public async Task<TaskDTO> GetSingle(int id)
         {
             try
             {
@@ -152,66 +151,65 @@ namespace JustDoIt.Repository
 
                 if (result == null)
                 {
-                    return null;
+                    return new TaskDTO();
                 }
                 return _mapper.MapToDTO(result);
             }
             catch
             {
                 /*Logger */
-                return null;
+                return new TaskDTO();
             }
         }
 
-        public async Task<TaskDTO?> Update(TaskDTO entity)
+        public async Task<bool> Update(TaskDTO entity)
         {
             try
             {
                 var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
 
                 // entity is not found in db, nothing to update
-                if (existing is null) return null;
+                if (existing is null) return false;
 
                 existing.Title = entity.Title;
                 existing.Summary = entity.Summary;
                 existing.Description = entity.Description;
-                existing.ProjectId = entity.ProjectId;
                 existing.PictureUrl = entity.PictureUrl;
                 existing.Deadline = entity.Deadline;
-                existing.IsActive = entity.IsActive;
+                existing.IsActive = entity.IsActive!.Value;
                 existing.State = entity.State;
 
 
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                return entity;
+                return true;
             }
             catch
             { /*Logger */
-                return null;
+                return false;
             }
         }
 
-        public async Task<TaskDTO?> Delete(TaskDTO entity)
+        public async Task<bool> Delete(TaskDTO entity)
         {
             try
             {
                 var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
 
                 // entity is not in db, nothing to delete
-                if (existing is null) return entity;
+                if (existing is null) return false;
 
                 _context.Tasks.Remove(existing);
                 await _context.SaveChangesAsync();
-                return null;
+                return true;
             }
             catch
             { /*Logger */
-                return entity;
+                return false;
             }
         }
 
-        public async Task<IEnumerable<TaskDTO>?> GetUserTasks(string userID)
+        public async Task<IEnumerable<TaskDTO>> GetUserTasks(string userID)
         {
             try
             {
@@ -224,11 +222,11 @@ namespace JustDoIt.Repository
             }
             catch
             {
-                return null;
+                return new List<TaskDTO>();
             }
         }
 
-        public async Task<IEnumerable<TaskDTO>?> GetUserProjectTasks(string userID, int projectID)
+        public async Task<IEnumerable<TaskDTO>> GetUserProjectTasks(string userID, int projectID)
         {
             try
             {
@@ -247,7 +245,7 @@ namespace JustDoIt.Repository
             catch
             {
                 /* Logger */
-                return null;
+                return new List<TaskDTO>();
             }
         }
 

@@ -1,14 +1,17 @@
+using JustDoIt.API.Contracts;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.ViewModels;
 using JustDoIt.Service.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
 {
-    [ApiController, Route("api/[controller]")]
-    public class ProjectController : Controller
+    [Authorize]
+    [ApiController, Route(ApiRoutes.Projects.Controller)]
+    public class ProjectsController : Controller
     {
 
         #region Properties
@@ -19,7 +22,7 @@ namespace JustDoIt.API.Controllers
 
         #region Contructors
 
-        public ProjectController(IProjectService service, UserManager<ApplicationUser> userManager)
+        public ProjectsController(IProjectService service, UserManager<ApplicationUser> userManager)
         {
             _service = service;
             _userManager = userManager;
@@ -28,7 +31,7 @@ namespace JustDoIt.API.Controllers
 
         #region Methods
 
-        [HttpGet("user-projects", Name = "GetUserProjects")]
+        [HttpGet(ApiRoutes.Projects.UserProjects)]
         public async Task<IActionResult> GetUserProjects() { 
             try
             {
@@ -46,7 +49,7 @@ namespace JustDoIt.API.Controllers
             }
         }
 
-        [HttpGet("", Name = "GetProjects")]
+        [HttpGet(ApiRoutes.Projects.GetAll)]
         public async Task<IActionResult> GetProjects([FromQuery]ProjectSearchParams searchParams
         )
         {
@@ -62,12 +65,12 @@ namespace JustDoIt.API.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "GetProject")]
-        public async Task<ActionResult> GetProject(int id)
+        [HttpGet(ApiRoutes.Projects.Get)]
+        public async Task<ActionResult> GetProject(int projectId)
         {
             try
             {
-                var response = await _service.GetSingle(id);
+                var response = await _service.GetSingle(projectId);
 
                 return Ok(response);
             }
@@ -77,7 +80,7 @@ namespace JustDoIt.API.Controllers
             }
         }
 
-        [HttpPut("update", Name = "UpdateProject")]
+        [HttpPut(ApiRoutes.Projects.Update)]
         public async Task<ActionResult> UpdateProject([FromBody] ProjectDTO dto)
         {
             try
@@ -91,7 +94,7 @@ namespace JustDoIt.API.Controllers
             }
         }
 
-        [HttpPost("create", Name = "CreateProject")]
+        [HttpPost(ApiRoutes.Projects.Create)]
         public async Task<IActionResult> CreateProject([FromBody] ProjectDTO dto)
         {
             try
@@ -107,7 +110,7 @@ namespace JustDoIt.API.Controllers
             }
         }
 
-        [HttpDelete("delete", Name = "DeleteProject")]
+        [HttpDelete(ApiRoutes.Projects.Delete)]
         public async Task<IActionResult> DeleteProject([FromBody] ProjectDTO dto)
         {
             try

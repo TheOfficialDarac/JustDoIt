@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace JustDoIt.Model.DTOs;
 public class TaskDTO
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     public string? Title { get; set; }
 
@@ -13,7 +13,7 @@ public class TaskDTO
 
     public string? Description { get; set; }
 
-    public int ProjectId { get; set; }
+    public int? ProjectId { get; set; }
 
     public string? PictureUrl { get; set; }
 
@@ -21,7 +21,7 @@ public class TaskDTO
 
     public DateTime CreatedDate { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; } = true;
 
     public string? State { get; set; }
 }
