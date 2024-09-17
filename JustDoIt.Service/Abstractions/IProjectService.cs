@@ -1,14 +1,15 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
+using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Projects;
+using JustDoIt.Model.DTOs.Responses;
+using JustDoIt.Model.DTOs.Responses.Projects;
 using JustDoIt.Service.Abstractions.Common;
 
 namespace JustDoIt.Service.Abstractions
 {
-    public interface IProjectService: IGenericService<ProjectDTO>
+    public interface IProjectService : IGenericService<ProjectResponse, CreateProjectRequest, CreateProjectResponse, GetProjectsRequest, GetSingleItemRequest, UpdateProjectRequest>
     {
-        Task<(ProjectDTO data, Result result)> Create(ProjectDTO entity, string userID);
-        Task<(IEnumerable<ProjectDTO> data, Result result)> GetUserProjects(string userID);
-        Task<(IEnumerable<ProjectDTO> data, Result result)> GetAll(GetProjectsRequest searchParams);
+        Task<RequestResponse<ProjectResponse>> GetUserProjects(GetSingleUserRequest request);
     }
 }

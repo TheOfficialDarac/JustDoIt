@@ -1,19 +1,23 @@
-﻿namespace JustDoIt.Model.DTOs.Requests.Tasks
+﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
+
+namespace JustDoIt.Model.DTOs.Requests.Tasks
 {
-    public class UpdateTaskRequest
+    public class UpdateTaskRequest : UpdateRequest
     {
-        public string? Title { get; set; }
+        public int Id { get; set; } = 0;
 
-        public string? Summary { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public string? Description { get; set; }
+        public string Summary { get; set; } = string.Empty;
 
-        public string? PictureUrl { get; set; }
+        public string Description { get; set; } = string.Empty;
 
-        public DateTime? Deadline { get; set; }
+        public string PictureUrl { get; set; } = string.Empty;
 
-        public bool IsActive { get; set; }
+        public DateTime Deadline { get; set; } = DateTime.Now.AddDays(7);
 
-        public string? State { get; set; }
+        public bool IsActive { get; set; } = true;
+
+        public string State { get; set; }  = string.Empty;
     }
 }

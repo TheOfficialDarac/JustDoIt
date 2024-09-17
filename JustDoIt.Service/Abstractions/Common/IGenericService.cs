@@ -1,13 +1,22 @@
 ﻿using JustDoIt.Common;
+using JustDoIt.Model.DTOs.Requests.Abstractions;
+using JustDoIt.Model.DTOs.Responses;
+using JustDoIt.Model.DTOs.Responses.Abstractions;
 
 namespace JustDoIt.Service.Abstractions.Common
 {
-    public interface IGenericService<T> where T : class
+    public interface IGenericService<TResponse, TCreateRequest, TCreateResponse, TGetRequest, TGetSingleRequest, TUpdateRequest>
+        where TResponse : Response
+        where TCreateRequest : CreateRequest
+        where TGetRequest : GetRequest
+        where TGetSingleRequest : GetSingleRequest
+        where TUpdateRequest : UpdateRequest
+        where TCreateResponse : CreateResponse
     {
-        Task<(T data, Result result)> Create(T entity);
-        Task<(IEnumerable<T> data, Result result)> GetAll();
-        Task<(T data, Result result)> GetSingle(int id);
-        Task<Result> Update(T entity);
-        Task<Result> Delete(T entity);
+        Task<RequestResponse<TCreateResponse>> Create(TCreateRequest request);
+        Task<RequestResponse<TResponse>> GetAll(TGetRequest request);
+        Task<RequestResponse<TResponse>> GetSingle(TGetSingleRequest request);
+        Task<RequestResponse<TResponse>> Update(TUpdateRequest request);
+        Task<RequestResponse<TResponse>> Delete(TGetSingleRequest request);
     }
 }

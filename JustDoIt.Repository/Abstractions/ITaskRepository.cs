@@ -1,15 +1,15 @@
-﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs;
+﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
+using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Model.DTOs.Requests.Tasks;
+using JustDoIt.Model.DTOs.Responses.Tasks;
 using JustDoIt.Repository.Abstractions.Common;
 
 namespace JustDoIt.Repository.Abstractions
 {
-    public interface ITaskRepository : IGenericRepository<TaskDTO>
+    public interface ITaskRepository : IGenericRepository<TaskResponse, CreateTaskRequest, CreateTaskResponse, GetTasksRequest, GetSingleItemRequest, UpdateTaskRequest>
     {
-        Task<IEnumerable<TaskDTO>> GetUserTasks(string userID);
-        Task<IEnumerable<TaskDTO>> GetAll(GetTasksRequest searchParams);
+        Task<IEnumerable<TaskResponse>> GetUserTasks(GetSingleUserRequest request);
 
-        Task<IEnumerable<TaskDTO>> GetUserProjectTasks(string userID, int projectID);
+        Task<IEnumerable<TaskResponse>> GetUserProjectTasks(GetUserProjectTasksRequest request);
     }
 }

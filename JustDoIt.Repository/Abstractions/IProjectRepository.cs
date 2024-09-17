@@ -1,19 +1,12 @@
-﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs;
+﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Projects;
+using JustDoIt.Model.DTOs.Responses.Projects;
 using JustDoIt.Repository.Abstractions.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustDoIt.Repository.Abstractions
 {
-    public interface IProjectRepository : IGenericRepository<ProjectDTO>
+    public interface IProjectRepository : IGenericRepository<ProjectResponse, CreateProjectRequest, CreateProjectResponse, GetProjectsRequest, GetSingleItemRequest, UpdateProjectRequest>
     {
-        Task<ProjectDTO> Create(ProjectDTO entity, string userID);
-        Task<IEnumerable<ProjectDTO>> GetUserProjects(string userID);
-        Task<IEnumerable<ProjectDTO>> GetAll(GetProjectsRequest searchParams);
+        Task<IEnumerable<ProjectResponse>> GetUserProjects(GetSingleUserRequest request);
     }
 }

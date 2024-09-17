@@ -2,6 +2,7 @@
 using JustDoIt.API.Contracts;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
+using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Tasks;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -11,33 +12,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace JustDoIt.API.Controllers
 {
     [ApiController, Route(ApiRoutes.Tasks.Controller)]
-    public class TasksController : Controller
+    public class TasksController(ITaskService service) : Controller
     {
         #region Properties
 
-        private readonly ITaskService _service;
-        //private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITaskService _service = service;
         #endregion Properties
 
-        #region Constructors
-
-        public TasksController(ITaskService service/*, UserManager<ApplicationUser> userManager*/)        {
-            _service = service;
-            //_userManager = userManager;
-        }
-        #endregion Constructors
-
-        //#region Methods
+        #region Methods
         [Authorize]
 
         [HttpGet(ApiRoutes.Tasks.GetAll)]
-        public async Task<ActionResult> GetAll([FromQuery]GetTasksRequest searchParams)
+        public async Task<ActionResult> GetAll([FromQuery]GetTasksRequest request)
         {
             try
             {
-                var response = await _service.GetAll(searchParams);
+                var response = await _service.GetAll(request);
 
-                return response.result.IsSuccess ? Ok(response.ToTuple() ) : NotFound(response.ToTuple());
+                return response.Result.IsSuccess ? Ok(response) : BadRequest(response);
             }
             catch (Exception e)
             {
@@ -46,32 +38,32 @@ namespace JustDoIt.API.Controllers
         }
 
         //[HttpGet(ApiRoutes.Tasks.UserTasks)]
-        //public async Task<ActionResult> GetUserTasks()
+        //public Task<IActionResult> GetUserTasks()
         //{
-        //    try
-        //    {
-        //        var usr = await _userManager.GetUserAsync(User);
-        //        string? id = usr?.Id;
+            //return NotFound();
+            //try
+            //{
 
-        //        var response = await _service.GetUserTasks(id);
+            //    var response = await _service.GetUserTasks(request);
 
-        //        return response is null ? NotFound() : Ok(response);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
+            //    return response is null ? NotFound() : Ok(response);
+            //}
+            //catch (Exception e)
+            //{
+            //    return BadRequest(e.Message);
+            //}
         //}
 
         [Authorize]
         [HttpGet(ApiRoutes.Tasks.UserProjectTasks)]
-        public async Task<ActionResult> GetUserProjectTasks([FromRoute] int projectId)
+        public async Task<IActionResult> GetUserProjectTasks([FromQuery] GetUserProjectTasksRequest request)
         {
             try
             {
-                var response = await _service.GetUserProjectTasks(HttpContext.GetUserId(), projectId);
+                request.UserId = HttpContext.GetUserId();
+                var response = await _service.GetUserProjectTasks(request);
 
-                return response.result.IsSuccess ? Ok(response.ToTuple()) : NotFound(response.ToTuple());
+                return response.Result.IsSuccess ? Ok(response) : NotFound(response);
             }
             catch (Exception e)
             {
@@ -80,13 +72,13 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpGet(ApiRoutes.Tasks.Get)]
-        public async Task<ActionResult> GetTask(int taskId)
+        public async Task<ActionResult> GetTask(GetSingleItemRequest request)
         {
             try
             {
-                var response = await _service.GetSingle(taskId);
+                var response = await _service.GetSingle(request);
 
-                return response.result.IsSuccess ? Ok(response.ToTuple()) : NotFound(response.ToTuple());
+                return response.Result.IsSuccess ? Ok(response) : NotFound(response);
             }
             catch (Exception e)
             {
@@ -95,24 +87,14 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Tasks.Update)]
-        public async Task<ActionResult> UpdateTask([FromRoute] int taskId, [FromBody] UpdateTaskRequest request)
+        public async Task<ActionResult> UpdateTask([FromBody] UpdateTaskRequest request)
         {
             try
             {
 
                 if (request is null) return BadRequest();
 
-                var success = await _service.Update(new TaskDTO
-                {
-                    Id = taskId,
-                    Title = request.Title,
-                    Summary = request.Summary,
-                    Description= request.Description,
-                    PictureUrl = request.PictureUrl,
-                    Deadline = request.Deadline,
-                    IsActive = request.IsActive,
-                    State= request.State
-                });
+                var success = await _service.Update(request);
                 return Ok(success);
             }
             catch (Exception e)
@@ -126,32 +108,13 @@ namespace JustDoIt.API.Controllers
         {
             try
             {
-                if (request is null)
-                {
-                    return NotFound();
-                }
-                else if (!ModelState.IsValid)
-                {
-                    return BadRequest();
-                }
-                else
-                {
-                    var model = new TaskDTO
-                    {
-                        Title = request.Title,
-                        Summary = request.Summary,
-                        Description = request.Description,
-                        ProjectId = request.ProjectId,
-                        PictureUrl = request.PictureUrl,
-                        Deadline = request.Deadline,
-                    };
-                    var response = await _service.Create(model);
+                var response = await _service.Create(request);
 
-                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-                    var locationUrl = $"{baseUrl}/{ApiRoutes.Tasks.Get.Replace("{taskId}", response.data.Id.ToString())}";
-                    return Created(locationUrl, response.ToTuple());
-                }
+                if(response.Result.IsFailure) return BadRequest(response.Result);
 
+                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+                var locationUrl = $"{baseUrl}/{ApiRoutes.Tasks.Get.Replace("{taskId}", response.Data!.Id.ToString())}";
+                return Created(locationUrl, response);
             }
             catch (Exception e)
             {
@@ -160,19 +123,19 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpDelete(ApiRoutes.Tasks.Delete)]
-        public async Task<IActionResult> DeleteTask([FromBody]TaskDTO dto)
+        public async Task<IActionResult> DeleteTask([FromBody] GetSingleItemRequest request)
         {
             try
             {
-                var response = await _service.Delete(dto);
-                return response.IsSuccess ? NoContent(): NotFound(response);
+                var response = await _service.Delete(request);
+                return response.Result.IsSuccess ? NoContent(): NotFound(response);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
-        //#endregion
+        #endregion
 
     }
 }

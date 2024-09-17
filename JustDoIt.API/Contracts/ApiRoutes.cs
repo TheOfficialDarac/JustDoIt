@@ -33,7 +33,8 @@ namespace JustDoIt.API.Contracts
             public const string Delete = "delete";
             public const string Update = "update";
 
-            public const string UserProjects = "user";
+            public const string UserProjects = "user/{userId}";
+            public const string CurrentUserProjects = "user";
         }
         public static class Auth
         {

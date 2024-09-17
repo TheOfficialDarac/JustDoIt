@@ -1,5 +1,5 @@
 @JustDoIt.API_HostAddress = https://localhost:7010/api/v1
-
+@auth_token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NjVkMGQwZC01YmU1LTRhN2UtYjU4YS1kZmY4MDM3NWVkNTQiLCJlbWFpbCI6InRlc3RAdnV2LmhyIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMTAiLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiZXhwIjoxNzI2NTUzODc2LCJpYXQiOjE3MjY1NTIwNzYsIm5iZiI6MTcyNjU1MjA3Nn0.ivBBz2aqahI4XDHbv52WowHb_XGX6ZoftsSTtnA4pM2XbUp5itHNVXjSv0FlGXxx7eW6PUzPVeXUw5kk9y9-LQ
 ############################################################
 # AUTHENTIFICATION
 
@@ -15,22 +15,23 @@ POST {{JustDoIt.API_HostAddress}}/auth/login
 Content-Type: application/json
 
 {
-"email": "test2@vuv.hr",
-"password": "P@ssw0rd"
+"email": "test@vuv.hr",
+"password": "Lozinka123!"
 }
 ###
 
 GET {{JustDoIt.API_HostAddress}}/auth/test
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYjJiMzVjMS1kN2FjLTQ3ZTEtYmNmMy1iMGM1OTk1ODM5N2QiLCJlbWFpbCI6InRlc3QyQHZ1di5ociIsImVtYWlsX3ZlcmlmaWVkIjoiRmFsc2UiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImV4cCI6MTcyNjUxODg2NiwiaWF0IjoxNzI2NTE3MDY2LCJuYmYiOjE3MjY1MTcwNjZ9.75-2tqC8xnO-VnizDefam7-C5Refs_z6nm0_niQLKGHtdVf8QpLB51AhCIH0F7VLIP1MTtI7M3opZPrvs_AP7w
+Authorization: Bearer {{auth_token}}
 ####
 
 POST {{JustDoIt.API_HostAddress}}/auth/logout
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NjVkMGQwZC01YmU1LTRhN2UtYjU4YS1kZmY4MDM3NWVkNTQiLCJlbWFpbCI6InRlc3RAdnV2LmhyIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMTAiLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiZXhwIjoxNzI2NDY3NTM4LCJpYXQiOjE3MjY0NjU3MzgsIm5iZiI6MTcyNjQ2NTczOH0.Y0ciViRhCJgg47pW9tVjJ2RZBI7RpA5esM1ZRrzAs7oxYLIhAJtA-Oueg_kkloNjqFhPUpyi9HAGNRGeKYIAcA
+Authorization: Bearer {{auth_token}}
 
 ############################################################
 # TASKS
+
 GET {{JustDoIt.API_HostAddress}}/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NjVkMGQwZC01YmU1LTRhN2UtYjU4YS1kZmY4MDM3NWVkNTQiLCJlbWFpbCI6InRlc3RAdnV2LmhyIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMTAiLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiZXhwIjoxNzI2NDc3NjU4LCJpYXQiOjE3MjY0NzU4NTgsIm5iZiI6MTcyNjQ3NTg1OH0.lMaMOmOAda1wkRVpMcuFhjB9auwOE2KxFZQOw96ThcWqV7ktMGglaFTRr3vjmDqkDM4V2P7QNF_SlSS95Pz87A
+Authorization: Bearer {{auth_token}}
 ###
 

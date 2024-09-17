@@ -1,13 +1,10 @@
-﻿using Azure;
-using JustDoIt.Common;
-using JustDoIt.DAL;
-using JustDoIt.Mapperly;
-using JustDoIt.Model;
-using JustDoIt.Model.DTOs;
+﻿using JustDoIt.DAL;
+using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Tasks;
+using JustDoIt.Model.DTOs.Responses.Tasks;
 using JustDoIt.Repository.Abstractions;
+using JustDoIt.Repository.Mappers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace JustDoIt.Repository
 {
@@ -27,39 +24,25 @@ namespace JustDoIt.Repository
 
         #region Methods
 
-        public async Task<TaskDTO> Create(TaskDTO entity)
+        public async Task<CreateTaskResponse> Create(CreateTaskRequest request)
         {
             // basic exceptions already handled up to repository
             // here only database errors exist
             try
             {
-                var task = _mapper.MapToType(entity);
+                var task = _mapper.CreateRequestToType(request);
 
                 await _context.Tasks.AddAsync(task);
-
-                //await _context.UserTasks.AddAsync(
-                //    new UserTask {
-                //        TaskId = task.Id,
-                //        UserId = task.IssuerId,
-                //        AssignDate = DateTime.Now,
-                //        IsActive = true
-                //    });
                 await _context.SaveChangesAsync();
 
 
-                return _mapper.MapToDTO(task);
+                return _mapper.TypeToCreateResponse(task);
             }
             catch { /*Logger? */ }
-            return new TaskDTO();
-        }
-        public async Task<IEnumerable<TaskDTO>> GetAll()
-        {
-            var query = _context.Tasks.AsQueryable();
-            var result = await query.ToListAsync();
-            return _mapper.MapToDTOList(result);
+            return new CreateTaskResponse();
         }
 
-        public async Task<IEnumerable<TaskDTO>> GetAll(
+        public async Task<IEnumerable<TaskResponse>> GetAll(
         GetTasksRequest request)
         {
             try
@@ -133,123 +116,106 @@ namespace JustDoIt.Repository
                 }
 
                 var tasks = await query.ToListAsync();
-                var results = _mapper.MapToDTOList(tasks);
 
-                return results;
+                return _mapper.ToResponseList(tasks);
             }
             catch
             {
                 /*Logger */
-                return null;
+                return [];
             }
         }
 
-        public async Task<TaskDTO> GetSingle(int id)
+        public async Task<TaskResponse> GetSingle(GetSingleItemRequest request)
         {
             try
             {
-                var result = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+                var result = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == request.Id);
 
                 if (result == null)
                 {
-                    return new TaskDTO();
+                    return new TaskResponse();
                 }
-                return _mapper.MapToDTO(result);
+                return _mapper.ToResponse(result);
             }
-            catch
-            {
-                /*Logger */
-                return new TaskDTO();
-            }
+            catch { /*Logger */ }
+            return new TaskResponse();
         }
 
-        public async Task<bool> Update(TaskDTO entity)
+        public async Task<TaskResponse> Update(UpdateTaskRequest request)
         {
             try
             {
-                var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
+                var existing = await _context.Tasks.FindAsync(request.Id);
 
                 // entity is not found in db, nothing to update
-                if (existing is null) return false;
+                if (existing is null) return new TaskResponse();
 
-                existing.Title = entity.Title;
-                existing.Summary = entity.Summary;
-                existing.Description = entity.Description;
-                existing.PictureUrl = entity.PictureUrl;
-                existing.Deadline = entity.Deadline;
-                existing.IsActive = entity.IsActive!.Value;
-                existing.State = entity.State;
+                existing.Title = request.Title;
+                existing.Summary = request.Summary;
+                existing.Description = request.Description;
+                existing.PictureUrl = request.PictureUrl;
+                existing.Deadline = request.Deadline;
+                existing.IsActive = request.IsActive;
+                existing.State = request.State;
 
 
                 _context.ChangeTracker.DetectChanges();
                 await _context.SaveChangesAsync();
-                return true;
+                return _mapper.ToResponse(existing);
             }
-            catch
-            { /*Logger */
-                return false;
-            }
+            catch { /*Logger */ }
+            return new TaskResponse();
         }
 
-        public async Task<bool> Delete(TaskDTO entity)
+        public async Task<TaskResponse> Delete(GetSingleItemRequest request)
         {
             try
             {
-                var existing = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == entity.Id);
+                var existing = await _context.Tasks.FindAsync(request.Id);
 
                 // entity is not in db, nothing to delete
-                if (existing is null) return false;
+                if (existing is null) return new TaskResponse();
 
                 _context.Tasks.Remove(existing);
                 await _context.SaveChangesAsync();
-                return true;
+                return new TaskResponse();
             }
-            catch
-            { /*Logger */
-                return false;
-            }
+            catch { /*Logger */ }
+            return new TaskResponse { Id = request.Id };
         }
 
-        public async Task<IEnumerable<TaskDTO>> GetUserTasks(string userID)
+        public async Task<IEnumerable<TaskResponse>> GetUserTasks(GetSingleUserRequest request)
         {
             try
             {
                 var query = _context.UserTasks
-                    .Where(ut => ut.UserId.Equals(userID))
+                    .Where(ut => ut.UserId.Equals(request.Id))
                     .Select(t => t.Task);
 
                 var tasks = await query.ToListAsync();
-                return _mapper.MapToDTOList(tasks);
+                return _mapper.ToResponseList(tasks);
             }
-            catch
-            {
-                return new List<TaskDTO>();
-            }
+            catch { /* Logger */}
+            return [];
         }
 
-        public async Task<IEnumerable<TaskDTO>> GetUserProjectTasks(string userID, int projectID)
+        public async Task<IEnumerable<TaskResponse>> GetUserProjectTasks(GetUserProjectTasksRequest request)
         {
             try
             {
-                //  get project find all tasks
-                //  get user tasks
-                //  get common inputs
 
                 var query = _context.UserTasks
-                    .Where(ut => ut.UserId.Equals(userID))
+                    .Where(ut => ut.UserId.Equals(request.UserId))
                     .Select(t => t.Task)
-                    .Where(t => t.ProjectId.Equals(projectID));
+                    .Where(t => t.ProjectId.Equals(request.ProjectId));
 
                 var tasks = await query.ToListAsync();
-                return _mapper.MapToDTOList(tasks);
+                return _mapper.ToResponseList(tasks);
             }
-            catch
-            {
-                /* Logger */
-                return new List<TaskDTO>();
-            }
+            catch { /* Logger */ }
+            return [];
         }
-
         #endregion
     }
 }

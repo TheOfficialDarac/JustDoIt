@@ -1,129 +1,118 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
+using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Tasks;
+using JustDoIt.Model.DTOs.Responses;
+using JustDoIt.Model.DTOs.Responses.Abstractions;
+using JustDoIt.Model.DTOs.Responses.Tasks;
 using JustDoIt.Repository.Abstractions;
+using JustDoIt.Repository.Mappers;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
 
 namespace JustDoIt.Service.Implementations
 {
-    public class TaskService : ITaskService
+    public class TaskService(ITaskRepository repository) : ITaskService
     {
         #region Properties
 
-        private readonly ITaskRepository _repository;
-        #endregion
+        private readonly ITaskRepository _repository = repository;
 
-        public TaskService(ITaskRepository repository)
-        {
-            _repository = repository;
-        }
+        #endregion
 
         #region Methods
 
-        public async Task<(IEnumerable<TaskDTO> data, Result result)> GetUserTasks(string userID)
+        public async Task<RequestResponse<TaskResponse>> GetUserTasks(GetSingleUserRequest request)
         {
             var errors = new List<Error>();
 
-            var result = await _repository.GetUserTasks(userID);
+            var result = await _repository.GetUserTasks(request);
 
-            if (result.Any()) return (result, Result.Success());
+            if (result.Any()) return new RequestResponse<TaskResponse>(result, Result.Success());
 
             errors.Add(TaskErrors.NotFound);
-            return (result, Result.Failure(errors));
 
+            return new RequestResponse<TaskResponse>(result, Result.Failure(errors));
         }
 
-        async Task<(IEnumerable<TaskDTO> data, Result result)> ITaskService.GetAll(GetTasksRequest searchParams)
+        async Task<RequestResponse<TaskResponse>> GetAll(GetTasksRequest request)
         {
             var errors = new List<Error>();
 
-            var result = await _repository.GetAll(searchParams);
+            var result = await _repository.GetAll(request);
 
-            if (result.Any()) return (result, Result.Success());
+            if (result.Any()) return new RequestResponse<TaskResponse>(result, Result.Success());
 
             errors.Add(TaskErrors.NotFound);
-            return (result, Result.Failure(errors));
+            return new RequestResponse<TaskResponse>(result, Result.Failure(errors));
         }
 
-        public async Task<(IEnumerable<TaskDTO> data, Result result)> GetAll()
+        public async Task<RequestResponse<CreateTaskResponse>> Create(CreateTaskRequest request)
         {
             var errors = new List<Error>();
-            var result = await _repository.GetAll();
+            var data = await _repository.Create(request);
 
-            if (result.Any()) return (result, Result.Success());
-
-            errors.Add(TaskErrors.NotFound);
-            return (result, Result.Failure(errors));
-
-        }
-
-        public async Task<(TaskDTO data, Result result)> Create(TaskDTO entity)
-        {
-            var errors = new List<Error>();
-            var data = await _repository.Create(entity);
-
-            if (data.Id.HasValue) return (data, Result.Success());
+            if (data.Id == 0) return new RequestResponse<CreateTaskResponse>(data, Result.Success());
 
             errors.Add(TaskErrors.NotFound);
-            return (data, Result.Failure(errors));
+            return new RequestResponse<CreateTaskResponse>(data, Result.Failure(errors));
         }
 
-        public async Task<(TaskDTO data, Result result)> GetSingle(int id)
+        public async Task<RequestResponse<TaskResponse>> GetSingle(GetSingleItemRequest request)
         {
-            var data = await _repository.GetSingle(id);
+            var data = await _repository.GetSingle(request);
             if (data.Id.HasValue)
             {
-                return (data, Result.Success());
+                return new RequestResponse<TaskResponse>(data, Result.Success());
             }
             var errors = new List<Error> { TaskErrors.NotFound };
-            return (data, Result.Failure(errors));
+            return new RequestResponse<TaskResponse>(new TaskResponse(), Result.Failure(errors));
         }
 
-        public async Task<Result> Update(TaskDTO entity)
+        public async Task<RequestResponse<TaskResponse>> Update(UpdateTaskRequest request)
         {
             //TODO sanitize
             var errors = new List<Error>();
 
             //TODO checks done
-            var data = await _repository.Update(entity);
-            if (data == true)
+            var data = await _repository.Update(request);
+            if (data.Id != 0)
             {
-                return Result.Success();
+                return new RequestResponse<TaskResponse>(data, Result.Success());
             }
 
             errors.Add(TaskErrors.NotFound);
-            return Result.Failure(errors);
+            return new RequestResponse<TaskResponse>(data, Result.Failure(errors));
         }
 
-        public async Task<Result> Delete(TaskDTO entity)
+        public async Task<RequestResponse<TaskResponse>> Delete(GetSingleItemRequest request)
         {
             //TODO sanitize
             var errors = new List<Error>();
 
             //TODO checks done
-            var result = await _repository.Delete(entity);
+            var response = await _repository.Delete(request);
 
-            if (result == true) return Result.Success();
+            if (response.Id == 0) return new RequestResponse<TaskResponse>(response, Result.Success());
 
             errors.Add(TaskErrors.NotFound);
-            return Result.Failure(errors);
+            return new RequestResponse<TaskResponse>(response, Result.Failure(errors));
 
         }
 
-        public async Task<(IEnumerable<TaskDTO> data, Result result)> GetUserProjectTasks(string userID, int projectID)
+        public async Task<RequestResponse<TaskResponse>> GetUserProjectTasks(GetUserProjectTasksRequest request)
         {
             var errors = new List<Error>();
 
-            var data = await _repository.GetUserProjectTasks(userID, projectID);
+            var data = await _repository.GetUserProjectTasks(request);
 
             if (data.Any())
             {
-                return (data, Result.Success());
+                return new RequestResponse<TaskResponse>(data, Result.Success());
             }
             else errors.Add(TaskErrors.NotFound);
 
-            return (data, Result.Failure(errors));
+            return new RequestResponse<TaskResponse>([], Result.Failure(errors));
         }
 
         #endregion

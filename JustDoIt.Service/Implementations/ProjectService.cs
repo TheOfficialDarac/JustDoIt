@@ -1,9 +1,13 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
+using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Projects;
+using JustDoIt.Model.DTOs.Responses;
+using JustDoIt.Model.DTOs.Responses.Projects;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
+using Microsoft.IdentityModel.Tokens;
 
 namespace JustDoIt.Service.Implementations
 {
@@ -21,119 +25,96 @@ namespace JustDoIt.Service.Implementations
 
         #region Methods
 
-        public Task<(ProjectDTO data,Result result)> Create(ProjectDTO entity)
-        {
-            var errors = new List<Error> { };
-            return Task.FromResult((new ProjectDTO(),Result.Failure(errors)));
-        }
-
-        public async Task<(IEnumerable<ProjectDTO> data, Result result)> GetAll(GetProjectsRequest searchParams)
+        public async Task<RequestResponse<ProjectResponse>> GetAll(GetProjectsRequest request)
         {
             var errors = new List<Error>();
 
-            if (searchParams is not null)
-            {
-                var response = await _repository.GetAll(searchParams);
+            var response = await _repository.GetAll(request);
 
-                if (response.Any()) return (response, Result.Success());
-                else errors.Add(ProjectErrors.NotFound);
-            }
-            errors.Add(ProjectErrors.BadRequest);
-
-            return (Enumerable.Empty<ProjectDTO>(), Result.Failure(errors));
-
-        }
-
-        public async Task<(IEnumerable<ProjectDTO> data, Result result)> GetAll()
-        {
-            var errors = new List<Error>();
-            var response = await _repository.GetAll();
-
-            if (response.Any())
-            {
-                return (response, Result.Success());
-            }
-
+            if (response.Any()) return new RequestResponse<ProjectResponse>(response, Result.Success());
+            
             errors.Add(ProjectErrors.NotFound);
-            errors.Add(ProjectErrors.BadRequest);
-            return (response, Result.Failure(errors));
+            //errors.Add(ProjectErrors.BadRequest);
+
+            return new RequestResponse<ProjectResponse>([], Result.Failure(errors));
+
         }
 
-        public async Task<(ProjectDTO data, Result result)> GetSingle(int id)
+        public async Task<RequestResponse<ProjectResponse>> GetSingle(GetSingleItemRequest request)
         {
             var errors = new List<Error>();
-            var response = await _repository.GetSingle(id);
+            var response = await _repository.GetSingle(request);
 
-            if (response.Id.HasValue)
+            if (response.Id == 0)
             {
                 errors.Add(ProjectErrors.NotFound);
                 errors.Add(ProjectErrors.BadRequest);
-                return (new ProjectDTO(), Result.Failure(errors));
+                return new RequestResponse<ProjectResponse>(response, Result.Failure(errors));
             }
 
-            return (response, Result.Success());
+            return new RequestResponse<ProjectResponse>(response, Result.Success());
         }
 
-        public async Task<(IEnumerable<ProjectDTO> data, Result result)> GetUserProjects(string userID)
+        public async Task<RequestResponse<ProjectResponse>> GetUserProjects(GetSingleUserRequest request)
         {
             var errors = new List<Error>();
-            if (string.IsNullOrEmpty(userID))
+            if (string.IsNullOrEmpty(request.Id.ToString()))
             {
                 errors.Add(ProjectErrors.BadRequest);
-                return (Enumerable.Empty<ProjectDTO>(), Result.Failure(errors));
+                return new RequestResponse<ProjectResponse>([], Result.Failure(errors));
             }
-            var response = await _repository.GetUserProjects(userID);
+            var response = await _repository.GetUserProjects(request);
 
             if (response.Any())
             {
-                return (response, Result.Success());
+                return new RequestResponse<ProjectResponse>(response, Result.Success());
             }
 
             errors.Add(ProjectErrors.NotFound);
-            return (response, Result.Failure(errors));
+            return new RequestResponse<ProjectResponse>([], Result.Failure(errors));
         }
 
-        public async Task<Result> Update(ProjectDTO entity)
+        public async Task<RequestResponse<ProjectResponse>> Update(UpdateProjectRequest request)
         {
             var errors = new List<Error>();
-            if (entity.Equals(null))
+            if (request.Id == 0)
             {
                 errors.Add(ProjectErrors.BadRequest);
-                return Result.Failure(errors);
+                return new RequestResponse<ProjectResponse>(new ProjectResponse(), Result.Failure(errors));
             }
 
-            var result = await _repository.Update(entity);
-            if (result.Equals(null))
+            var result = await _repository.Update(request);
+            if (result.Id == 0)
             {
                 errors.Add(ProjectErrors.NotFound);
-                return Result.Failure(errors);
+                return new RequestResponse<ProjectResponse>(new ProjectResponse(), Result.Failure(errors));
             }
 
-            return Result.Success();
+            return new RequestResponse<ProjectResponse>(result, Result.Success());
         }
 
-        public async Task<(ProjectDTO data, Result result)> Create(ProjectDTO entity, string userID)
+        public async Task<RequestResponse<CreateProjectResponse>> Create(CreateProjectRequest request)
         {
-            var result = await _repository.Create(entity, userID);
-            if (result.Id.HasValue)
+            var result = await _repository.Create(request);
+            if (result.Id != 0)
             {
-                return (result,Result.Success());
+                return new RequestResponse<CreateProjectResponse>(result,Result.Success());
             }
             var errors = new List<Error> { ProjectErrors.NotFound };
 
-            return (new ProjectDTO(), Result.Failure(errors));
+            return new RequestResponse<CreateProjectResponse>(new CreateProjectResponse(), Result.Failure(errors));
         }
 
-        public async Task<Result> Delete(ProjectDTO entity)
+        public async Task<RequestResponse<ProjectResponse>> Delete(GetSingleItemRequest request)
         {
             var errors = new List<Error>();
-            var result = await _repository.Delete(entity);
-            if (result.Equals(null))
+            var result = await _repository.Delete(request);
+            if (result.Id == 0)
             {
-                return Result.Success();
+                return new RequestResponse<ProjectResponse>(result, Result.Success());
             }
             errors.Add(ProjectErrors.NotFound);
-            return Result.Failure(errors);
+            return new RequestResponse<ProjectResponse>(result, Result.Failure(errors));
         }
 
 

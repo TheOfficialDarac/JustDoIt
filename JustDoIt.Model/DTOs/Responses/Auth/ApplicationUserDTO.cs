@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JustDoIt.Model.DTOs
+namespace JustDoIt.Model.DTOs.Responses.Auth
 {
     public class ApplicationUserDTO
     {

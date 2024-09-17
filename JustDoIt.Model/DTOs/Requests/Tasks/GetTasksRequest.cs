@@ -1,6 +1,8 @@
-﻿namespace JustDoIt.Model.DTOs.Requests.Tasks
+﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
+
+namespace JustDoIt.Model.DTOs.Requests.Tasks
 {
-    public class GetTasksRequest
+    public class GetTasksRequest: GetRequest
     {
         public string? Title { get; set; }
 

@@ -1,14 +1,10 @@
 ﻿using JustDoIt.DAL;
-using JustDoIt.Mapperly;
-using JustDoIt.Model.DTOs;
+using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Projects;
+using JustDoIt.Model.DTOs.Responses.Projects;
 using JustDoIt.Repository.Abstractions;
+using JustDoIt.Repository.Mappers;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JustDoIt.Repository
 {
@@ -24,120 +20,101 @@ namespace JustDoIt.Repository
             _mapper = new ProjectMapper();
         }
 
-        public async Task<ProjectDTO> Create(ProjectDTO entity, string userID)
+        public async Task<CreateProjectResponse> Create(CreateProjectRequest request)
         {
             try
             {
-                var project = _mapper.MapToType(entity);
+                var project = _mapper.CreateRequestToType(request);
 
                 await _context.Projects.AddAsync(project);
                 await _context.SaveChangesAsync();
 
                 await _context.UserProjects.AddAsync(new Model.UserProject
                 {
-                    UserId = userID,
+                    UserId = request.IssuerId.ToString(),
                     ProjectId = project.Id,
                     IsVerified = true,
                     Token = "CREATOR",
                     RoleId = 1
                 });
 
-                return _mapper.MapToDTO(project);
+                return _mapper.TypeToCreateResponse(project);
             }
-            catch
-            {
-                return new ProjectDTO();
-            }
+            catch { /* Logger */ }
+            return new CreateProjectResponse();
         }
 
-        public Task<ProjectDTO> Create(ProjectDTO entity)
+        public async Task<ProjectResponse> Delete(GetSingleItemRequest request)
         {
-            return Task.FromResult(entity);
-        }
-
-        public async Task<bool> Delete(ProjectDTO entity)
-        {
-            var project = _mapper.MapToType(entity);
-
-            var found = await _context.Projects.FindAsync(project);
+            var found = await _context.Projects.FindAsync(request.Id);
             if(found != null)
             {
                 _context.Remove(found);
                 await _context.SaveChangesAsync();
-                return true;
+                return new ProjectResponse();
             }
 
-            return false;
+            return new ProjectResponse { Id = request.Id };
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetAll(GetProjectsRequest searchParams)
+        public async Task<IEnumerable<ProjectResponse>> GetAll(GetProjectsRequest request)
         {
             var query = _context.Projects.AsQueryable();
 
-            if(!string.IsNullOrEmpty(searchParams.Title))
+            if(!string.IsNullOrEmpty(request.Title))
             {
-                query = query.Where(x => x.Title.Contains(searchParams.Title));
+                query = query.Where(x => x.Title.Contains(request.Title));
             }
 
-            if(searchParams.IsActive.HasValue)
+            if(request.IsActive.HasValue)
             {
-                query = query.Where(x => x.IsActive.Equals(searchParams.IsActive));
+                query = query.Where(x => x.IsActive.Equals(request.IsActive));
             }
 
-            if(searchParams.MinCreatedDate.HasValue)
+            if(request.MinCreatedDate.HasValue)
             {
-                searchParams.MinCreatedDate = DateTime.SpecifyKind(searchParams.MinCreatedDate.Value, DateTimeKind.Utc);
-                query = query.Where(x => x.CreatedDate >= searchParams.MinCreatedDate);
+                request.MinCreatedDate = DateTime.SpecifyKind(request.MinCreatedDate.Value, DateTimeKind.Utc);
+                query = query.Where(x => x.CreatedDate >= request.MinCreatedDate);
             }
 
-            if (searchParams.MaxCreatedDate.HasValue)
+            if (request.MaxCreatedDate.HasValue)
             {
-                searchParams.MaxCreatedDate = DateTime.SpecifyKind(searchParams.MaxCreatedDate.Value, DateTimeKind.Utc);
-                query = query.Where(x => x.CreatedDate <= searchParams.MaxCreatedDate);
+                request.MaxCreatedDate = DateTime.SpecifyKind(request.MaxCreatedDate.Value, DateTimeKind.Utc);
+                query = query.Where(x => x.CreatedDate <= request.MaxCreatedDate);
             }
 
             var result = await query.ToListAsync();
-            return _mapper.MapToDTOList(result);
+            return _mapper.ToResponseList(result);
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetAll()
+        public async Task<ProjectResponse> GetSingle(GetSingleItemRequest request)
         {
-            var result = await _context.Projects.ToListAsync();
-            return _mapper.MapToDTOList(result);
+            var result = await _context.Projects.FindAsync(request.Id);
+
+            return result is null ? new() : _mapper.ToResponse(result);
         }
 
-        public async Task<ProjectDTO> GetSingle(int id)
-        {
-            var query = _context.Projects.AsQueryable();
-            query = query.Where(x => x.Id.Equals(id));
-
-            var result = await query.SingleOrDefaultAsync();
-            return result is null ? new ProjectDTO() : _mapper.MapToDTO(result);
-        }
-
-        public async Task<IEnumerable<ProjectDTO>> GetUserProjects(string userID)
+        public async Task<IEnumerable<ProjectResponse>> GetUserProjects(GetSingleUserRequest request)
         { 
             var result = await _context.UserProjects.AsQueryable()
-                .Where(x => x.UserId.Equals(userID))
+                .Where(x => x.UserId.Equals(request.Id))
                 .Select(x => x.Project)
                 .ToListAsync();
-            return _mapper.MapToDTOList(result);
-        }
 
-        public async Task<bool> Update(ProjectDTO entity)
+            return _mapper.ToResponseList(result);        }
+
+        public async Task<ProjectResponse> Update(UpdateProjectRequest request)
         {
-            var project = _mapper.MapToType(entity);
+            var found = await _context.Projects.FindAsync(request.Id);
+            if(found is null) return new ProjectResponse();
 
-            var found = await _context.Projects.FindAsync(project);
-            if(found is null) return false;
-
-            found.Title = entity.Title!;
-            found.Description = entity.Description;
-            found.PictureUrl = entity.PictureUrl;
-            found.IsActive = entity.IsActive!.Value;
+            found.Title = request.Title;
+            found.Description = request.Description;
+            found.PictureUrl = request.PictureUrl;
+            found.IsActive = request.IsActive;
 
             await _context.SaveChangesAsync();
-            return true;
+            return _mapper.ToResponse(found);
         }
     }
 }

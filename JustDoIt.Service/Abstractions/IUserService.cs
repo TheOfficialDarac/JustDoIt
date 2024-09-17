@@ -1,14 +1,14 @@
 ﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs;
 using JustDoIt.Model.DTOs.Requests.Auth;
+using JustDoIt.Model.DTOs.Responses;
 using JustDoIt.Service.Abstractions.Common;
 
 namespace JustDoIt.Service.Abstractions
 {
-    public interface IUserService// : IGenericService<ApplicationUserDTO>
+    public interface IUserService //: IGenericService
     {
-        Task<(string data, Result result)> LoginAsync(UserLoginRequest request);
+        Task<RequestResponse<string>> LoginAsync(UserLoginRequest request);
         Task<Result> LogoutAsync();
-        Task<Result> RegisterAsync(UserRegistrationRequest data);
+        //Task<Result> RegisterAsync(UserRegistrationRequest data);
     }
 }

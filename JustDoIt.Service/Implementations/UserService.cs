@@ -1,32 +1,28 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs.Requests.Auth;
+using JustDoIt.Model.DTOs.Responses;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Azure;
 
 namespace JustDoIt.Service.Implementations
 {
-    public class UserService: IUserService
+    public class UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration) : IUserService
     {
         #region Properties
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IConfiguration _configuration;
-        #endregion
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly IConfiguration _configuration = configuration;
 
-        public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
-        }
+        #endregion
 
         #region Methods
 
-        public async Task<Result> RegisterAsync(UserRegistrationRequest data)
+        public async Task<RequestResponse<bool>> Create(UserRegistrationRequest data)
         {
             var errors = new List<Error>();
             // TODO perform email & password validation
@@ -40,14 +36,14 @@ namespace JustDoIt.Service.Implementations
             var response = await _userManager.CreateAsync(new ApplicationUser { Email = data.Email, UserName = data.Email }, data.Password);
 
             //  send request to confirm email, otherwise unable to login
-            if (response.Succeeded) return Result.Success();
+            if (response.Succeeded) return new RequestResponse<bool>(Result.Success());
 
             var responseErrors = response.Errors.Select(x => new Error(x.Code, x.Description)).ToList();
             errors.AddRange(responseErrors);
             return Result.Failure(errors);
         }
 
-        public async Task<(string data, Result result)> LoginAsync(UserLoginRequest request)
+        public async Task<RequestResponse<string>> LoginAsync(UserLoginRequest request)
         {
             List<Error> errors = [];
             ApplicationUser? user = await _userManager.FindByEmailAsync(request.Email);
@@ -55,7 +51,7 @@ namespace JustDoIt.Service.Implementations
             if (user == null)
             {
                 errors.Add(UserErrors.NotFound);
-                return ("", Result.Failure(errors));
+                return new RequestResponse<string>("", Result.Failure(errors));
             }
 
             var userHasPw = await _userManager.CheckPasswordAsync(user, request.Password);
@@ -63,13 +59,13 @@ namespace JustDoIt.Service.Implementations
             if (!userHasPw)
             {
                 errors.Add(UserErrors.InvalidCredentials);
-                return ("", Result.Failure(errors));
+                return new RequestResponse<string>("", Result.Failure(errors));
             } 
                 
             await _signInManager.SignInAsync(user, false);
 
             var tokenString = new TokenProvider(_configuration).Create(user);
-            return (tokenString, Result.Success());
+            return new RequestResponse<string>(tokenString, Result.Success());
         }
 
         public async Task<Result> LogoutAsync()

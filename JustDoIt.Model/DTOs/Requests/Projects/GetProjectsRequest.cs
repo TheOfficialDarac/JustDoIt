@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using JustDoIt.Model.DTOs.Requests.Abstractions;
 
 namespace JustDoIt.Model.DTOs.Requests.Projects
 {
-    public class GetProjectsRequest
+    public class GetProjectsRequest: GetRequest
     {
-        //public int? Id { get; set; }
-
         public string? Title { get; set; }
-
-        //public string? Description { get; set; }
-
-        //public string? PictureUrl { get; set; }
 
         public bool? IsActive { get; set; }
 

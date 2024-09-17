@@ -1,13 +1,20 @@
-﻿using JustDoIt.Common;
+﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
+using JustDoIt.Model.DTOs.Responses.Abstractions;
 
 namespace JustDoIt.Repository.Abstractions.Common
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<TResponse, TCreateRequest, TCreateResponse, TGetRequest, TGetSingleRequest, TUpdateRequest> 
+        where TResponse:Response
+        where TCreateRequest : CreateRequest
+        where TGetRequest : GetRequest
+        where TGetSingleRequest : GetSingleRequest
+        where TUpdateRequest : UpdateRequest
+        where TCreateResponse : CreateResponse
     {
-        Task<T> Create(T entity);
-        Task<IEnumerable<T>> GetAll();
-        Task<T> GetSingle(int id);
-        Task<bool> Update(T entity);
-        Task<bool> Delete(T entity);
+        Task<TCreateResponse> Create(TCreateRequest request);
+        Task<IEnumerable<TResponse>> GetAll(TGetRequest request);
+        Task<TResponse> GetSingle(TGetSingleRequest request);
+        Task<TResponse> Update(TUpdateRequest request);
+        Task<TResponse> Delete(TGetSingleRequest request);
     }
 }

@@ -14,7 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\JustDoIt.Common\JustDoIt.Common.csproj" />
     <ProjectReference Include="..\JustDoIt.DAL\JustDoIt.DAL.csproj" />
-    <ProjectReference Include="..\JustDoIt.Mapperly\JustDoIt.Mapperly.csproj" />
   </ItemGroup>
 
 </Project>
