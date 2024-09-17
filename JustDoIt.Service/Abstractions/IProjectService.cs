@@ -1,6 +1,4 @@
-﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs;
-using JustDoIt.Model.DTOs.Requests.Abstractions;
+﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Model.DTOs.Responses;
 using JustDoIt.Model.DTOs.Responses.Projects;

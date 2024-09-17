@@ -2,7 +2,7 @@
 
 namespace JustDoIt.Model.DTOs.Requests.Tasks
 {
-    public class GetTasksRequest: GetRequest
+    public class GetTasksRequest : GetRequest
     {
         public string? Title { get; set; }
 

@@ -1,7 +1,8 @@
-import { createContext, useContext, useMemo, ReactNode } from "react";
+import { createContext, useContext, useMemo, ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { useLocalStorage } from "./useLocalStorage";
 import { useSessionStorage } from "./useSessionStorage";
+import { useLocalStorage } from "./useLocalStorage";
 
 interface AuthContextType {
   user: User | null;
@@ -27,42 +28,13 @@ interface User {
 }
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useSessionStorage("user", null);
+  const [user, setUser] = useState(null);
+  // const [user, setUser] = useSessionStorage("user", null);
   const navigate = useNavigate();
 
-  const getUserObject = async (email: string): Promise<boolean> => {
-    await fetch(
-      "/api/user/all?" + new URLSearchParams({ email: email }).toString(),
-      {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then(async (response) => {
-        // handle success or error from the server
-        if (response.ok) {
-          return response.json().then((data) => {
-            setUser(() => data[0]);
-            return true;
-          });
-        } else return null;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    return false;
-  };
-
   // call this function when you want to authenticate the user
-  const login = async (email: string) => {
-    console.log("EMAIL: ", email);
-    const res = await getUserObject(email);
-    if (res) {
-      navigate("/profil e");
-    }
+  const login = async (token: string, rememberme: boolean) => {
+    console.log("token: ", token);
   };
 
   // call this function to sign out logged in user

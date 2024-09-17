@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JustDoIt.Model.DTOs.Responses.Auth
+﻿namespace JustDoIt.Model.DTOs.Responses.Auth
 {
-    public class ApplicationUserDTO
+    public class ApplicationUserResponse
     {
         public Guid? Id { get; set; }
         public string? FirstName { get; set; }

@@ -56,13 +56,13 @@ builder.Services.AddSwaggerGen(
         };
 
         options.AddSecurityRequirement(securityRequirement);
-    //    options.SwaggerDoc("v1", new OpenApiInfo { Title = "JustDoIt API", Version = "v1", Description = "API for the JustDoIt Web App" });
-    //    var security = new Dictionary<string, IEnumerable<string>>
-    //    {
-    //        {"Bearer", new string[0] }
-    //    };
+        //    options.SwaggerDoc("v1", new OpenApiInfo { Title = "JustDoIt API", Version = "v1", Description = "API for the JustDoIt Web App" });
+        //    var security = new Dictionary<string, IEnumerable<string>>
+        //    {
+        //        {"Bearer", new string[0] }
+        //    };
 
-    //options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme{ Description = "JWT Authorization header using the bearer scheme", Name = "Authorization", In = ParameterLocation.Header, Type = SecuritySchemeType.ApiKey });
+        //options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme{ Description = "JWT Authorization header using the bearer scheme", Name = "Authorization", In = ParameterLocation.Header, Type = SecuritySchemeType.ApiKey });
     }
 );
 
@@ -81,7 +81,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
     opts.Password.RequiredLength = 8;
 })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationContext>();  
+    .AddEntityFrameworkStores<ApplicationContext>();
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
@@ -99,7 +99,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     {
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value!)),
         ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value!,
-        ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value!,
+        ValidAudiences = builder.Configuration.GetSection("Jwt:Audience").Value!.Split(";"),
         ClockSkew = TimeSpan.Zero,
         ValidateIssuer = true,
         ValidateLifetime = true,

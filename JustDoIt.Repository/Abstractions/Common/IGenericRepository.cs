@@ -3,8 +3,8 @@ using JustDoIt.Model.DTOs.Responses.Abstractions;
 
 namespace JustDoIt.Repository.Abstractions.Common
 {
-    public interface IGenericRepository<TResponse, TCreateRequest, TCreateResponse, TGetRequest, TGetSingleRequest, TUpdateRequest> 
-        where TResponse:Response
+    public interface IGenericRepository<TResponse, TCreateRequest, TCreateResponse, TGetRequest, TGetSingleRequest, TUpdateRequest>
+        where TResponse : Response
         where TCreateRequest : CreateRequest
         where TGetRequest : GetRequest
         where TGetSingleRequest : GetSingleRequest

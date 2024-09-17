@@ -20,16 +20,16 @@ namespace JustDoIt.API.Controllers
         #endregion Properties
 
         #region Methods
-        [Authorize]
 
+        [Authorize]
         [HttpGet(ApiRoutes.Tasks.GetAll)]
-        public async Task<ActionResult> GetAll([FromQuery]GetTasksRequest request)
+        public async Task<IActionResult> GetAll([FromQuery] GetTasksRequest request)
         {
             try
             {
                 var response = await _service.GetAll(request);
 
-                return response.Result.IsSuccess ? Ok(response) : BadRequest(response);
+                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, errors = response.Result.Errors }) : BadRequest(response.Result.Errors);
             }
             catch (Exception e)
             {
@@ -40,18 +40,18 @@ namespace JustDoIt.API.Controllers
         //[HttpGet(ApiRoutes.Tasks.UserTasks)]
         //public Task<IActionResult> GetUserTasks()
         //{
-            //return NotFound();
-            //try
-            //{
+        //return NotFound();
+        //try
+        //{
 
-            //    var response = await _service.GetUserTasks(request);
+        //    var response = await _service.GetUserTasks(request);
 
-            //    return response is null ? NotFound() : Ok(response);
-            //}
-            //catch (Exception e)
-            //{
-            //    return BadRequest(e.Message);
-            //}
+        //    return response is null ? NotFound() : Ok(response);
+        //}
+        //catch (Exception e)
+        //{
+        //    return BadRequest(e.Message);
+        //}
         //}
 
         [Authorize]
@@ -63,7 +63,7 @@ namespace JustDoIt.API.Controllers
                 request.UserId = HttpContext.GetUserId();
                 var response = await _service.GetUserProjectTasks(request);
 
-                return response.Result.IsSuccess ? Ok(response) : NotFound(response);
+                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, errors = response.Result.Errors }) : NotFound(response);
             }
             catch (Exception e)
             {
@@ -72,13 +72,13 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpGet(ApiRoutes.Tasks.Get)]
-        public async Task<ActionResult> GetTask(GetSingleItemRequest request)
+        public async Task<IActionResult> GetTask([FromQuery] GetSingleItemRequest request)
         {
             try
             {
                 var response = await _service.GetSingle(request);
 
-                return response.Result.IsSuccess ? Ok(response) : NotFound(response);
+                return response.Result.IsSuccess ? Ok(new { data = response.Data, errors = response.Result.Errors }) : NotFound(response);
             }
             catch (Exception e)
             {
@@ -87,7 +87,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Tasks.Update)]
-        public async Task<ActionResult> UpdateTask([FromBody] UpdateTaskRequest request)
+        public async Task<IActionResult> UpdateTask([FromBody] UpdateTaskRequest request)
         {
             try
             {
@@ -104,13 +104,13 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost(ApiRoutes.Tasks.Create)]
-        public async Task<IActionResult> CreateTask([FromBody]CreateTaskRequest request)
+        public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
         {
             try
             {
                 var response = await _service.Create(request);
 
-                if(response.Result.IsFailure) return BadRequest(response.Result);
+                if (response.Result.IsFailure) return BadRequest(response.Result);
 
                 var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
                 var locationUrl = $"{baseUrl}/{ApiRoutes.Tasks.Get.Replace("{taskId}", response.Data!.Id.ToString())}";
@@ -128,7 +128,7 @@ namespace JustDoIt.API.Controllers
             try
             {
                 var response = await _service.Delete(request);
-                return response.Result.IsSuccess ? NoContent(): NotFound(response);
+                return response.Result.IsSuccess ? NoContent() : NotFound(response);
             }
             catch (Exception e)
             {

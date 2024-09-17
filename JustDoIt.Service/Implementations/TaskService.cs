@@ -35,7 +35,7 @@ namespace JustDoIt.Service.Implementations
             return new RequestResponse<TaskResponse>(result, Result.Failure(errors));
         }
 
-        async Task<RequestResponse<TaskResponse>> GetAll(GetTasksRequest request)
+        public async Task<RequestResponse<TaskResponse>> GetAll(GetTasksRequest request)
         {
             var errors = new List<Error>();
 

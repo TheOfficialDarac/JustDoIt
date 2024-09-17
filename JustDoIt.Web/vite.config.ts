@@ -55,15 +55,11 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "^/api/auth/login": {
+      "^/api/v1/auth/login": {
         target,
         secure: false,
       },
-      "^/api/auth/register": {
-        target,
-        secure: false,
-      },
-      "^/api/user/all": {
+      "^/api/v1/auth/register": {
         target,
         secure: false,
       },

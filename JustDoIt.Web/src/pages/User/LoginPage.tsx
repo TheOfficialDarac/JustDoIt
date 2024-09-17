@@ -52,10 +52,7 @@ export const LoginPage = () => {
 
     // post data to the /register api
 
-    let loginurl = "?useSessionCookies=true";
-    if (rememberme == true) loginurl += "&useCookies=true";
-
-    await fetch("/api/auth/login" + loginurl, {
+    await fetch("/api/v1/auth/login", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       headers: {
@@ -64,6 +61,7 @@ export const LoginPage = () => {
       body: JSON.stringify({
         email: email,
         password: password,
+        rememberme: rememberme,
       }),
     })
       .then(async (response) => {
@@ -71,16 +69,22 @@ export const LoginPage = () => {
         if (!response.ok) {
           setMessage(() => "Username or password incorrect.");
         }
+        // console.log("RESPONSE", response);
+        // console.log("JSON", await response.json());
 
-        setMessage(() => "Successful Login.");
-        await login(email).then(() => navigate("/"));
+        const json = await response.json();
+
+        if (json.result.isSuccess) await login(json.data.token);
+
+        // setMessage(() => "Successful Login.");
+        // await login(email).then(() => navigate("/"));
       })
       .catch((error) => {
         // handle network error
-        console.error(error.message);
+        console.error(error);
         setMessage(() => "Error: Error Logging in.");
-      })
-      .finally(() => onClose);
+      });
+    // .finally(() => onClose);
   };
   return (
     <>

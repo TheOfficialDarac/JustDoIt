@@ -3,7 +3,7 @@ using JustDoIt.Model.DTOs.Requests.Abstractions;
 
 namespace JustDoIt.Model.DTOs.Requests.Projects
 {
-    public class GetProjectsRequest: GetRequest
+    public class GetProjectsRequest : GetRequest
     {
         public string? Title { get; set; }
 

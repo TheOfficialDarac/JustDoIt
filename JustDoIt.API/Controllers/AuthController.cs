@@ -17,7 +17,7 @@ namespace JustDoIt.API.Controllers
         {
             var response = await _service.RegisterAsync(request);
 
-            if (response.IsSuccess) return NoContent();
+            if (response.Result.IsSuccess) return NoContent();
 
             return BadRequest(response);
         }
@@ -27,8 +27,8 @@ namespace JustDoIt.API.Controllers
         {
             var response = await _service.LoginAsync(request);
 
-            if(response.result.IsSuccess) return Ok(response.data);
-            return BadRequest(response.result);
+            if (response.Result.IsSuccess) return Ok(new { data = response.Data, result = response.Result });
+            return BadRequest(response.Result.Errors);
         }
 
         [Authorize]
@@ -44,7 +44,8 @@ namespace JustDoIt.API.Controllers
         public IActionResult GetHit() => Ok("We get hit");
 
         [HttpPost(ApiRoutes.Auth.VerifyEmail)]
-        public System.Threading.Tasks.Task VerifyEmail() { 
+        public System.Threading.Tasks.Task VerifyEmail()
+        {
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
