@@ -1,6 +1,6 @@
 ﻿namespace JustDoIt.Model.DTOs.Responses.Auth
 {
-    public class ApplicationUserResponse
+    public class UserResponse
     {
         public Guid? Id { get; set; }
         public string? FirstName { get; set; }

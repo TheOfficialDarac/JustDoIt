@@ -1,4 +1,5 @@
 ﻿using JustDoIt.API.Contracts;
+using JustDoIt.Common;
 using JustDoIt.Model.DTOs.Requests.Auth;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,7 @@ namespace JustDoIt.API.Controllers
             var response = await _service.LoginAsync(request);
 
             if (response.Result.IsSuccess) return Ok(new { data = response.Data, result = response.Result });
-            return BadRequest(response.Result.Errors);
+            return BadRequest(new { data = response.Data, result = response.Result });
         }
 
         [Authorize]
@@ -39,9 +40,20 @@ namespace JustDoIt.API.Controllers
             return NoContent();
         }
 
-        [HttpGet(ApiRoutes.Auth.Test)]
         [Authorize]
+        [HttpGet(ApiRoutes.Auth.Test)]
         public IActionResult GetHit() => Ok("We get hit");
+
+        [Authorize]
+        [HttpGet("userdata")]
+        public async Task<IActionResult> GetUserDataAsync()
+        {
+            //var id = HttpContext.GetUserId();
+            //return Ok(id);
+            var response = await _service.GetCurrentUserData(HttpContext.GetUserId());
+            if (response.Result.IsFailure) return BadRequest(new { data = response.Data, result = response.Result });
+            return Ok(new { data = response.Data, result = response.Result });
+        }
 
         [HttpPost(ApiRoutes.Auth.VerifyEmail)]
         public System.Threading.Tasks.Task VerifyEmail()

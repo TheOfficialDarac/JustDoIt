@@ -43,6 +43,7 @@ namespace JustDoIt.API.Controllers
         public async Task<IActionResult> GetUserProjects() { 
             try
             {
+                var context = HttpContext.GetUserId();
                 var request = new GetSingleUserRequest { Id = HttpContext.GetUserId()! };
                 var result = await _service.GetUserProjects(request);
 

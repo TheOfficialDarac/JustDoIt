@@ -8,33 +8,33 @@ import child_process from "child_process";
 import { env } from "process";
 
 const baseFolder =
-  env.APPDATA !== undefined && env.APPDATA !== ""
-    ? `${env.APPDATA}/ASP.NET/https`
-    : `${env.HOME}/.aspnet/https`;
+	env.APPDATA !== undefined && env.APPDATA !== ""
+		? `${env.APPDATA}/ASP.NET/https`
+		: `${env.HOME}/.aspnet/https`;
 
 const certificateName = "JustDoIt.Web";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
 if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-  if (
-    0 !==
-    child_process.spawnSync(
-      "dotnet",
-      [
-        "dev-certs",
-        "https",
-        "--export-path",
-        certFilePath,
-        "--format",
-        "Pem",
-        "--no-password",
-      ],
-      { stdio: "inherit" }
-    ).status
-  ) {
-    throw new Error("Could not create certificate.");
-  }
+	if (
+		0 !==
+		child_process.spawnSync(
+			"dotnet",
+			[
+				"dev-certs",
+				"https",
+				"--export-path",
+				certFilePath,
+				"--format",
+				"Pem",
+				"--no-password",
+			],
+			{ stdio: "inherit" }
+		).status
+	) {
+		throw new Error("Could not create certificate.");
+	}
 }
 
 const target = "https://localhost:7010";
@@ -47,29 +47,33 @@ const target = "https://localhost:7010";
 // https:vitejs.dev/config/
 
 export default defineConfig({
-  plugins: [plugin()],
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
-  },
-  server: {
-    proxy: {
-      "^/api/v1/auth/login": {
-        target,
-        secure: false,
-      },
-      "^/api/v1/auth/register": {
-        target,
-        secure: false,
-      },
-    },
-    port: 5173,
-    https: {
-      key: fs.readFileSync(keyFilePath),
-      cert: fs.readFileSync(certFilePath),
-    },
-  },
+	plugins: [plugin()],
+	resolve: {
+		alias: {
+			"@": fileURLToPath(new URL("./src", import.meta.url)),
+		},
+	},
+	server: {
+		proxy: {
+			"^/api/v1/auth/login": {
+				target,
+				secure: false,
+			},
+			"^/api/v1/auth/register": {
+				target,
+				secure: false,
+			},
+			"^/api/v1/auth/userdata": {
+				target,
+				secure: false,
+			},
+		},
+		port: 5173,
+		https: {
+			key: fs.readFileSync(keyFilePath),
+			cert: fs.readFileSync(certFilePath),
+		},
+	},
 });
 
 // import { defineConfig } from 'vite'

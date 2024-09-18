@@ -34,7 +34,7 @@ namespace JustDoIt.Service.Implementations
                 return new RequestResponse<UserRegistrationResponse>(new UserRegistrationResponse { UserIsCreated = false }, Result.Failure(errors));
             }
 
-            var response = await _userManager.CreateAsync(new ApplicationUser { Email = request.Email, UserName = request.Email }, request.Password);
+            var response = await _userManager.CreateAsync(new ApplicationUser { Email = request.Email, UserName = request.Email, NormalizedEmail = request.Email.ToUpper(), NormalizedUserName = request.Email.ToUpper() }, request.Password);
 
             //  send request to confirm email, otherwise unable to login
             if (response.Succeeded) return new RequestResponse<UserRegistrationResponse>(new UserRegistrationResponse { UserIsCreated = true }, Result.Success());
@@ -74,6 +74,27 @@ namespace JustDoIt.Service.Implementations
             await _signInManager.SignOutAsync();
             return Result.Success();
         }
+
+        public async Task<RequestResponse<UserResponse>> GetCurrentUserData(string request)
+        {
+            var errors = new List<Error>();
+            var response = await _userManager.FindByIdAsync(request);
+
+            if (response == null) {
+                errors.Add(UserErrors.NotFound);
+                return new RequestResponse<UserResponse>(new UserResponse(), Result.Failure(errors));
+            }
+            return new RequestResponse<UserResponse>(new UserResponse
+            {
+                FirstName = response.FirstName,
+                LastName = response.LastName,
+                Email = response.Email,
+                UserName = response.UserName,
+                PhoneNumber = response.PhoneNumber,
+                PictureUrl = response.PictureUrl
+            }, Result.Success());
+        }
+
         #endregion
     }
 }

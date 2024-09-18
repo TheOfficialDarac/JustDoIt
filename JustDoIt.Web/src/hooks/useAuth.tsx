@@ -1,64 +1,109 @@
-import { createContext, useContext, useMemo, ReactNode, useState } from "react";
+import {
+	createContext,
+	useContext,
+	useMemo,
+	ReactNode,
+	useState,
+	useEffect,
+} from "react";
 import { useNavigate } from "react-router-dom";
-// import { useLocalStorage } from "./useLocalStorage";
-import { useSessionStorage } from "./useSessionStorage";
-import { useLocalStorage } from "./useLocalStorage";
 
 interface AuthContextType {
-  user: User | null;
-  login: (data: string) => Promise<void>;
-  logout: () => void;
+	user: UserResponse;
+	authToken: string;
+	login: (token: string, rememberme: boolean) => Promise<void>;
+	logout: () => void;
+}
+
+interface UserResponse {
+	firstName: string;
+	lastName: string;
+	email: string;
+	userName: string;
+	phoneNumber: string;
+	pictureUrl: string;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 interface Props {
-  children: ReactNode;
-}
-
-interface User {
-  userName: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  pictureUrl: string;
-  id: string;
+	children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState(null);
-  // const [user, setUser] = useSessionStorage("user", null);
-  const navigate = useNavigate();
+	const [authToken, setAuthToken] = useState<string>("");
+	const navigate = useNavigate();
 
-  // call this function when you want to authenticate the user
-  const login = async (token: string, rememberme: boolean) => {
-    console.log("token: ", token);
-  };
+	const [user, setUser] = useState(null);
 
-  // call this function to sign out logged in user
-  const logout = () => {
-    setUser(null);
-    navigate("/", { replace: true });
-  };
+	useEffect(() => {
+		fetch("/api/v1/auth/userdata", {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${authToken}`,
+			},
+		}).then(async (response) => {
+			// console.log("USER RESPONSE", response);
+			const json = await response.json();
+			console.log("USER JSON: ", json);
+			setUser(() => json.data);
+		});
+	}, [authToken]);
 
-  const value = useMemo(
-    () => ({
-      user,
-      login,
-      logout,
-    }),
-    [user]
-  );
+	useEffect(() => {
+		const localVal = localStorage.getItem("auth_token");
+		const sessionVal = sessionStorage.getItem("auth_token");
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+		if (localVal != null) {
+			setAuthToken(() => localVal);
+		} else if (sessionVal != null) {
+			setAuthToken(() => sessionVal);
+		}
+	}, []);
+
+	// call this function when you want to authenticate the user
+	async function login(token: string, rememberme: boolean): Promise<void> {
+		try {
+			if (rememberme) {
+				localStorage.setItem("auth_token", token);
+			} else {
+				sessionStorage.setItem("auth_token", token);
+			}
+		} catch (err) {
+			console.log(err);
+			return;
+		}
+
+		setAuthToken(() => token);
+		navigate("/", { replace: false });
+	}
+
+	// call this function to sign out logged in user
+	function logout(): void {
+		localStorage.removeItem("auth_token");
+		sessionStorage.removeItem("auth_token");
+		setAuthToken(() => "");
+		setUser(() => null);
+		navigate("/", { replace: true });
+	}
+
+	const value = useMemo(
+		() => ({
+			user,
+			authToken,
+			login,
+			logout,
+		}),
+		[authToken, logout]
+	);
+
+	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+	const context = useContext(AuthContext);
+	if (!context) {
+		throw new Error('"useAuth" must be used within an AuthProvider component.');
+	}
+	return context;
 };

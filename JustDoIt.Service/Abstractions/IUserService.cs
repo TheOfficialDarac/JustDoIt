@@ -7,8 +7,9 @@ using JustDoIt.Service.Abstractions.Common;
 
 namespace JustDoIt.Service.Abstractions
 {
-    public interface IUserService// : IGenericService<ApplicationUserResponse>
+    public interface IUserService// : IGenericService<UserResponse>
     {
+        Task<RequestResponse<UserResponse>> GetCurrentUserData(string request);
         Task<RequestResponse<UserLoginResponse>> LoginAsync(UserLoginRequest request);
         Task<Result> LogoutAsync();
         Task<RequestResponse<UserRegistrationResponse>> RegisterAsync(UserRegistrationRequest request);

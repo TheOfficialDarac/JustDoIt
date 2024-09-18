@@ -1,5 +1,5 @@
-import { Avatar, Input } from "@nextui-org/react";
-import React, { useRef, useState } from "react";
+import { Input } from "@nextui-org/react";
+import React, { useState } from "react";
 
 const Register = () => {
 	const [email, setEmail] = useState<string>("");
