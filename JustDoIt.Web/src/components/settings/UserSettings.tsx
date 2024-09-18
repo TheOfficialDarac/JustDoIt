@@ -1,23 +1,18 @@
 import { Button, Image, Input } from "@nextui-org/react";
 import { useAuth } from "../../hooks/useAuth";
+import { useState } from "react";
 
 const UserSettings = () => {
   const { user, authToken } = useAuth();
   console.log(user);
+  let [image, setImage] = useState<string>("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     let pic = e.target.elements.namedItem("picture");
-    const fr = new FileReader();
-    fr.onload = () => {
-      //   console.log(fr.result);
-      console.log(fr.result);
-      //   fr.readAsDataURL(pic);
-
-      // fr.readAsText(htepic)
-    };
-    // fr.readAsDataURL(form.get("picture"));
-    // URL.createObjectURL(new File(form.get("picture")));
+    console.log("PIC: ", pic.files[0]);
+    console.log(URL.createObjectURL(pic.files[0]));
+    setImage(() => URL.createObjectURL(pic.files[0]));
   };
   return (
     <div className="border p-2 flex flex-col">
@@ -48,7 +43,7 @@ const UserSettings = () => {
           removeWrapper
           className="cursor-pointer mx-auto w-64"
           //   isZoomed
-          src={user?.pictureUrl}
+          src={image ? image : user?.pictureUrl}
           onClick={() => {
             // let form = document.getElementById("user-data-form");
             // let picture = form?.children.namedItem("picture");
