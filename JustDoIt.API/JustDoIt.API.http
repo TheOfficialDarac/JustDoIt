@@ -1,5 +1,5 @@
 @JustDoIt.API_HostAddress = https://localhost:7010/api/v1
-@auth_token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NjVkMGQwZC01YmU1LTRhN2UtYjU4YS1kZmY4MDM3NWVkNTQiLCJlbWFpbCI6InRlc3RAdnV2LmhyIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUxNzM7aHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMTAiLCJleHAiOjE3MjY2NjcxNzYsImlhdCI6MTcyNjY2NTM3NiwibmJmIjoxNzI2NjY1Mzc2fQ.j55WO8wIyEYHJegrgdUv3Di1cUka7u5CfDsC8GazFBdb3GeTg-sJTI_WNFlZ0tQxlgeVAW5-WJkhiXi9Iqi9ew
+@auth_token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMWYwOGI1ZC0xNDVjLTRiZTItOGQzOC1hNmI0NmRkMDA0NmEiLCJlbWFpbCI6ImRhcmlvLnJ1cGNpY0B2dXYuaHIiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTE3MztodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImV4cCI6MTcyNjY4NjYxMywiaWF0IjoxNzI2Njg0ODEzLCJuYmYiOjE3MjY2ODQ4MTN9.zZ6cyAU2EqbNsmAlcDX4NYVuxjgtUOSw6IRomgRv2c3rSinaUR7w_NHBoTJDIPTprM14FBml-yGGJMM5_cwmeQ
 ############################################################
 # AUTHENTIFICATION
 
@@ -15,7 +15,7 @@ POST {{JustDoIt.API_HostAddress}}/auth/login
 Content-Type: application/json
 
 {
-"email": "test@vuv.hr",
+"email": "dario.rupcic@vuv.hr",
 "password": "Lozinka123!",
 "rememberme":false
 }

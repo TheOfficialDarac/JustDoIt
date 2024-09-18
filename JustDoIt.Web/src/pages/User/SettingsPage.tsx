@@ -1,17 +1,13 @@
-import { Button } from "@nextui-org/react";
-import { usePreferences } from "../../hooks/usePreferences";
+import DisplaySettings from "../../components/settings/DisplaySettings";
+import UserSettings from "../../components/settings/UserSettings";
 
 const SettingsPage = () => {
-	const { changeTheme } = usePreferences();
-
-	return (
-		<>
-			ALO
-			<div className='m-3 p-3 flex flex-col gap-2'>
-				<Button onClick={changeTheme}>Change theme</Button>
-			</div>
-		</>
-	);
+  return (
+    <div className="m-3 p-3 flex flex-col gap-2">
+      <DisplaySettings />
+      <UserSettings />
+    </div>
+  );
 };
 
 export default SettingsPage;
