@@ -1,6 +1,7 @@
 ﻿using JustDoIt.API.Contracts;
 using JustDoIt.Common;
 using JustDoIt.Model.DTOs.Requests.Auth;
+using JustDoIt.Model.DTOs.Responses.Auth;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,7 @@ namespace JustDoIt.API.Controllers
         public IActionResult GetHit() => Ok("We get hit");
 
         [Authorize]
-        [HttpGet("userdata")]
+        [HttpGet(ApiRoutes.Auth.UserData)]
         public async Task<IActionResult> GetUserDataAsync()
         {
             //var id = HttpContext.GetUserId();
@@ -59,6 +60,17 @@ namespace JustDoIt.API.Controllers
         public System.Threading.Tasks.Task VerifyEmail()
         {
             return System.Threading.Tasks.Task.CompletedTask;
+        }
+
+        [HttpPut(ApiRoutes.Auth.Update)]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
+        {
+            var uid = HttpContext.GetUserId();
+            request.Id = uid;
+            var response = await _service.UpdateUser(request);
+
+            if (response.Result.IsSuccess) return Ok(new { data = "", result = response.Result });
+            else return BadRequest(new { data = response.Data, result=response.Result });
         }
 
     }

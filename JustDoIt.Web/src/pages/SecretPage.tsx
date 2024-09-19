@@ -1,21 +1,18 @@
+import { Button } from "@nextui-org/react";
 import { useAuth } from "../hooks/useAuth";
 
 export const SecretPage = () => {
 	const { logout } = useAuth();
 
-	const handleLogout = () => {
-		logout();
-	};
-
 	return (
 		<div>
 			<h1>This is a Secret page</h1>
-			<button
+			<Button
 				type='button'
-				onClick={handleLogout}
+				onPress={logout}
 			>
 				Logout
-			</button>
+			</Button>
 		</div>
 	);
 };

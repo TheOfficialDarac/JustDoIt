@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Azure;
 using JustDoIt.Model.DTOs.Responses.Auth;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.Reflection;
+using System.Net;
+using System.Security.Policy;
 
 namespace JustDoIt.Service.Implementations
 {
@@ -61,8 +66,8 @@ namespace JustDoIt.Service.Implementations
             {
                 errors.Add(UserErrors.InvalidCredentials);
                 return new RequestResponse<UserLoginResponse>(new UserLoginResponse(), Result.Failure(errors));
-            } 
-                
+            }
+
             await _signInManager.SignInAsync(user, request.RememberMe);
 
             var tokenString = new TokenProvider(_configuration).Create(user);
@@ -80,10 +85,12 @@ namespace JustDoIt.Service.Implementations
             var errors = new List<Error>();
             var response = await _userManager.FindByIdAsync(request);
 
-            if (response == null) {
+            if (response == null)
+            {
                 errors.Add(UserErrors.NotFound);
                 return new RequestResponse<UserResponse>(new UserResponse(), Result.Failure(errors));
             }
+
             return new RequestResponse<UserResponse>(new UserResponse
             {
                 FirstName = response.FirstName,
@@ -93,6 +100,115 @@ namespace JustDoIt.Service.Implementations
                 PhoneNumber = response.PhoneNumber,
                 PictureUrl = response.PictureUrl
             }, Result.Success());
+        }
+
+        public async Task<RequestResponse<string>> UpdateUser(UpdateUserRequest request)
+        {
+            var errors = new List<Error>();
+            if (string.IsNullOrEmpty(request.Id))
+            {
+                errors.Add(UserErrors.UserIdNotSet);
+                return new RequestResponse<string>("", Result.Failure(errors));
+            }
+
+            var foundUser = await _userManager.FindByIdAsync(request.Id);
+            if (foundUser == null)
+            {
+                errors.Add(UserErrors.NotFound);
+                return new RequestResponse<string>("", Result.Failure(errors));
+            }
+
+            if (!string.IsNullOrEmpty(request.FirstName))
+                foundUser.FirstName = request.FirstName;
+
+            if (!string.IsNullOrEmpty(request.LastName))
+                foundUser.LastName = request.LastName;
+
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                foundUser.Email = request.Email;
+                foundUser.NormalizedEmail = request.Email.ToUpper();
+            }
+
+            if (!string.IsNullOrEmpty(request.FirstName))
+            {
+                foundUser.UserName = request.UserName;
+                foundUser.NormalizedUserName = request.UserName.ToUpper();
+            }
+
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+                foundUser.PhoneNumber = request.PhoneNumber;
+
+            SaveImageFromPath(request.PictureUrl, request.Id);
+            if (!string.IsNullOrEmpty(request.PictureUrl))
+                foundUser.PictureUrl = request.Id+".jpg";
+
+            return new RequestResponse<string>("", Result.Success());
+
+            await _userManager.GenerateConcurrencyStampAsync(foundUser);
+            await _userManager.UpdateAsync(foundUser);
+            return new RequestResponse<string>("", Result.Success());
+        }
+
+        //! https://learn.microsoft.com/en-us/dotnet/api/system.drawing.image.save?view=net-8.0&redirectedfrom=MSDN#System_Drawing_Image_Save_System_String_System_Drawing_Imaging_ImageFormat_
+        public void SaveImageFromPath(string url, string userId)
+        {
+            url = url.Replace("blob:", "");
+            var path = $"{Directory.GetCurrentDirectory().Replace("//", "/")}/Images/{userId}.jpeg";
+
+            using (WebClient client = new WebClient())
+            {
+                //client.DownloadProgressChanged += client_DownloadProgressChanged;
+                //client.DownloadFileCompleted += client_DownloadFileCompleted;
+                client.DownloadFile(new Uri(url), path);
+            }
+            return;
+            Image Dummy = Image.FromFile(path);
+            Dummy.Save($"${path}.bmp", ImageFormat.Bmp);
+            // Get a bitmap.
+            Bitmap bmp1 = new Bitmap($"${path}.bmp");
+            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+
+            // Create an Encoder object based on the GUID
+            // for the Quality parameter category.
+            Encoder myEncoder = Encoder.Quality;
+
+            // Create an EncoderParameters object.
+            // An EncoderParameters object has an array of EncoderParameter
+            // objects. In this case, there is only one
+            // EncoderParameter object in the array.
+            EncoderParameters myEncoderParameters = new EncoderParameters(1);
+
+            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 25L);
+            myEncoderParameters.Param[0] = myEncoderParameter;
+            bmp1.Save(path+".jpg", jpgEncoder, myEncoderParameters);
+
+            //EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
+            //myEncoderParameters.Param[0] = myEncoderParameter;
+            //bmp1.Save(@"c:\TestPhotoQualityFifty.jpg", jpgEncoder, myEncoderParameters);
+
+            //myEncoderParameter = new EncoderParameter(myEncoder, 100L);
+            //myEncoderParameters.Param[0] = myEncoderParameter;
+            //bmp1.Save(@"c:\TestPhotoQualityHundred.jpg", jpgEncoder, myEncoderParameters);
+
+            // Save the bitmap as a JPG file with zero quality level compression.
+            //myEncoderParameter = new EncoderParameter(myEncoder, 0L);
+            //myEncoderParameters.Param[0] = myEncoderParameter;
+            //bmp1.Save(@"c:\TestPhotoQualityZero.jpg", jpgEncoder, myEncoderParameters);
+        }
+        private ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+
+            return null;
         }
 
         #endregion

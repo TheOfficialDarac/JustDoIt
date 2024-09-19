@@ -8,18 +8,18 @@ import {
 	NavbarMenuToggle,
 	NavbarMenu,
 	NavbarMenuItem,
+	Button,
 } from "@nextui-org/react";
 import DummyLogo from "../../assets/icons/AppLogo.tsx";
 import UserIcon from "./UserIcon.tsx";
 import { MagnifyingGlas } from "../../assets/icons/MagnifyingGlas.tsx";
 import { useAuth } from "../../hooks/useAuth.tsx";
-import Logout from "./Logout.tsx";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-	const { authToken } = useAuth();
+	const { authToken, logout } = useAuth();
 
 	const menuItems = ["settings", "projects", "shutdown", "Log Out"];
 
@@ -95,7 +95,8 @@ function Header() {
 					{menuItems.map((item, index) => (
 						<NavbarMenuItem key={`${item}-${index}`}>
 							{item == "Log Out" ? (
-								<Logout />
+								// <Navigate />
+								<Button onClick={logout}>{item}</Button>
 							) : (
 								<Link
 									className={

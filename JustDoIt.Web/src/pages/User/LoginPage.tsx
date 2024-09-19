@@ -6,13 +6,14 @@ import {
 	Checkbox,
 	Input,
 	Link,
-	Modal,
-	ModalBody,
-	ModalContent,
-	Spinner,
+	// Modal,
+	// ModalBody,
+	// ModalContent,
+	// Spinner,
 	useDisclosure,
 } from "@nextui-org/react";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/16/solid";
+import LoadingSpinner from "../../components/layout/LoadingSpinner";
 
 export const LoginPage = () => {
 	const navigate = useNavigate();
@@ -147,19 +148,24 @@ export const LoginPage = () => {
 				<ul className='error p-2'>{message}</ul>
 			</div>
 			{/* {loading && <></>} */}
-			<Modal
+			<LoadingSpinner
+				isOpen={isOpen}
+				onClose={onClose}
+				onOpen={onOpen}
+			/>
+			{/* <Modal
 				backdrop={"blur"}
 				isOpen={isOpen}
 				onClose={onClose}
 				hideCloseButton
 				isDismissable={false}
 			>
-				<ModalContent className='bg-transparent'>
-					<ModalBody className='bg-transparent'>
+				<ModalContent className='bg-transparent border-none'>
+					<ModalBody className='bg-transparent border-none'>
 						<Spinner />
 					</ModalBody>
 				</ModalContent>
-			</Modal>
+			</Modal> */}
 		</>
 	);
 };

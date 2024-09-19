@@ -5,6 +5,7 @@ import {
 	ReactNode,
 	useState,
 	useEffect,
+	useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +14,7 @@ interface AuthContextType {
 	authToken: string;
 	login: (token: string, rememberme: boolean) => Promise<void>;
 	logout: () => void;
+	fetchUserData: () => void;
 }
 
 interface UserResponse {
@@ -36,8 +38,8 @@ export const AuthProvider = ({ children }: Props) => {
 
 	const [user, setUser] = useState(null);
 
-	useEffect(() => {
-		fetch("/api/v1/auth/userdata", {
+	const fetchUserData = useCallback(async () => {
+		await fetch("/api/v1/auth/data", {
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${authToken}`,
@@ -45,7 +47,7 @@ export const AuthProvider = ({ children }: Props) => {
 		}).then(async (response) => {
 			// console.log("USER RESPONSE", response);
 			const json = await response.json();
-			console.log("USER JSON: ", json);
+			// console.log("USER JSON: ", json);
 			setUser(() => json.data);
 		});
 	}, [authToken]);
@@ -60,6 +62,10 @@ export const AuthProvider = ({ children }: Props) => {
 			setAuthToken(() => sessionVal);
 		}
 	}, []);
+
+	useEffect(() => {
+		fetchUserData();
+	}, [authToken, fetchUserData]);
 
 	// call this function when you want to authenticate the user
 	async function login(token: string, rememberme: boolean): Promise<void> {
@@ -90,11 +96,12 @@ export const AuthProvider = ({ children }: Props) => {
 	const value = useMemo(
 		() => ({
 			user,
+			fetchUserData,
 			authToken,
 			login,
 			logout,
 		}),
-		[authToken, logout]
+		[authToken, logout, user]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

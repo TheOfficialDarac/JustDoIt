@@ -63,7 +63,11 @@ export default defineConfig({
 				target,
 				secure: false,
 			},
-			"^/api/v1/auth/userdata": {
+			"^/api/v1/auth/data": {
+				target,
+				secure: false,
+			},
+			"^/api/v1/auth/update": {
 				target,
 				secure: false,
 			},

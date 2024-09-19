@@ -13,5 +13,6 @@ namespace JustDoIt.Service.Abstractions
         Task<RequestResponse<UserLoginResponse>> LoginAsync(UserLoginRequest request);
         Task<Result> LogoutAsync();
         Task<RequestResponse<UserRegistrationResponse>> RegisterAsync(UserRegistrationRequest request);
+        Task<RequestResponse<string>> UpdateUser(UpdateUserRequest request);
     }
 }

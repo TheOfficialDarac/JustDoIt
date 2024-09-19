@@ -44,6 +44,8 @@ namespace JustDoIt.API.Contracts
             public const string Login = "login";
             public const string Logout = "logout";
             public const string VerifyEmail = "verify-email";
+            public const string UserData = "data";
+            public const string Update = "update";
 
             public const string Test = "test";
         }

@@ -1,5 +1,5 @@
 import { Listbox, ListboxItem } from "@nextui-org/react";
-import AppLogo from "../../assets/icons/AppLogo";
+// import AppLogo from "../../assets/icons/AppLogo";
 import { TwitterLogo } from "../../assets/icons/TwitterLogo";
 import { InstagramLogo } from "../../assets/icons/InstagramLogo";
 import FacebookLogo from "../../assets/icons/FacebookLogo";
