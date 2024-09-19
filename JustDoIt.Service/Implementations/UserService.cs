@@ -139,11 +139,12 @@ namespace JustDoIt.Service.Implementations
             if (!string.IsNullOrEmpty(request.PhoneNumber))
                 foundUser.PhoneNumber = request.PhoneNumber;
 
-            SaveImageFromPath(request.PictureUrl, request.Id);
-            if (!string.IsNullOrEmpty(request.PictureUrl))
-                foundUser.PictureUrl = request.Id+".jpg";
 
-            return new RequestResponse<string>("", Result.Success());
+            if (!string.IsNullOrEmpty(request.PictureUrl))
+                foundUser.PictureUrl = $"gs://task-manager-just-do-it.appspot.com/profile-photos/{request.Id}.jpeg";
+                    //SaveImageFromPath(request.PictureUrl, request.Id);
+
+            //return new RequestResponse<string>("", Result.Success());
 
             await _userManager.GenerateConcurrencyStampAsync(foundUser);
             await _userManager.UpdateAsync(foundUser);
@@ -151,65 +152,21 @@ namespace JustDoIt.Service.Implementations
         }
 
         //! https://learn.microsoft.com/en-us/dotnet/api/system.drawing.image.save?view=net-8.0&redirectedfrom=MSDN#System_Drawing_Image_Save_System_String_System_Drawing_Imaging_ImageFormat_
-        public void SaveImageFromPath(string url, string userId)
-        {
-            url = url.Replace("blob:", "");
-            var path = $"{Directory.GetCurrentDirectory().Replace("//", "/")}/Images/{userId}.jpeg";
+        //public static string SaveImageFromPath(string url, string userId)
+        //{
+        //    url = url.Replace("blob:", "");
+        //    var path = $"{Directory.GetCurrentDirectory().Replace("//", "/")}/Images/{userId}.";
 
-            using (WebClient client = new WebClient())
-            {
-                //client.DownloadProgressChanged += client_DownloadProgressChanged;
-                //client.DownloadFileCompleted += client_DownloadFileCompleted;
-                client.DownloadFile(new Uri(url), path);
-            }
-            return;
-            Image Dummy = Image.FromFile(path);
-            Dummy.Save($"${path}.bmp", ImageFormat.Bmp);
-            // Get a bitmap.
-            Bitmap bmp1 = new Bitmap($"${path}.bmp");
-            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-
-            // Create an Encoder object based on the GUID
-            // for the Quality parameter category.
-            Encoder myEncoder = Encoder.Quality;
-
-            // Create an EncoderParameters object.
-            // An EncoderParameters object has an array of EncoderParameter
-            // objects. In this case, there is only one
-            // EncoderParameter object in the array.
-            EncoderParameters myEncoderParameters = new EncoderParameters(1);
-
-            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 25L);
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            bmp1.Save(path+".jpg", jpgEncoder, myEncoderParameters);
-
-            //EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
-            //myEncoderParameters.Param[0] = myEncoderParameter;
-            //bmp1.Save(@"c:\TestPhotoQualityFifty.jpg", jpgEncoder, myEncoderParameters);
-
-            //myEncoderParameter = new EncoderParameter(myEncoder, 100L);
-            //myEncoderParameters.Param[0] = myEncoderParameter;
-            //bmp1.Save(@"c:\TestPhotoQualityHundred.jpg", jpgEncoder, myEncoderParameters);
-
-            // Save the bitmap as a JPG file with zero quality level compression.
-            //myEncoderParameter = new EncoderParameter(myEncoder, 0L);
-            //myEncoderParameters.Param[0] = myEncoderParameter;
-            //bmp1.Save(@"c:\TestPhotoQualityZero.jpg", jpgEncoder, myEncoderParameters);
-        }
-        private ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-
-            foreach (ImageCodecInfo codec in codecs)
-            {
-                if (codec.FormatID == format.Guid)
-                {
-                    return codec;
-                }
-            }
-
-            return null;
-        }
+        //    var extension = url.Split(".")[1];
+        //    using (var client = new WebClient())
+        //    {
+        //        //client.DownloadProgressChanged += client_DownloadProgressChanged;
+        //        //client.DownloadFileCompleted += client_DownloadFileCompleted;
+        //        client.DownloadFile(new Uri(url), 
+        //            $"{path}{extension}");
+        //    }
+        //    return path;
+        //}
 
         #endregion
     }
