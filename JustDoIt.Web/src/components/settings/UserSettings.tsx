@@ -1,5 +1,4 @@
 import { Button, Image, Input, useDisclosure } from "@nextui-org/react";
-import { useAuth } from "../../hooks/useAuth";
 import { SyntheticEvent, useCallback, useRef, useState } from "react";
 import LoadingSpinner from "../layout/LoadingSpinner";
 import { firebaseApp } from "../../Firebase";
@@ -24,8 +23,7 @@ function parseJwt(token: string) {
 	return {};
 }
 
-const UserSettings = () => {
-	const { user, authToken, fetchUserData } = useAuth();
+const UserSettings = ({ user, authToken, fetchUserData }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	// console.log("JWT VAL: ", parseJwt(authToken));

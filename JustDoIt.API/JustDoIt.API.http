@@ -1,5 +1,5 @@
 @JustDoIt.API_HostAddress = https://localhost:7010/api/v1
-@auth_token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMWYwOGI1ZC0xNDVjLTRiZTItOGQzOC1hNmI0NmRkMDA0NmEiLCJlbWFpbCI6ImRhcmlvLnJ1cGNpY0B2dXYuaHIiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTE3MztodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImV4cCI6MTcyNjY4NjYxMywiaWF0IjoxNzI2Njg0ODEzLCJuYmYiOjE3MjY2ODQ4MTN9.zZ6cyAU2EqbNsmAlcDX4NYVuxjgtUOSw6IRomgRv2c3rSinaUR7w_NHBoTJDIPTprM14FBml-yGGJMM5_cwmeQ
+@auth_token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlYmNjZDIzMC0zNzUxLTRjN2UtYTRhMy1lYzRmMTlhMTQyN2YiLCJlbWFpbCI6ImRhcmlvLnJ1cGNpY0B2dXYuaHIiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTE3MztodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImV4cCI6MTcyNjgzNDMzMiwiaWF0IjoxNzI2ODMyNTMyLCJuYmYiOjE3MjY4MzI1MzJ9.7oY8n7CXPZXT7KYAxo0OwUofCW2zvqZQMJKX29tpgqgWNmX8-kn4QH_Aveu48RxdYBbnj0pAohe9vUK8lJL_dQ
 ############################################################
 # AUTHENTIFICATION
 
@@ -23,10 +23,16 @@ Content-Type: application/json
 
 GET {{JustDoIt.API_HostAddress}}/auth/test
 Authorization: Bearer {{auth_token}}
-####
+###
+
+GET {{JustDoIt.API_HostAddress}}/auth/userdata
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+###
 
 POST {{JustDoIt.API_HostAddress}}/auth/logout
 Authorization: Bearer {{auth_token}}
+###
 
 ############################################################
 # TASKS
@@ -36,11 +42,26 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 ###
 
+############################################################
+# PROJECTS
+
 GET {{JustDoIt.API_HostAddress}}/projects/user
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 ###
-GET {{JustDoIt.API_HostAddress}}/auth/userdata
+
+GET {{JustDoIt.API_HostAddress}}/projects
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
+###
+
+POST {{JustDoIt.API_HostAddress}}/projects/create
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "title": "Test Project",
+  "description": "project description",
+  "pictureUrl": "hmhm"
+}

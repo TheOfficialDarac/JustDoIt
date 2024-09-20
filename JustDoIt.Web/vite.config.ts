@@ -71,6 +71,10 @@ export default defineConfig({
 				target,
 				secure: false,
 			},
+			"/api/v1/projects/user": {
+				target,
+				secure: false,
+			},
 		},
 		port: 5173,
 		https: {

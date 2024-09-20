@@ -28,9 +28,9 @@ namespace JustDoIt.API.Controllers
             try
             {
                 
-                var result = await _service.GetUserProjects(request);
+                var response = await _service.GetUserProjects(request);
 
-                return Ok(result);
+                return Ok(new { data = response.ListOfData, result = response.Result });
             }
             catch (Exception ex)
             {
@@ -45,9 +45,9 @@ namespace JustDoIt.API.Controllers
             {
                 var context = HttpContext.GetUserId();
                 var request = new GetSingleUserRequest { Id = HttpContext.GetUserId()! };
-                var result = await _service.GetUserProjects(request);
+                var response = await _service.GetUserProjects(request);
 
-                return Ok(result);
+                return Ok(new { data = response.ListOfData, result = response.Result });
             }
             catch (Exception ex)
             {
@@ -61,9 +61,9 @@ namespace JustDoIt.API.Controllers
         {
             try
             {
-                var result = await _service.GetAll(searchParams);
+                var response = await _service.GetAll(searchParams);
 
-                return Ok(result);
+                return Ok(new { data = response.ListOfData, result = response.Result });
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace JustDoIt.API.Controllers
             {
                 var response = await _service.GetSingle(request);
 
-                return Ok(response);
+                return Ok(new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {
@@ -91,8 +91,8 @@ namespace JustDoIt.API.Controllers
         {
             try
             {
-                var success = await _service.Update(request);
-                return Ok(success);
+                var response = await _service.Update(request);
+                return Ok(new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {
@@ -108,7 +108,7 @@ namespace JustDoIt.API.Controllers
                 request.IssuerId = HttpContext.GetUserId();
                 var response = await _service.Create(request);
 
-                return Ok(response);
+                return Ok(new { data=response.Data, result=response.Result});
             }
             catch (Exception e)
             {
@@ -122,7 +122,7 @@ namespace JustDoIt.API.Controllers
             try
             {
                 var response = await _service.Delete(request);
-                return Ok(response);
+                return Ok(new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {

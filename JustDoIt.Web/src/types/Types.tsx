@@ -6,3 +6,11 @@ export interface UserResponse {
 	pictureUrl: string;
 	userName: string;
 }
+
+export interface ProjectResponse {
+	id: number;
+	title: string;
+	pictureUrl: string;
+	isActive: boolean;
+	createdDate: string;
+}

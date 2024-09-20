@@ -28,7 +28,18 @@ export const AuthProvider = ({ children }: Props) => {
 	const [authToken, setAuthToken] = useState<string>("");
 	const navigate = useNavigate();
 
-	const [user, setUser] = useState(null);
+	const setUserInitial = useCallback(async () => {
+		await fetch("/api/v1/auth/data", {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${authToken}`,
+			},
+		}).then(async (response) => {
+			const json = await response.json();
+			return json;
+		});
+	}, [authToken]);
+	const [user, setUser] = useState(setUserInitial());
 
 	const fetchUserData = useCallback(async () => {
 		await fetch("/api/v1/auth/data", {
@@ -37,9 +48,7 @@ export const AuthProvider = ({ children }: Props) => {
 				Authorization: `Bearer ${authToken}`,
 			},
 		}).then(async (response) => {
-			// console.log("USER RESPONSE", response);
 			const json = await response.json();
-			// console.log("USER JSON: ", json);
 			setUser(() => json.data);
 		});
 	}, [authToken]);

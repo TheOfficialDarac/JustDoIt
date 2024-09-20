@@ -37,10 +37,11 @@ namespace JustDoIt.Repository
                     Token = "CREATOR",
                     RoleId = 1
                 });
+                await _context.SaveChangesAsync();
 
                 return _mapper.TypeToCreateResponse(project);
             }
-            catch { /* Logger */ }
+            catch (Exception E){ /* Logger */ }
             return new CreateProjectResponse();
         }
 
@@ -96,8 +97,8 @@ namespace JustDoIt.Repository
 
         public async Task<IEnumerable<ProjectResponse>> GetUserProjects(GetSingleUserRequest request)
         { 
-            var result = await _context.UserProjects.AsQueryable()
-                .Where(x => x.UserId.Equals(request.Id))
+            var result = await _context.UserProjects
+                .Where(x => x.UserId == request.Id)
                 .Select(x => x.Project)
                 .ToListAsync();
 

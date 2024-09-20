@@ -1,17 +1,20 @@
 import { Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import RegisterPage from "./pages/User/RegisterPage";
-import { LoginPage } from "./pages/User/LoginPage";
+import RegisterPage from "./pages/user/RegisterPage";
+import { LoginPage } from "./pages/user/LoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { SecretPage } from "./pages/SecretPage";
-import { AuthProvider } from "./hooks/useAuth";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
-import SettingsPage from "./pages/User/SettingsPage";
+import SettingsPage from "./pages/user/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { usePreferences } from "./hooks/usePreferences";
+import ProjectsPage from "./pages/projects/ProjectsPage";
 
 export default function App() {
 	const { preferences } = usePreferences();
+
+	const { authToken, user, fetchUserData } = useAuth();
 
 	return (
 		<div
@@ -21,39 +24,53 @@ export default function App() {
 				preferences?.theme
 			}
 		>
-			<AuthProvider>
-				<Layout>
-					<Routes>
+			<Layout>
+				<Routes>
+					<Route
+						path='/'
+						element={<HomePage />}
+					/>
+					<Route
+						path='/login'
+						element={<LoginPage />}
+					/>
+					<Route
+						path='/register'
+						element={<RegisterPage />}
+					/>
+					<Route element={<ProtectedRoute children={<Outlet />} />}>
 						<Route
-							path='/'
-							element={<HomePage />}
+							path='/settings'
+							element={
+								<SettingsPage
+									authToken={authToken}
+									user={user}
+									fetchUserData={fetchUserData}
+								/>
+							}
 						/>
 						<Route
-							path='/login'
-							element={<LoginPage />}
+							path='/secret'
+							element={<SecretPage />}
 						/>
 						<Route
-							path='/register'
-							element={<RegisterPage />}
+							path='/projects'
+							element={
+								<ProjectsPage
+									authToken={authToken}
+									user={user}
+									fetchUserData={fetchUserData}
+								/>
+							}
 						/>
-						<Route element={<ProtectedRoute children={<Outlet />} />}>
-							<Route
-								path='/settings'
-								element={<SettingsPage />}
-							/>
-							<Route
-								path='/secret'
-								element={<SecretPage />}
-							/>
-						</Route>
+					</Route>
 
-						<Route
-							path='*'
-							element={<NotFoundPage />}
-						/>
-					</Routes>
-				</Layout>
-			</AuthProvider>
+					<Route
+						path='*'
+						element={<NotFoundPage />}
+					/>
+				</Routes>
+			</Layout>
 		</div>
 	);
 }
