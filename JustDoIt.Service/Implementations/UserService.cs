@@ -141,7 +141,7 @@ namespace JustDoIt.Service.Implementations
 
 
             if (!string.IsNullOrEmpty(request.PictureUrl))
-                foundUser.PictureUrl = $"gs://task-manager-just-do-it.appspot.com/profile-photos/{request.Id}.jpeg";
+                foundUser.PictureUrl = request.PictureUrl;
                     //SaveImageFromPath(request.PictureUrl, request.Id);
 
             //return new RequestResponse<string>("", Result.Success());

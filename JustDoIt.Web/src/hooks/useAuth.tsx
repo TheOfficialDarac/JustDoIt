@@ -8,6 +8,7 @@ import {
 	useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserResponse } from "../types/Types";
 
 interface AuthContextType {
 	user: UserResponse;
@@ -15,15 +16,6 @@ interface AuthContextType {
 	login: (token: string, rememberme: boolean) => Promise<void>;
 	logout: () => void;
 	fetchUserData: () => void;
-}
-
-interface UserResponse {
-	firstName: string;
-	lastName: string;
-	email: string;
-	userName: string;
-	phoneNumber: string;
-	pictureUrl: string;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
