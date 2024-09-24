@@ -35,6 +35,7 @@ namespace JustDoIt.API.Contracts
 
             public const string UserProjects = "user/{userId}";
             public const string CurrentUserProjects = "user";
+            public const string CurrentUserProjectRole = "user-role";
         }
         public static class Auth
         {

@@ -7,6 +7,7 @@ using JustDoIt.Model.DTOs.Responses.Projects;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace JustDoIt.Service.Implementations
@@ -117,7 +118,15 @@ namespace JustDoIt.Service.Implementations
             return new RequestResponse<ProjectResponse>(result, Result.Failure(errors));
         }
 
+        public async Task<RequestResponse<GetProjectRoleResponse>> GetUserRoleInProjectAsync(GetProjectRoleRequest request)
+        {
+            //perform checks
+            var errors = new List<Error>();
 
+            var response = await _repository.GetUserRoleInProjectAsync(request);
+
+            return new RequestResponse<GetProjectRoleResponse>(response, Result.Success());
+        }
         #endregion
     }
 }

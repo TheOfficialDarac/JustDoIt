@@ -8,5 +8,6 @@ namespace JustDoIt.Repository.Abstractions
     public interface IProjectRepository : IGenericRepository<ProjectResponse, CreateProjectRequest, CreateProjectResponse, GetProjectsRequest, GetSingleItemRequest, UpdateProjectRequest>
     {
         Task<IEnumerable<ProjectResponse>> GetUserProjects(GetSingleUserRequest request);
+        Task<GetProjectRoleResponse> GetUserRoleInProjectAsync(GetProjectRoleRequest request);
     }
 }

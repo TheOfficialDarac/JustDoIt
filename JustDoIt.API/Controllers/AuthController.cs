@@ -69,9 +69,11 @@ namespace JustDoIt.API.Controllers
             request.Id = uid;
             var response = await _service.UpdateUser(request);
 
-            if (response.Result.IsSuccess) return Ok(new { data = "", result = response.Result });
+            if (response.Result.IsSuccess) return Ok(new { data = response.Data, result = response.Result });
             else return BadRequest(new { data = response.Data, result=response.Result });
         }
+
+
 
     }
 }

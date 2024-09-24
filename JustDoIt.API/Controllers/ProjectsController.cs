@@ -129,6 +129,15 @@ namespace JustDoIt.API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet(ApiRoutes.Projects.CurrentUserProjectRole)]
+        public async Task<IActionResult> GetUserRoleInProjectAsync([FromQuery]GetProjectRoleRequest request)
+        {
+            request.UserId = HttpContext.GetUserId();
+            var response = await _service.GetUserRoleInProjectAsync(request);
+            if (response.Result.IsSuccess) return Ok(new { data = response.Data, result = response.Result });
+            else return BadRequest(new { data = response.Data, result = response.Result });
+        }
         #endregion
     }
 }

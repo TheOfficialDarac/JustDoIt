@@ -6,13 +6,7 @@ using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Azure;
 using JustDoIt.Model.DTOs.Responses.Auth;
-using System.Drawing.Imaging;
-using System.Drawing;
-using System.Reflection;
-using System.Net;
-using System.Security.Policy;
 
 namespace JustDoIt.Service.Implementations
 {

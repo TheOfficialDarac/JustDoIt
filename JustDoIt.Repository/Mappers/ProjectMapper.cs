@@ -16,5 +16,7 @@ namespace JustDoIt.Repository.Mappers
         public partial Project CreateRequestToType(CreateProjectRequest dto);
 
         public partial CreateProjectResponse TypeToCreateResponse(Project task);
+
+        public partial GetProjectRoleResponse TypeToGetRoleResponse(ProjectRole projectRole);
     }
 }

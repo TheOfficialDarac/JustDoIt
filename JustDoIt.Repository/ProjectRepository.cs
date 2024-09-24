@@ -41,14 +41,14 @@ namespace JustDoIt.Repository
 
                 return _mapper.TypeToCreateResponse(project);
             }
-            catch (Exception E){ /* Logger */ }
+            catch (Exception E) { /* Logger */ }
             return new CreateProjectResponse();
         }
 
         public async Task<ProjectResponse> Delete(GetSingleItemRequest request)
         {
             var found = await _context.Projects.FindAsync(request.Id);
-            if(found != null)
+            if (found != null)
             {
                 _context.Remove(found);
                 await _context.SaveChangesAsync();
@@ -62,17 +62,17 @@ namespace JustDoIt.Repository
         {
             var query = _context.Projects.AsQueryable();
 
-            if(!string.IsNullOrEmpty(request.Title))
+            if (!string.IsNullOrEmpty(request.Title))
             {
                 query = query.Where(x => x.Title.Contains(request.Title));
             }
 
-            if(request.IsActive.HasValue)
+            if (request.IsActive.HasValue)
             {
                 query = query.Where(x => x.IsActive.Equals(request.IsActive));
             }
 
-            if(request.MinCreatedDate.HasValue)
+            if (request.MinCreatedDate.HasValue)
             {
                 request.MinCreatedDate = DateTime.SpecifyKind(request.MinCreatedDate.Value, DateTimeKind.Utc);
                 query = query.Where(x => x.CreatedDate >= request.MinCreatedDate);
@@ -96,18 +96,18 @@ namespace JustDoIt.Repository
         }
 
         public async Task<IEnumerable<ProjectResponse>> GetUserProjects(GetSingleUserRequest request)
-        { 
+        {
             var result = await _context.UserProjects
                 .Where(x => x.UserId == request.Id)
                 .Select(x => x.Project)
                 .ToListAsync();
 
-            return _mapper.ToResponseList(result);        }
+            return _mapper.ToResponseList(result); }
 
         public async Task<ProjectResponse> Update(UpdateProjectRequest request)
         {
             var found = await _context.Projects.FindAsync(request.Id);
-            if(found is null) return new ProjectResponse();
+            if (found is null) return new ProjectResponse();
 
             found.Title = request.Title;
             found.Description = request.Description;
@@ -116,6 +116,16 @@ namespace JustDoIt.Repository
 
             await _context.SaveChangesAsync();
             return _mapper.ToResponse(found);
+        }
+
+        public async Task<GetProjectRoleResponse> GetUserRoleInProjectAsync(GetProjectRoleRequest request){
+            var foundProject = await _context.Projects.FindAsync(request.ProjectId);
+            if (foundProject is null) return new ();
+
+            var response = await _context.UserProjects.Where(x => x.UserId == request.UserId && x.ProjectId == request.ProjectId).Where(x=> x.IsVerified == true).Select(x=> x.Role).FirstOrDefaultAsync();
+            if (response is null) return new();
+
+            return _mapper.TypeToGetRoleResponse(response);
         }
     }
 }

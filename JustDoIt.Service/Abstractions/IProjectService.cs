@@ -9,5 +9,6 @@ namespace JustDoIt.Service.Abstractions
     public interface IProjectService : IGenericService<ProjectResponse, CreateProjectRequest, CreateProjectResponse, GetProjectsRequest, GetSingleItemRequest, UpdateProjectRequest>
     {
         Task<RequestResponse<ProjectResponse>> GetUserProjects(GetSingleUserRequest request);
+        Task<RequestResponse<GetProjectRoleResponse>> GetUserRoleInProjectAsync(GetProjectRoleRequest request);
     }
 }
