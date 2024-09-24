@@ -29,7 +29,7 @@ namespace JustDoIt.API.Controllers
             {
                 var response = await _service.GetAll(request);
 
-                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, errors = response.Result.Errors }) : BadRequest(response.Result.Errors);
+                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, result = response.Result }) : BadRequest(new { data = response.ListOfData, result = response.Result });
             }
             catch (Exception e)
             {
@@ -63,7 +63,7 @@ namespace JustDoIt.API.Controllers
                 request.UserId = HttpContext.GetUserId();
                 var response = await _service.GetUserProjectTasks(request);
 
-                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, errors = response.Result.Errors }) : NotFound(response);
+                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, result = response.Result }) : NotFound(new { data = response.ListOfData, result = response.Result });
             }
             catch (Exception e)
             {
@@ -78,7 +78,7 @@ namespace JustDoIt.API.Controllers
             {
                 var response = await _service.GetSingle(request);
 
-                return response.Result.IsSuccess ? Ok(new { data = response.Data, errors = response.Result.Errors }) : NotFound(response);
+                return response.Result.IsSuccess ? Ok(new { data = response.Data, errors = response.Result.Errors }) : NotFound(new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {

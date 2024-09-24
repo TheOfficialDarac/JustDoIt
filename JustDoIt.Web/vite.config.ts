@@ -75,6 +75,10 @@ export default defineConfig({
 				target,
 				secure: false,
 			},
+			"/api/v1/tasks": {
+				target,
+				secure: false,
+			},
 		},
 		port: 5173,
 		https: {

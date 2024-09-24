@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import ProjectsSidebar from "../../components/projects/ProjectsSidebar";
 import SelectedProject from "../../components/projects/SelectedProject";
-import { ProjectResponse } from "../../types/Types";
+import { AuthResponse, ProjectResponse, UserResponse } from "../../types/Types";
 import LoadingSpinner from "../../components/layout/LoadingSpinner";
 import { useDisclosure } from "@nextui-org/react";
 
-const ProjectsPage = ({ user, authToken }) => {
+interface Props {
+	user: UserResponse;
+	authToken: string;
+}
+function ProjectsPage({ user, authToken }: Props) {
 	const [projects, setProjects] = useState<ProjectResponse[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState<number>(0);
 	const { onOpen, isOpen, onClose } = useDisclosure();
@@ -36,7 +40,7 @@ const ProjectsPage = ({ user, authToken }) => {
 
 	return (
 		<div className='flex gap-3 border p-2'>
-			<div>{user?.userName}</div>
+			{/* <div>{user?.userName}</div> */}
 
 			<ProjectsSidebar
 				projects={projects}
@@ -50,6 +54,6 @@ const ProjectsPage = ({ user, authToken }) => {
 			/>
 		</div>
 	);
-};
+}
 
 export default ProjectsPage;

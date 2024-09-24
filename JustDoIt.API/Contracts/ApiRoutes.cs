@@ -20,7 +20,7 @@ namespace JustDoIt.API.Contracts
             public const string Update = "update";
 
             public const string UserTasks = "user";
-            public const string UserProjectTasks = "project/{projectId}";
+            public const string UserProjectTasks = "project";
         }
 
         public static class Projects

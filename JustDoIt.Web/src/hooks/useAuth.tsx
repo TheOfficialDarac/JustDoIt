@@ -69,30 +69,33 @@ export const AuthProvider = ({ children }: Props) => {
 	}, [authToken, fetchUserData]);
 
 	// call this function when you want to authenticate the user
-	async function login(token: string, rememberme: boolean): Promise<void> {
-		try {
-			if (rememberme) {
-				localStorage.setItem("auth_token", token);
-			} else {
-				sessionStorage.setItem("auth_token", token);
+	const login = useCallback(
+		async (token: string, rememberme: boolean): Promise<void> => {
+			try {
+				if (rememberme) {
+					localStorage.setItem("auth_token", token);
+				} else {
+					sessionStorage.setItem("auth_token", token);
+				}
+			} catch (err) {
+				console.log(err);
+				return;
 			}
-		} catch (err) {
-			console.log(err);
-			return;
-		}
 
-		setAuthToken(() => token);
-		navigate("/", { replace: false });
-	}
+			setAuthToken(() => token);
+			navigate("/", { replace: false });
+		},
+		[navigate]
+	);
 
 	// call this function to sign out logged in user
-	function logout(): void {
+	const logout = useCallback((): void => {
 		localStorage.removeItem("auth_token");
 		sessionStorage.removeItem("auth_token");
 		setAuthToken(() => "");
 		setUser(() => null);
 		navigate("/", { replace: true });
-	}
+	}, []);
 
 	const value = useMemo(
 		() => ({
@@ -102,7 +105,7 @@ export const AuthProvider = ({ children }: Props) => {
 			login,
 			logout,
 		}),
-		[authToken, logout, user]
+		[user, fetchUserData, authToken, login, logout]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

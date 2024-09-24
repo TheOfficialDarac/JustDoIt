@@ -205,12 +205,12 @@ namespace JustDoIt.Repository
             try
             {
 
-                var query = _context.UserTasks
+                var tasks = await _context.UserTasks
                     .Where(ut => ut.UserId.Equals(request.UserId))
                     .Select(t => t.Task)
-                    .Where(t => t.ProjectId.Equals(request.ProjectId));
+                    .Where(t => t.ProjectId.Equals(request.ProjectId)).ToListAsync();
 
-                var tasks = await query.ToListAsync();
+                //var tasks = await query.ToListAsync();
                 return _mapper.ToResponseList(tasks);
             }
             catch { /* Logger */ }

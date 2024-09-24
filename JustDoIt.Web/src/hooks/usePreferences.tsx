@@ -1,4 +1,11 @@
-import { createContext, useContext, useMemo, ReactNode } from "react";
+import {
+	createContext,
+	useContext,
+	useMemo,
+	ReactNode,
+	useCallback,
+	useEffect,
+} from "react";
 import { useLocalStorage } from "./useLocalStorage";
 
 interface PreferenceContextType {
@@ -19,24 +26,30 @@ interface Props {
 export const PreferenceProvider = ({ children }: Props) => {
 	const [preferences, setPreferences] = useLocalStorage("preferences", null);
 
+	useEffect(() => {
+		const root = document.querySelector("#body");
+
+		root?.classList.add(preferences?.theme);
+	}, [preferences?.theme]);
+
 	// call this function when you want to authenticate the user
-	const changeTheme = () => {
+	const changeTheme = useCallback(() => {
 		console.log("theme toggle gets called");
-		const root = document.querySelector("#app");
+		const root = document.querySelector("#body");
 		root?.classList.toggle("dark");
 		if (root?.classList.contains("dark")) {
 			setPreferences({ ...preferences, theme: "dark" });
 		} else {
 			setPreferences({ ...preferences, theme: "light" });
 		}
-	};
+	}, [preferences, setPreferences]);
 
 	const value = useMemo(
 		() => ({
 			preferences,
 			changeTheme,
 		}),
-		[preferences]
+		[changeTheme, preferences]
 	);
 
 	return (

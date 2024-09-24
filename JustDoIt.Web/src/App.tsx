@@ -4,26 +4,18 @@ import RegisterPage from "./pages/user/RegisterPage";
 import { LoginPage } from "./pages/user/LoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { SecretPage } from "./pages/SecretPage";
-import { AuthProvider, useAuth } from "./hooks/useAuth";
+import { useAuth } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
 import SettingsPage from "./pages/user/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import { usePreferences } from "./hooks/usePreferences";
 import ProjectsPage from "./pages/projects/ProjectsPage";
+import TasksPage from "./pages/projects/TasksPage";
 
 export default function App() {
-	const { preferences } = usePreferences();
-
 	const { authToken, user, fetchUserData } = useAuth();
 
 	return (
-		<div
-			id='app'
-			className={
-				"min-h-screen flex flex-col items-center text-foreground bg-background " +
-				preferences?.theme
-			}
-		>
+		<div className='min-h-screen flex flex-col items-center'>
 			<Layout>
 				<Routes>
 					<Route
@@ -59,9 +51,12 @@ export default function App() {
 								<ProjectsPage
 									authToken={authToken}
 									user={user}
-									fetchUserData={fetchUserData}
 								/>
 							}
+						/>
+						<Route
+							path='/tasks/:projectId'
+							element={<TasksPage authToken={authToken} />}
 						/>
 					</Route>
 
