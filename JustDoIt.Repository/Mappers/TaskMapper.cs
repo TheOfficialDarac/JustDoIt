@@ -1,6 +1,4 @@
-﻿using JustDoIt.Model.DTOs;
-using JustDoIt.Model.DTOs.Requests;
-using JustDoIt.Model.DTOs.Requests.Tasks;
+﻿using JustDoIt.Model.DTOs.Requests.Tasks;
 using JustDoIt.Model.DTOs.Responses.Tasks;
 using Riok.Mapperly.Abstractions;
 
@@ -17,5 +15,6 @@ namespace JustDoIt.Repository.Mappers
         public partial Model.Task CreateRequestToType(CreateTaskRequest dto);
 
         public partial CreateTaskResponse TypeToCreateResponse(Model.Task task);
+        public partial List<TaskAttachmentResponse> ToTaskAttachmentResponseList(List<Model.TaskAttachment> attachments);
     }
 }

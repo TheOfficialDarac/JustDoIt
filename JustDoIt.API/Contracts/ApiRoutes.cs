@@ -21,6 +21,7 @@ namespace JustDoIt.API.Contracts
 
             public const string UserTasks = "user";
             public const string UserProjectTasks = "project";
+            public const string Attachments = "attachments";
         }
 
         public static class Projects

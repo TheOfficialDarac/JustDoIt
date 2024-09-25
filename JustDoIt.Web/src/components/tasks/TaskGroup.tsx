@@ -18,9 +18,11 @@ interface Props {
 	title: string;
 	state: string;
 	tasks: TaskResponse[];
+	roleName: string;
+	authToken: string;
 }
 
-const TaskGroup = ({ title, state, tasks }: Props) => {
+const TaskGroup = ({ title, state, tasks, roleName, authToken }: Props) => {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const [selectedTask, setSelectedTask] = useState<TaskResponse>(null);
 	const handleSelectTask = (task: TaskResponse) => {
@@ -30,7 +32,7 @@ const TaskGroup = ({ title, state, tasks }: Props) => {
 	return (
 		<>
 			<figure className='border p-2 flex-1'>
-				<figcaption>{title}</figcaption>
+				<figcaption className='p-2 text-center'>{title}</figcaption>
 				<ul>
 					{tasks.map((task) => {
 						if (task.state === state)
@@ -53,7 +55,7 @@ const TaskGroup = ({ title, state, tasks }: Props) => {
 			<Modal
 				isOpen={isOpen}
 				onOpenChange={onOpenChange}
-				className=''
+				size='3xl'
 			>
 				<ModalContent>
 					{(onClose) => (
@@ -71,7 +73,11 @@ const TaskGroup = ({ title, state, tasks }: Props) => {
 								<Divider className='my-1' />
 								<p>{selectedTask?.description}</p>
 								<Divider />
-								<TaskAttachments />
+								<TaskAttachments
+									taskId={selectedTask?.id}
+									roleName={roleName}
+									authToken={authToken}
+								/>
 								<Divider />
 
 								<TaskComments />

@@ -8,10 +8,10 @@ const TaskComments = () => {
 		<Accordion>
 			<AccordionItem
 				key='1'
-				aria-label='Accordion 1'
-				title='Accordion 1'
+				aria-label='Comments'
+				title='Comments'
 			>
-				{"hello"}
+				{"Comment 1"}
 			</AccordionItem>
 		</Accordion>
 	);

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
 {
+    [Authorize]
     [ApiController, Route(ApiRoutes.Tasks.Controller)]
     public class TasksController(ITaskService service) : Controller
     {
@@ -129,6 +130,21 @@ namespace JustDoIt.API.Controllers
             {
                 var response = await _service.Delete(request);
                 return response.Result.IsSuccess ? NoContent() : NotFound(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.Tasks.Attachments)]
+        public async Task<IActionResult> GetTaskAttachments([FromQuery] GetTaskAttachmentsRequest request)
+        {
+            try
+            {
+                var response = await _service.GetTaskAttachmentsAsync(request);
+
+                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, result = response.Result }) : NotFound(new { data = response.ListOfData, result = response.Result });
             }
             catch (Exception e)
             {

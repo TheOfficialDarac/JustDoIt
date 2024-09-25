@@ -13,5 +13,6 @@ namespace JustDoIt.Service.Abstractions
         Task<RequestResponse<TaskResponse>> GetUserTasks(GetSingleUserRequest request);
         //Task<(IEnumerable<TaskDTO> data, Result result)> GetAll(GetTasksRequest searchParams);
         Task<RequestResponse<TaskResponse>> GetUserProjectTasks(GetUserProjectTasksRequest request);
+        Task<RequestResponse<TaskAttachmentResponse>> GetTaskAttachmentsAsync(GetTaskAttachmentsRequest request);
     }
 }

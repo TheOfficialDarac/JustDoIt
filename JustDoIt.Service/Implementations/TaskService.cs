@@ -115,6 +115,27 @@ namespace JustDoIt.Service.Implementations
             return new RequestResponse<TaskResponse>([], Result.Failure(errors));
         }
 
+        public async Task<RequestResponse<TaskAttachmentResponse>> GetTaskAttachmentsAsync(GetTaskAttachmentsRequest request)
+        {
+            var errors = new List<Error>();
+
+            if (request.AttachmentId == 0 && request.TaskId == 0)
+            {
+                errors.Add(TaskErrors.NotFound);
+                return new RequestResponse<TaskAttachmentResponse>([], Result.Success());
+            }
+
+            var data = await _repository.GetTaskAttachmentsAsync(request);
+
+            if (data.Any())
+            {
+                return new RequestResponse<TaskAttachmentResponse>(data, Result.Success());
+            }
+            else errors.Add(TaskErrors.NotFound);
+
+            return new RequestResponse<TaskAttachmentResponse>([], Result.Failure(errors));
+        }
+
         #endregion
     }
 }
