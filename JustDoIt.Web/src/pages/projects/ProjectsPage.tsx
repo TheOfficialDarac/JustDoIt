@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import ProjectsSidebar from "../../components/projects/ProjectsSidebar";
 import SelectedProject from "../../components/projects/SelectedProject";
-import { AuthResponse, ProjectResponse, UserResponse } from "../../types/Types";
+import { ProjectResponse, UserResponse } from "../../types/Types";
 import LoadingSpinner from "../../components/layout/LoadingSpinner";
 import { useDisclosure } from "@nextui-org/react";
 

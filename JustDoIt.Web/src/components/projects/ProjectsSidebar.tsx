@@ -1,6 +1,8 @@
 import { Dispatch, memo, SetStateAction, useEffect, useState } from "react";
 import { ProjectResponse } from "../../types/Types";
 import { Button, Input } from "@nextui-org/react";
+import { PlusIcon } from "@heroicons/react/16/solid";
+import CreateProjectModal from "./CreateProjectModal";
 
 interface Props {
   projects: ProjectResponse[];
@@ -13,6 +15,7 @@ const ProjectsSidebar = memo(function ({
   const [filteredProjects, setFilteredProjects] = useState<ProjectResponse[]>(
     []
   );
+  const [isOpenCreateModal, setIsOpenCreateModal] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("we here again");
@@ -31,30 +34,41 @@ const ProjectsSidebar = memo(function ({
   };
 
   return (
-    <div className="flex flex-col justify-items-center">
-      <div className="border p-3">
-        <Input
-          type="text"
-          label="Project title"
-          placeholder="Search by title"
-          className="max-w-xs"
-          onChange={handleSearch}
-        />
+    <>
+      <div className="flex flex-col justify-items-center text-center border-spacing-8">
+        <div className="border p-3">
+          <Input
+            type="text"
+            // label="Project title"
+            placeholder="Search"
+            className="max-w-xs"
+            onChange={handleSearch}
+          />
+        </div>
+        <ul className="flex flex-col gap-2 p-1">
+          {filteredProjects?.map((project) => (
+            <li className="border" key={project.id}>
+              <button
+                className="p-2"
+                onClick={() => setSelectedProject(() => project)}
+              >
+                {project.title}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="p-2">
+          <CreateProjectModal />
+          {/* <Button
+            className="w-full"
+            // onPress={onOpen}
+            onPress={() => setIsOpenCreateModal(() => true)}
+          >
+            <PlusIcon className="size-6 text-foreground" />
+          </Button> */}
+        </div>
       </div>
-      <ul className="flex flex-col gap-2 p-1">
-        {filteredProjects?.map((project) => (
-          <li className="border" key={project.id}>
-            <button
-              className="p-2"
-              onClick={() => setSelectedProject(() => project)}
-            >
-              {project.title}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <Button className="mx-auto rounded-2xl">+</Button>
-    </div>
+    </>
   );
 });
 export default ProjectsSidebar;

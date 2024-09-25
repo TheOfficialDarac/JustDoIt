@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { ProjectResponse, ProjectRoleResponse } from "../../types/Types";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
+import TasksComponent from "../test/TasksComponent";
+import { Cog6ToothIcon } from "@heroicons/react/16/solid";
 
 interface Props {
   project: ProjectResponse;
@@ -44,18 +46,27 @@ export default function SelectedProject({
       <div className="border">
         <h3>{project?.title}</h3>
         <p>{project?.description}</p>
-      </div>
-      <div>my role: {userRole?.roleName}</div>
-      <div>
-        <Link className="hover:text-cyan-100" to={`/tasks/${project?.id}`}>
-          Tasks
-        </Link>
+        <button onClick={() => alert("edit me")}>
+          <Cog6ToothIcon className="size-6" />
+        </button>
       </div>
       <div>
-        <Link className="hover:text-cyan-100" to={`/members/${project?.id}`}>
+        {/* <Link className="hover:text-cyan-100" to={`/members/${project?.id}`}>
           Members
-        </Link>
+        </Link> */}
         {/* <ProjectMembers projectId={project?.id} /> */}
+      </div>
+      <div>my role in project: {userRole?.roleName}</div>
+      <div>
+        {/* <Link className="hover:text-cyan-100" to={`/tasks/${project?.id}`}>
+          Tasks
+        </Link> */}
+
+        <TasksComponent
+          projectId={project?.id}
+          userRole={userRole}
+          authToken={authToken}
+        />
       </div>
     </div>
   );
