@@ -1,5 +1,4 @@
 ﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
-using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Model.DTOs.Requests.Tasks;
 using JustDoIt.Model.DTOs.Responses.Tasks;
 using JustDoIt.Repository.Abstractions.Common;

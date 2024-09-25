@@ -1,21 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 
 interface Props {
-	children: React.ReactNode;
+  children: React.ReactNode;
+  authToken: string;
 }
 
-export const ProtectedRoute = ({ children }: Props) => {
-	const navigate = useNavigate();
-	const { authToken } = useAuth();
-	useEffect(() => {
-		console.log(authToken);
-		if (!authToken) {
-			navigate("/");
-			return;
-		}
-	}, [authToken, navigate]);
-	// console.log("AUTH: ", authToken);
-	return <>{children}</>;
+export const ProtectedRoute = ({ children, authToken }: Props) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log(authToken);
+    if (!authToken) {
+      navigate("/");
+      return;
+    }
+  }, [authToken, navigate]);
+  return <>{children}</>;
 };

@@ -51,5 +51,15 @@ namespace JustDoIt.API.Contracts
 
             public const string Test = "test";
         }
+
+        public static class Attachments {
+            public const string Controller = $"{Base}/attachments";
+
+            public const string GetAll = "";
+            public const string Get = "{attachmentId}";
+            public const string Create = "create";
+            public const string Delete = "delete";
+            public const string Update = "update";
+        }
     }
 }
