@@ -1,5 +1,4 @@
 ﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs;
 using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Model.DTOs.Responses;
@@ -7,22 +6,16 @@ using JustDoIt.Model.DTOs.Responses.Projects;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 
 namespace JustDoIt.Service.Implementations
 {
-    public class ProjectService : IProjectService
+    public class ProjectService(IProjectRepository repository) : IProjectService
     {
         #region Properties
 
-        private readonly IProjectRepository _repository;
+        private readonly IProjectRepository _repository = repository;
 
         #endregion
-        public ProjectService(IProjectRepository repository)
-        {
-            _repository = repository;
-        }
 
         #region Methods
 

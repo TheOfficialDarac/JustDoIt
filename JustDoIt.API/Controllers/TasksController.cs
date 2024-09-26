@@ -1,12 +1,9 @@
-﻿using Azure;
-using JustDoIt.API.Contracts;
-using JustDoIt.Model;
-using JustDoIt.Model.DTOs;
+﻿using JustDoIt.API.Contracts;
 using JustDoIt.Model.DTOs.Requests.Abstractions;
+using JustDoIt.Model.DTOs.Requests.Attachments;
 using JustDoIt.Model.DTOs.Requests.Tasks;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers
@@ -79,7 +76,7 @@ namespace JustDoIt.API.Controllers
             {
                 var response = await _service.GetSingle(request);
 
-                return response.Result.IsSuccess ? Ok(new { data = response.Data, errors = response.Result.Errors }) : NotFound(new { data = response.Data, result = response.Result });
+                return response.Result.IsSuccess ? Ok(new { data = response.Data, result = response.Result}) : NotFound(new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {
@@ -95,8 +92,8 @@ namespace JustDoIt.API.Controllers
 
                 if (request is null) return BadRequest();
 
-                var success = await _service.Update(request);
-                return Ok(success);
+                var response = await _service.Update(request);
+                return Ok(new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {
@@ -115,7 +112,7 @@ namespace JustDoIt.API.Controllers
 
                 var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
                 var locationUrl = $"{baseUrl}/{ApiRoutes.Tasks.Get.Replace("{taskId}", response.Data!.Id.ToString())}";
-                return Created(locationUrl, response);
+                return Created(locationUrl, new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {
@@ -129,22 +126,7 @@ namespace JustDoIt.API.Controllers
             try
             {
                 var response = await _service.Delete(request);
-                return response.Result.IsSuccess ? NoContent() : NotFound(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet(ApiRoutes.Tasks.Attachments)]
-        public async Task<IActionResult> GetTaskAttachments([FromQuery] GetTaskAttachmentsRequest request)
-        {
-            try
-            {
-                var response = await _service.GetTaskAttachmentsAsync(request);
-
-                return response.Result.IsSuccess ? Ok(new { data = response.ListOfData, result = response.Result }) : NotFound(new { data = response.ListOfData, result = response.Result });
+                return response.Result.IsSuccess ? NoContent() : NotFound(new { data = response.Data, result = response.Result });
             }
             catch (Exception e)
             {

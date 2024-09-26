@@ -1,9 +1,11 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
 using JustDoIt.Model.DTOs.Requests.Abstractions;
+using JustDoIt.Model.DTOs.Requests.Attachments;
 using JustDoIt.Model.DTOs.Requests.Tasks;
 using JustDoIt.Model.DTOs.Responses;
 using JustDoIt.Model.DTOs.Responses.Abstractions;
+using JustDoIt.Model.DTOs.Responses.Attachments;
 using JustDoIt.Model.DTOs.Responses.Tasks;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Mappers;
@@ -28,11 +30,7 @@ namespace JustDoIt.Service.Implementations
 
             var result = await _repository.GetUserTasks(request);
 
-            if (result.Any()) return new RequestResponse<TaskResponse>(result, Result.Success());
-
-            errors.Add(TaskErrors.NotFound);
-
-            return new RequestResponse<TaskResponse>(result, Result.Failure(errors));
+            return new RequestResponse<TaskResponse>(result, Result.Success());
         }
 
         public async Task<RequestResponse<TaskResponse>> GetAll(GetTasksRequest request)
@@ -41,10 +39,7 @@ namespace JustDoIt.Service.Implementations
 
             var result = await _repository.GetAll(request);
 
-            if (result.Any()) return new RequestResponse<TaskResponse>(result, Result.Success());
-
-            errors.Add(TaskErrors.NotFound);
-            return new RequestResponse<TaskResponse>(result, Result.Failure(errors));
+            return new RequestResponse<TaskResponse>(result, Result.Success());
         }
 
         public async Task<RequestResponse<CreateTaskResponse>> Create(CreateTaskRequest request)
@@ -106,36 +101,8 @@ namespace JustDoIt.Service.Implementations
 
             var data = await _repository.GetUserProjectTasks(request);
 
-            if (data.Any())
-            {
-                return new RequestResponse<TaskResponse>(data, Result.Success());
-            }
-            else errors.Add(TaskErrors.NotFound);
-
-            return new RequestResponse<TaskResponse>([], Result.Failure(errors));
+            return new RequestResponse<TaskResponse>(data, Result.Success());
         }
-
-        public async Task<RequestResponse<TaskAttachmentResponse>> GetTaskAttachmentsAsync(GetTaskAttachmentsRequest request)
-        {
-            var errors = new List<Error>();
-
-            if (request.AttachmentId == 0 && request.TaskId == 0)
-            {
-                errors.Add(TaskErrors.NotFound);
-                return new RequestResponse<TaskAttachmentResponse>([], Result.Success());
-            }
-
-            var data = await _repository.GetTaskAttachmentsAsync(request);
-
-            if (data.Any())
-            {
-                return new RequestResponse<TaskAttachmentResponse>(data, Result.Success());
-            }
-            else errors.Add(TaskErrors.NotFound);
-
-            return new RequestResponse<TaskAttachmentResponse>([], Result.Failure(errors));
-        }
-
         #endregion
     }
 }

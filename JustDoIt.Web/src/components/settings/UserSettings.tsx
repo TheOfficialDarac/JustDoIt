@@ -3,25 +3,7 @@ import { SyntheticEvent, useCallback, useRef, useState } from "react";
 import LoadingSpinner from "../layout/LoadingSpinner";
 import { firebaseApp } from "../../Firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-
-function parseJwt(token: string) {
-	if (token) {
-		const base64Url = token.split(".")[1];
-		const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-		const jsonPayload = decodeURIComponent(
-			window
-				.atob(base64)
-				.split("")
-				.map(function (c) {
-					return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-				})
-				.join("")
-		);
-
-		return JSON.parse(jsonPayload);
-	}
-	return {};
-}
+import { parseJwt } from "../../types/Types";
 
 const UserSettings = ({ user, authToken, fetchUserData }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

@@ -1,9 +1,10 @@
 using JustDoIt.DAL;
 using JustDoIt.Model;
-using JustDoIt.Repository;
 using JustDoIt.Repository.Abstractions;
+using JustDoIt.Repository.Implementations;
 using JustDoIt.Service;
 using JustDoIt.Service.Abstractions;
+using JustDoIt.Service.Abstractions.Common;
 using JustDoIt.Service.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -85,8 +86,13 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+
+builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
+builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSingleton<TokenProvider>();

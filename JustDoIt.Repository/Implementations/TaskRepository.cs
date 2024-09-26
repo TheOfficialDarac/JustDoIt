@@ -1,13 +1,15 @@
 ﻿using JustDoIt.DAL;
 using JustDoIt.Model.DTOs.Requests.Abstractions;
+using JustDoIt.Model.DTOs.Requests.Attachments;
 using JustDoIt.Model.DTOs.Requests.Tasks;
 using JustDoIt.Model.DTOs.Responses;
+using JustDoIt.Model.DTOs.Responses.Attachments;
 using JustDoIt.Model.DTOs.Responses.Tasks;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace JustDoIt.Repository
+namespace JustDoIt.Repository.Implementations
 {
     public class TaskRepository : ITaskRepository
     {
@@ -213,18 +215,6 @@ namespace JustDoIt.Repository
 
                 //var tasks = await query.ToListAsync();
                 return _mapper.ToResponseList(tasks);
-            }
-            catch { /* Logger */ }
-            return [];
-        }
-
-        public async Task<IEnumerable<TaskAttachmentResponse>> GetTaskAttachmentsAsync(GetTaskAttachmentsRequest request)
-        {
-            try
-            {
-                var attachments = await _context.TaskAttachments.Where(x => x.TaskId == request.TaskId).ToListAsync();
-
-                return _mapper.ToTaskAttachmentResponseList(attachments);
             }
             catch { /* Logger */ }
             return [];

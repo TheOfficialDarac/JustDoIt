@@ -10,6 +10,5 @@ namespace JustDoIt.Repository.Abstractions
         Task<IEnumerable<TaskResponse>> GetUserTasks(GetSingleUserRequest request);
 
         Task<IEnumerable<TaskResponse>> GetUserProjectTasks(GetUserProjectTasksRequest request);
-        Task<IEnumerable<TaskAttachmentResponse>> GetTaskAttachmentsAsync(GetTaskAttachmentsRequest request);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using JustDoIt.Model.DTOs.Responses.Abstractions;
 
-namespace JustDoIt.Model.DTOs.Responses.Tasks
+namespace JustDoIt.Model.DTOs.Responses.Attachments
 {
-    public class TaskAttachmentResponse:Response
+    public class AttachmentResponse : Response
     {
         public int Id { get; set; } = 0;
 

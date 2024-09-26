@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace JustDoIt.API
 {
-    public static class Extenstions
+    public static class Extensions
     {
         public static string GetUserId(this HttpContext httpContext)
         {
@@ -13,7 +11,6 @@ namespace JustDoIt.API
                 return string.Empty;
             }
             return httpContext.User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            //return await httpContext.GetTokenAsync(JwtBearerDefaults.AuthenticationScheme, "");
         }
     }
 }

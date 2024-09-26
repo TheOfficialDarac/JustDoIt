@@ -79,11 +79,19 @@ export default defineConfig({
 				target,
 				secure: false,
 			},
-			"/api/v1/tasks/attachments": {
+			"/api/v1/projects/create": {
+				target,
+				secure: false,
+			},
+			"/api/v1/projects/update": {
 				target,
 				secure: false,
 			},
 			"/api/v1/tasks": {
+				target,
+				secure: false,
+			},
+			"/api/v1/attachments": {
 				target,
 				secure: false,
 			},
