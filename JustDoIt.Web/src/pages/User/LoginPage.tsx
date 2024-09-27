@@ -92,7 +92,7 @@ export const LoginPage = () => {
 						endContent={
 							<EnvelopeIcon
 								className='w-6 text-2xl text-default-400 pointer-events-none'
-								role='presentation'
+								// role='presentation'
 							/>
 						}
 						label='Email'
@@ -107,7 +107,7 @@ export const LoginPage = () => {
 						endContent={
 							<LockClosedIcon
 								className='w-6 text-2xl text-default-400 pointer-events-none'
-								role='presentation'
+								// role='presentation'
 							/>
 						}
 						label='Password'
@@ -123,9 +123,6 @@ export const LoginPage = () => {
 						Remember me
 					</Checkbox>
 					<div className='flex py-2 px-1 justify-around gap-2'>
-						{/* <Link color="primary" size="sm">
-            Forgot password?
-            </Link> */}
 						<Link
 							color='primary'
 							className='cursor-pointer'
@@ -147,25 +144,11 @@ export const LoginPage = () => {
 				</form>
 				<ul className='error p-2'>{message}</ul>
 			</div>
-			{/* {loading && <></>} */}
 			<LoadingSpinner
 				isOpen={isOpen}
 				onClose={onClose}
 				onOpen={onOpen}
 			/>
-			{/* <Modal
-				backdrop={"blur"}
-				isOpen={isOpen}
-				onClose={onClose}
-				hideCloseButton
-				isDismissable={false}
-			>
-				<ModalContent className='bg-transparent border-none'>
-					<ModalBody className='bg-transparent border-none'>
-						<Spinner />
-					</ModalBody>
-				</ModalContent>
-			</Modal> */}
 		</>
 	);
 };

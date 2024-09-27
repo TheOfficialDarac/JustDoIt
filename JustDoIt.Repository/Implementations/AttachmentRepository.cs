@@ -136,6 +136,7 @@ namespace JustDoIt.Repository.Implementations
             _context.TaskAttachments.RemoveRange(toBeRemoved);
             await _context.SaveChangesAsync();
 
+            if(request.Attachments != null)
             foreach (var formFile in request.Attachments)
             {
                 if (formFile.Length > 0)
@@ -143,7 +144,7 @@ namespace JustDoIt.Repository.Implementations
                     var ext = Path.GetExtension(formFile.FileName).ToLowerInvariant();
                     var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Attachments\\{formFile.FileName}";
 
-                    using (var stream = System.IO.File.Create(filePath))
+                    using (var stream = File.Create(filePath))
                     {
                         await formFile.CopyToAsync(stream);
                     }

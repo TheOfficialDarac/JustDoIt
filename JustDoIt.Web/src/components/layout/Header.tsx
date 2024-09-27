@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-	Input,
 	Navbar,
 	NavbarBrand,
 	NavbarContent,
@@ -12,9 +11,8 @@ import {
 } from "@nextui-org/react";
 import DummyLogo from "../../assets/icons/AppLogo.tsx";
 import UserIcon from "./UserIcon.tsx";
-import { MagnifyingGlas } from "../../assets/icons/MagnifyingGlas.tsx";
 import { useAuth } from "../../hooks/useAuth.tsx";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -55,9 +53,9 @@ function Header() {
 						<NavbarItem>
 							<Link
 								color='foreground'
-								to='/secret'
+								to='/projects'
 							>
-								SecretTest
+								Projects
 							</Link>
 						</NavbarItem>
 					)}
@@ -75,7 +73,7 @@ function Header() {
 					className='items-center'
 					justify='end'
 				>
-					<Input
+					{/* <Input
 						classNames={{
 							base: "max-w-full sm:max-w-[10rem] h-10",
 							mainWrapper: "h-full",
@@ -87,7 +85,7 @@ function Header() {
 						size='sm'
 						startContent={<MagnifyingGlas />}
 						type='search'
-					/>
+					/> */}
 					{<UserIcon />}
 				</NavbarContent>
 

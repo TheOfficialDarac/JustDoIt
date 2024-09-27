@@ -3,12 +3,17 @@ import { SyntheticEvent, useCallback, useRef, useState } from "react";
 import LoadingSpinner from "../layout/LoadingSpinner";
 import { firebaseApp } from "../../Firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { parseJwt } from "../../types/Types";
+import { AuthResponse, parseJwt } from "../../types/Types";
 
-const UserSettings = ({ user, authToken, fetchUserData }) => {
+interface Props {
+	user: AuthResponse;
+	authToken: string;
+	fetchUserData: () => void;
+}
+
+const UserSettings = ({ user, authToken, fetchUserData }: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	// console.log("JWT VAL: ", parseJwt(authToken));
 	const storage = getStorage(firebaseApp);
 	const [image, setImage] = useState<string>(user?.pictureUrl);
 	const imageInputRef = useRef<HTMLInputElement>(null);
@@ -42,13 +47,13 @@ const UserSettings = ({ user, authToken, fetchUserData }) => {
 			async (snapshot) => {
 				// console.log("SNAPSHOT: ", snapshot.ref);
 				await getDownloadURL(snapshot.ref).then((downloadURL) => {
-					console.log("download URL: ", downloadURL);
+					// console.log("download URL: ", downloadURL);
 					setImage(() => downloadURL);
-					console.log("Image: ", image);
+					// console.log("Image: ", image);
 				});
 			}
 		);
-	}, [image, storage, authToken]);
+	}, [storage, authToken]);
 
 	const handleFormSubmit = useCallback(
 		async (e: SyntheticEvent) => {
@@ -101,7 +106,7 @@ const UserSettings = ({ user, authToken, fetchUserData }) => {
 
 	return (
 		<div className='border p-2 flex flex-col'>
-			<h2>User Settings</h2>
+			{/* <h2>User Settings</h2> */}
 			<form
 				action='PUT'
 				id='user-data-form'
@@ -159,7 +164,7 @@ const UserSettings = ({ user, authToken, fetchUserData }) => {
 					/>
 					<Input
 						name='email'
-						isDisabled={!isEditing}
+						isDisabled={true}
 						type='email'
 						label='Email'
 						defaultValue={user?.email}
