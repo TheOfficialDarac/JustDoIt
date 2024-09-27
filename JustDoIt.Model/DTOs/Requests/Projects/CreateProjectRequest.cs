@@ -1,4 +1,5 @@
 ﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
+using Microsoft.AspNetCore.Http;
 
 namespace JustDoIt.Model.DTOs.Requests.Projects
 {
@@ -10,5 +11,7 @@ namespace JustDoIt.Model.DTOs.Requests.Projects
         public string Description { get; set; } = string.Empty;
 
         public string PictureUrl { get; set; } = string.Empty;
+        public IFormFile? Attachment { get; set; } = null;
+
     }
 }

@@ -1,10 +1,12 @@
 ﻿using JustDoIt.DAL;
+using JustDoIt.Model;
 using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Projects;
 using JustDoIt.Model.DTOs.Responses.Projects;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Mappers;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
 
 namespace JustDoIt.Repository.Implementations
 {
@@ -33,6 +35,18 @@ namespace JustDoIt.Repository.Implementations
                     Token = "CREATOR",
                     RoleId = 1
                 });
+
+                if (request.Attachment != null && request.Attachment.Length > 0 && string.IsNullOrEmpty(request.PictureUrl))
+                {
+                    var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
+                    var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Projects\\{project.Id}{ext}";
+
+                    using (var stream = File.Create(filePath))
+                    {
+                        await request.Attachment.CopyToAsync(stream);
+                    }
+                    project.PictureUrl = (filePath).Replace("\\", "/");
+                }
                 await _context.SaveChangesAsync();
 
                 return _mapper.TypeToCreateResponse(project);
@@ -121,22 +135,34 @@ namespace JustDoIt.Repository.Implementations
         {
             try
             {
-                var found = await _context.Projects.FindAsync(request.Id);
-                if (found is null) return new ProjectResponse();
+                var project = await _context.Projects.FindAsync(request.Id);
+                if (project is null) return new ProjectResponse();
 
                 if (!string.IsNullOrEmpty(request.Title))
-                    found.Title = request.Title;
+                    project.Title = request.Title;
 
                 if (!string.IsNullOrEmpty(request.Description))
-                    found.Description = request.Description;
+                    project.Description = request.Description;
 
                 if (!string.IsNullOrEmpty(request.PictureUrl))
-                    found.PictureUrl = request.PictureUrl;
+                    project.PictureUrl = request.PictureUrl;
 
-                found.IsActive = request.IsActive;
+                if (request.Attachment != null && request.Attachment.Length > 0 && string.IsNullOrEmpty(request.PictureUrl))
+                {
+                    var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
+                    var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Projects\\{project.Id}{ext}";
+
+                    using (var stream = File.Create(filePath))
+                    {
+                        await request.Attachment.CopyToAsync(stream);
+                    }
+                    project.PictureUrl = (filePath).Replace("\\", "/");
+                }
+
+                project.IsActive = request.IsActive;
 
                 await _context.SaveChangesAsync();
-                return _mapper.ToResponse(found);
+                return _mapper.ToResponse(project);
             }
             catch (Exception e) { }
             return new();

@@ -87,7 +87,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Projects.Update)]
-        public async Task<ActionResult> UpdateProject([FromBody] UpdateProjectRequest request)
+        public async Task<ActionResult> UpdateProject([FromForm] UpdateProjectRequest request)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost(ApiRoutes.Projects.Create)]
-        public async Task<IActionResult> CreateProject([FromBody] CreateProjectRequest request)
+        public async Task<IActionResult> CreateProject([FromForm] CreateProjectRequest request)
         {
             try
             {

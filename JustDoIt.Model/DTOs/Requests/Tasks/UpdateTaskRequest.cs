@@ -1,4 +1,5 @@
 ﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
+using Microsoft.AspNetCore.Http;
 
 namespace JustDoIt.Model.DTOs.Requests.Tasks
 {
@@ -19,5 +20,7 @@ namespace JustDoIt.Model.DTOs.Requests.Tasks
         public bool IsActive { get; set; } = true;
 
         public string State { get; set; }  = string.Empty;
+        public IFormFile? Attachment { get; set; } = null;
+
     }
 }

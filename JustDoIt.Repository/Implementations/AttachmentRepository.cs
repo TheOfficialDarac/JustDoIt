@@ -1,10 +1,12 @@
 ﻿using JustDoIt.DAL;
+using JustDoIt.Model;
 using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Attachments;
 using JustDoIt.Model.DTOs.Responses.Attachments;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Mappers;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
 
 namespace JustDoIt.Repository.Implementations
 {
@@ -25,6 +27,19 @@ namespace JustDoIt.Repository.Implementations
                 var attachment = _mapper.CreateRequestToType(request);
 
                 await _context.TaskAttachments.AddAsync(attachment);
+                await _context.SaveChangesAsync();
+
+                if (request.Attachment != null && request.Attachment.Length > 0)
+                {
+                    var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
+                    var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Attachments\\{attachment.Id}{ext}";
+
+                    using (var stream = File.Create(filePath))
+                    {
+                        await request.Attachment.CopyToAsync(stream);
+                    }
+                    attachment.Filepath = (filePath).Replace("\\", "/");
+                }
                 await _context.SaveChangesAsync();
 
                 return _mapper.TypeToCreateResponse(attachment);
@@ -59,16 +74,16 @@ namespace JustDoIt.Repository.Implementations
 
                 if (request.AttachmentId != 0)
                 {
-                    query = query.Where(x => x.Id.Equals(request.AttachmentId));
+                    query = query.Where(x => x.Id == request.AttachmentId);
                 }
 
                 if (request.TaskId != 0)
                 {
-                    query = query.Where(x => x.Id.Equals(request.AttachmentId));
+                    query = query.Where(x => x.TaskId == request.TaskId);
                 }
 
                 var result = await query.ToListAsync();
-                return _mapper.ToResponseList(result);
+                 return _mapper.ToResponseList(result);
             }
             catch (Exception e) { }
             return [];
@@ -90,17 +105,59 @@ namespace JustDoIt.Repository.Implementations
         {
             try
             {
-                var found = await _context.TaskAttachments.FindAsync(request.Id);
-                if (found is null) return new ();
+                var attachment = await _context.TaskAttachments.FindAsync(request.Id);
+                if (attachment is null) return new ();
 
-                found.Filepath = request.FilePath;
-                found.TaskId = request.TaskId;
+                attachment.Filepath = request.FilePath;
+                if (request.Attachment != null && request.Attachment.Length > 0 && string.IsNullOrEmpty(request.FilePath))
+                {
+                    var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
+                    var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Attachments\\{attachment.Id}{ext}";
+
+                    using (var stream = File.Create(filePath))
+                    {
+                        await request.Attachment.CopyToAsync(stream);
+                    }
+                    attachment.Filepath = (filePath).Replace("\\", "/");
+                }
+
+                attachment.TaskId = request.TaskId;
 
                 await _context.SaveChangesAsync();
-                return _mapper.ToResponse(found);
+                return _mapper.ToResponse(attachment);
             }
             catch (Exception e) { }
             return new();
+        }
+
+        public async Task<bool> UpdateTaskAttachments(UpdateTaskAttachmentsRequest request)
+        {
+            var toBeRemoved = await _context.TaskAttachments.Where(x => x.TaskId == request.TaskId).ToListAsync();
+            _context.TaskAttachments.RemoveRange(toBeRemoved);
+            await _context.SaveChangesAsync();
+
+            foreach (var formFile in request.Attachments)
+            {
+                if (formFile.Length > 0)
+                {
+                    var ext = Path.GetExtension(formFile.FileName).ToLowerInvariant();
+                    var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Attachments\\{formFile.FileName}";
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                    var file = new TaskAttachment
+                    {
+                        TaskId = request.TaskId,
+                        Filepath = (filePath).Replace("\\", "/")
+                    };
+
+                    _context.TaskAttachments.Add(file);
+                }
+            }
+            await _context.SaveChangesAsync();
+            return true;
         }
         #endregion
     }

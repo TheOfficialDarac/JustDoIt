@@ -1,4 +1,5 @@
 ﻿using JustDoIt.DAL;
+using JustDoIt.Model;
 using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Attachments;
 using JustDoIt.Model.DTOs.Requests.Tasks;
@@ -11,19 +12,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JustDoIt.Repository.Implementations
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository(ApplicationContext context) : ITaskRepository
     {
         #region Properties
 
-        private readonly ApplicationContext _context;
-        private readonly TaskMapper _mapper;
-        #endregion
+        private readonly ApplicationContext _context = context;
+        private readonly TaskMapper _mapper = new TaskMapper();
 
-        public TaskRepository(ApplicationContext context)
-        {
-            _context = context;
-            _mapper = new TaskMapper();
-        }
+        #endregion
 
         #region Methods
 
@@ -34,14 +30,30 @@ namespace JustDoIt.Repository.Implementations
             try
             {
                 var task = _mapper.CreateRequestToType(request);
+                task.IsActive = true;
+                task.State = "1";
 
                 await _context.Tasks.AddAsync(task);
                 await _context.SaveChangesAsync();
 
+                if (request.Attachment != null && request.Attachment.Length > 0 && string.IsNullOrEmpty(request.PictureUrl))
+                {
+                    var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
+                    var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Tasks\\{task.Id}{ext}";
+
+                    using (var stream = File.Create(filePath))
+                    {
+                        await request.Attachment.CopyToAsync(stream);
+                    }
+                    task.PictureUrl = (filePath).Replace("\\", "/");
+                }
+
+                  _context.ChangeTracker.DetectChanges();
+                await _context.SaveChangesAsync();
 
                 return _mapper.TypeToCreateResponse(task);
             }
-            catch { /*Logger? */ }
+            catch (Exception e){ /*Logger? */ }
             return new CreateTaskResponse();
         }
 
@@ -154,16 +166,36 @@ namespace JustDoIt.Repository.Implementations
                 // entity is not found in db, nothing to update
                 if (existing is null) return new TaskResponse();
 
+                if(!string.IsNullOrEmpty(request.Title))
                 existing.Title = request.Title;
-                existing.Summary = request.Summary;
-                existing.Description = request.Description;
-                existing.PictureUrl = request.PictureUrl;
-                existing.Deadline = request.Deadline;
+
+                if (!string.IsNullOrEmpty(request.Title))
+                    existing.Summary = request.Summary;
+
+                if (!string.IsNullOrEmpty(request.Title))
+                    existing.Description = request.Description;
+
+                if (!string.IsNullOrEmpty(request.Title))
+                    existing.Deadline = request.Deadline;
+
                 existing.IsActive = request.IsActive;
                 existing.State = request.State;
 
+                existing.PictureUrl = request.PictureUrl;
+                if (request.Attachment != null && request.Attachment.Length > 0 && string.IsNullOrEmpty(request.PictureUrl))
+                {
+                    var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
+                    var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Tasks\\{existing.Id}{ext}";
+
+                    using (var stream = File.Create(filePath))
+                    {
+                        await request.Attachment.CopyToAsync(stream);
+                    }
+                    existing.PictureUrl = (filePath).Replace("\\", "/");
+                }
 
                 _context.ChangeTracker.DetectChanges();
+
                 await _context.SaveChangesAsync();
                 return _mapper.ToResponse(existing);
             }

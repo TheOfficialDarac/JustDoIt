@@ -47,7 +47,7 @@ namespace JustDoIt.Service.Implementations
             var errors = new List<Error>();
             var data = await _repository.Create(request);
 
-            if (data.Id == 0) return new RequestResponse<CreateTaskResponse>(data, Result.Success());
+            if (data.Id != 0) return new RequestResponse<CreateTaskResponse>(data, Result.Success());
 
             errors.Add(TaskErrors.NotFound);
             return new RequestResponse<CreateTaskResponse>(data, Result.Failure(errors));

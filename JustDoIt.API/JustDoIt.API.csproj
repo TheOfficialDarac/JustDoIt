@@ -32,7 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
+    <Folder Include="Assets\Attachments\" />
+    <Folder Include="Assets\Tasks\" />
+    <Folder Include="Assets\Projects\" />
   </ItemGroup>
 
 </Project>
