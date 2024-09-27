@@ -1,6 +1,6 @@
-﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
-using JustDoIt.Model.DTOs.Responses;
-using JustDoIt.Model.DTOs.Responses.Abstractions;
+﻿using JustDoIt.Model.Requests.Abstractions;
+using JustDoIt.Model.Responses;
+using JustDoIt.Model.Responses.Abstractions;
 
 namespace JustDoIt.Service.Abstractions.Common
 {

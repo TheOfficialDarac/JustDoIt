@@ -1,6 +1,6 @@
-﻿using JustDoIt.Model.DTOs.Requests.Abstractions;
-using JustDoIt.Model.DTOs.Requests.Projects;
-using JustDoIt.Model.DTOs.Responses.Projects;
+﻿using JustDoIt.Model.Requests.Abstractions;
+using JustDoIt.Model.Requests.Projects;
+using JustDoIt.Model.Responses.Projects;
 using JustDoIt.Repository.Abstractions.Common;
 
 namespace JustDoIt.Repository.Abstractions

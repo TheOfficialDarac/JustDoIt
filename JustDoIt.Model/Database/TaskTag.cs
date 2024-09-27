@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace JustDoIt.Model.Database;
+
+public partial class TaskTag
+{
+    public int Id { get; set; }
+
+    public string Title { get; set; } = null!;
+
+    public int? TaskId { get; set; }
+
+    public virtual Task? Task { get; set; }
+}

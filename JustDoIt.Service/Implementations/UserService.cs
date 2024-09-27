@@ -1,12 +1,12 @@
 ﻿using JustDoIt.Common;
-using JustDoIt.Model;
-using JustDoIt.Model.DTOs.Requests.Auth;
-using JustDoIt.Model.DTOs.Responses;
 using JustDoIt.Service.Abstractions;
 using JustDoIt.Service.Errors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using JustDoIt.Model.DTOs.Responses.Auth;
+using JustDoIt.Model.Database;
+using JustDoIt.Model.Requests.Auth;
+using JustDoIt.Model.Responses;
+using JustDoIt.Model.Responses.Auth;
 
 namespace JustDoIt.Service.Implementations
 {

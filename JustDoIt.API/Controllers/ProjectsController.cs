@@ -1,8 +1,8 @@
 using JustDoIt.API.Contracts;
 using JustDoIt.Model;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Model.DTOs.Requests.Abstractions;
-using JustDoIt.Model.DTOs.Requests.Projects;
+using JustDoIt.Model.Requests.Abstractions;
+using JustDoIt.Model.Requests.Projects;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -87,7 +87,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Projects.Update)]
-        public async Task<ActionResult> UpdateProject([FromForm] UpdateProjectRequest request)
+        public async Task<ActionResult> UpdateProject([FromBody] UpdateProjectRequest request)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost(ApiRoutes.Projects.Create)]
-        public async Task<IActionResult> CreateProject([FromForm] CreateProjectRequest request)
+        public async Task<IActionResult> CreateProject([FromBody] CreateProjectRequest request)
         {
             try
             {

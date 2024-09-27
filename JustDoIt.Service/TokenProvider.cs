@@ -1,9 +1,9 @@
-﻿using JustDoIt.Model;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.Extensions.Configuration;
+using JustDoIt.Model.Database;
 
 namespace JustDoIt.Service
 {

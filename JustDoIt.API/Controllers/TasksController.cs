@@ -1,7 +1,7 @@
 ﻿using JustDoIt.API.Contracts;
-using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Attachments;
-using JustDoIt.Model.DTOs.Requests.Tasks;
+using JustDoIt.Model.Requests.Abstractions;
+using JustDoIt.Model.Requests.Tasks;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -85,7 +85,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Tasks.Update)]
-        public async Task<IActionResult> UpdateTask([FromForm] UpdateTaskRequest request)
+        public async Task<IActionResult> UpdateTask([FromBody] UpdateTaskRequest request)
         {
             try
             {
@@ -102,11 +102,10 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost(ApiRoutes.Tasks.Create)]
-        public async Task<IActionResult> CreateTask([FromForm] CreateTaskRequest request)
+        public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
         {
             try
             {
-                request.IssuerId = HttpContext.GetUserId();
                 var response = await _service.Create(request);
 
                 if (response.Result.IsFailure) return BadRequest(response.Result);

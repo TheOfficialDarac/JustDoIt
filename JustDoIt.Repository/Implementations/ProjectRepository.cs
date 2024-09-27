@@ -1,8 +1,8 @@
 ﻿using JustDoIt.DAL;
 using JustDoIt.Model;
-using JustDoIt.Model.DTOs.Requests.Abstractions;
-using JustDoIt.Model.DTOs.Requests.Projects;
-using JustDoIt.Model.DTOs.Responses.Projects;
+using JustDoIt.Model.Requests.Abstractions;
+using JustDoIt.Model.Requests.Projects;
+using JustDoIt.Model.Responses.Projects;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Mappers;
 using Microsoft.EntityFrameworkCore;

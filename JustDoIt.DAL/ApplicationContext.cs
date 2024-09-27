@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using JustDoIt.Model;
+using JustDoIt.Model.Database;
 
 namespace JustDoIt.DAL;
 
@@ -28,7 +28,7 @@ public partial class ApplicationContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<RoleClaim> RoleClaims { get; set; }
 
-    public virtual DbSet<Model.Task> Tasks { get; set; }
+    public virtual DbSet<Model.Database.Task> Tasks { get; set; }
 
     public virtual DbSet<TaskAttachment> TaskAttachments { get; set; }
 
@@ -114,7 +114,7 @@ public partial class ApplicationContext : IdentityDbContext<ApplicationUser>
                 .HasConstraintName("FK_ROLE_CLAIMS_PROJECT_ROLES");
         });
 
-        modelBuilder.Entity<Model.Task>(entity =>
+        modelBuilder.Entity<Model.Database.Task>(entity =>
         {
             entity.ToTable("TASKS");
 

@@ -1,5 +1,5 @@
 using JustDoIt.DAL;
-using JustDoIt.Model;
+using JustDoIt.Model.Database;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Implementations;
 using JustDoIt.Service;
@@ -134,7 +134,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors(options => options.WithOrigins("https://localhost:5173").AllowAnyMethod().AllowAnyHeader());
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

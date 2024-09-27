@@ -1,7 +1,7 @@
-﻿using JustDoIt.Model;
-using Riok.Mapperly.Abstractions;
-using JustDoIt.Model.DTOs.Responses.Attachments;
-using JustDoIt.Model.DTOs.Requests.Attachments;
+﻿using Riok.Mapperly.Abstractions;
+using JustDoIt.Model.Database;
+using JustDoIt.Model.Requests.Attachments;
+using JustDoIt.Model.Responses.Attachments;
 
 namespace JustDoIt.Repository.Mappers
 {

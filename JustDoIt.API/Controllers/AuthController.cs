@@ -1,7 +1,7 @@
 ﻿using JustDoIt.API.Contracts;
 using JustDoIt.Common;
-using JustDoIt.Model.DTOs.Requests.Auth;
-using JustDoIt.Model.DTOs.Responses.Auth;
+using JustDoIt.Model.Requests.Auth;
+using JustDoIt.Model.Responses.Auth;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

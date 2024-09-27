@@ -1,9 +1,9 @@
 ﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs.Requests.Abstractions;
-using JustDoIt.Model.DTOs.Requests.Attachments;
-using JustDoIt.Model.DTOs.Responses;
-using JustDoIt.Model.DTOs.Responses.Attachments;
 using JustDoIt.Model.DTOs.Responses.Projects;
+using JustDoIt.Model.Requests.Abstractions;
+using JustDoIt.Model.Requests.Attachments;
+using JustDoIt.Model.Responses;
+using JustDoIt.Model.Responses.Attachments;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Service.Abstractions.Common;
 using JustDoIt.Service.Errors;
@@ -89,12 +89,6 @@ namespace JustDoIt.Service.Implementations
             }
 
             return new RequestResponse<AttachmentResponse>(new AttachmentResponse(), Result.Success());
-        }
-
-        public async Task<bool> UpdateTaskAttachments(UpdateTaskAttachmentsRequest request)
-        {
-            await _repository.UpdateTaskAttachments(request);
-            return true;
         }
 
         #endregion

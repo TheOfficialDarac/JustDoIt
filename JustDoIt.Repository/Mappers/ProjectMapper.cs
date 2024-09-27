@@ -1,6 +1,6 @@
-﻿using JustDoIt.Model;
-using JustDoIt.Model.DTOs.Requests.Projects;
-using JustDoIt.Model.DTOs.Responses.Projects;
+﻿using JustDoIt.Model.Database;
+using JustDoIt.Model.Requests.Projects;
+using JustDoIt.Model.Responses.Projects;
 using Riok.Mapperly.Abstractions;
 
 namespace JustDoIt.Repository.Mappers

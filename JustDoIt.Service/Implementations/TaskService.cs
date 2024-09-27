@@ -1,12 +1,12 @@
 ﻿using JustDoIt.Common;
 using JustDoIt.Model.DTOs;
-using JustDoIt.Model.DTOs.Requests.Abstractions;
 using JustDoIt.Model.DTOs.Requests.Attachments;
-using JustDoIt.Model.DTOs.Requests.Tasks;
-using JustDoIt.Model.DTOs.Responses;
 using JustDoIt.Model.DTOs.Responses.Abstractions;
 using JustDoIt.Model.DTOs.Responses.Attachments;
-using JustDoIt.Model.DTOs.Responses.Tasks;
+using JustDoIt.Model.Requests.Abstractions;
+using JustDoIt.Model.Requests.Tasks;
+using JustDoIt.Model.Responses;
+using JustDoIt.Model.Responses.Tasks;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Mappers;
 using JustDoIt.Service.Abstractions;
@@ -47,7 +47,7 @@ namespace JustDoIt.Service.Implementations
             var errors = new List<Error>();
             var data = await _repository.Create(request);
 
-            if (data.Id != 0) return new RequestResponse<CreateTaskResponse>(data, Result.Success());
+            if (data.Id == 0) return new RequestResponse<CreateTaskResponse>(data, Result.Success());
 
             errors.Add(TaskErrors.NotFound);
             return new RequestResponse<CreateTaskResponse>(data, Result.Failure(errors));
