@@ -1,5 +1,5 @@
 import { Cog6ToothIcon, PhotoIcon } from "@heroicons/react/16/solid";
-import { ProjectResponse } from "../../types/Types";
+import { ProjectResponse } from "../../helpers/Types";
 import {
 	useDisclosure,
 	Button,
@@ -11,6 +11,7 @@ import {
 	Input,
 	Textarea,
 	Image,
+	DropdownItem,
 } from "@nextui-org/react";
 import {
 	SyntheticEvent,
@@ -100,31 +101,32 @@ const UpdateProject = ({ project, authToken, fetchProjects }: Props) => {
 		onClose();
 	};
 
-	const handleDelete = useCallback(async (e: PressEvent): void => {
-		await fetch("/api/v1/projects/delete", {
-			method: "delete",
-			body: JSON.stringify({ id: project?.id }),
-			headers: {
-				Authorization: `Bearer ${authToken}`,
-				"Content-Type": "application/json",
-			},
-		})
-			.then(async (response) => {
-				console.log("response on delete", response);
-				const json = await response.json();
-				if (response.ok) {
-				}
-			})
-			.catch((error) => console.error(error));
-		fetchProjects();
-		onClose();
-	}, []);
+	// const handleDelete = useCallback(async (e: PressEvent): void => {
+	// 	await fetch("/api/v1/projects/delete", {
+	// 		method: "delete",
+	// 		body: JSON.stringify({ id: project?.id }),
+	// 		headers: {
+	// 			Authorization: `Bearer ${authToken}`,
+	// 			"Content-Type": "application/json",
+	// 		},
+	// 	})
+	// 		.then(async (response) => {
+	// 			console.log("response on delete", response);
+	// 			const json = await response.json();
+	// 			if (response.ok) {
+	// 			}
+	// 		})
+	// 		.catch((error) => console.error(error));
+	// 	fetchProjects();
+	// 	onClose();
+	// }, []);
 
 	return (
 		<>
-			<button onClick={onOpen}>
+			{/* <button onClick={onOpen}>
 				<Cog6ToothIcon className='size-6' />
-			</button>
+			</button> */}
+			<DropdownItem onPress={onOpen}>Edit</DropdownItem>
 			<Modal
 				isOpen={isOpen}
 				onOpenChange={onOpenChange}

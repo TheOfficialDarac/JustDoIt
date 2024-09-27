@@ -16,7 +16,7 @@ import {
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import TaskAttachments from "./TaskAttachments";
 import TaskComments from "./TaskComments";
-import { TaskAttachmentResponse, TaskResponse } from "../../types/Types";
+import { TaskAttachmentResponse, TaskResponse } from "../../helpers/Types";
 import {
 	getLocalTimeZone,
 	parseDateTime,

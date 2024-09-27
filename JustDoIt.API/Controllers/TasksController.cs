@@ -1,5 +1,5 @@
 ﻿using JustDoIt.API.Contracts;
-using JustDoIt.Model.DTOs.Requests.Attachments;
+using JustDoIt.Model.Requests.Attachments;
 using JustDoIt.Model.Requests.Abstractions;
 using JustDoIt.Model.Requests.Tasks;
 using JustDoIt.Service.Abstractions;

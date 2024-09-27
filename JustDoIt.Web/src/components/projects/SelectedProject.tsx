@@ -1,4 +1,4 @@
-import { ProjectResponse, ProjectRoleResponse } from "../../types/Types";
+import { ProjectResponse, ProjectRoleResponse } from "../../helpers/Types";
 import { useCallback, useEffect, useState } from "react";
 import { Image } from "@nextui-org/react";
 import TasksComponent from "../tasks/TasksComponent";

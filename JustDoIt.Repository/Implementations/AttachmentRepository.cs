@@ -1,5 +1,6 @@
 ﻿using JustDoIt.DAL;
 using JustDoIt.Model;
+using JustDoIt.Model.Database;
 using JustDoIt.Model.Requests.Abstractions;
 using JustDoIt.Model.Requests.Attachments;
 using JustDoIt.Model.Responses.Attachments;

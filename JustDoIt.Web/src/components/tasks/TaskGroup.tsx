@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { TaskResponse } from "../../types/Types";
+import { TaskResponse } from "../../helpers/Types";
 import {
 	Button,
 	Divider,

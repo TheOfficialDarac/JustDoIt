@@ -1,9 +1,7 @@
 ﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs;
 using JustDoIt.Model.Requests.Auth;
 using JustDoIt.Model.Responses;
 using JustDoIt.Model.Responses.Auth;
-using JustDoIt.Service.Abstractions.Common;
 
 namespace JustDoIt.Service.Abstractions
 {

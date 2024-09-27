@@ -2,7 +2,7 @@ export interface AuthResponse {
 	authToken: string;
 }
 
-export interface UserResponse {
+export interface User {
 	email: string;
 	firstName: string;
 	lastName: string;
@@ -11,16 +11,16 @@ export interface UserResponse {
 	userName: string;
 }
 
-export interface ProjectResponse {
+export interface Project {
 	id: number;
 	title: string;
 	pictureUrl: string;
-	isActive: boolean;
+	status: string;
 	createdDate: string;
 	description: string;
 }
 
-export interface TaskResponse {
+export interface Task {
 	id: number;
 	projectId: number;
 	issuerId: string;
@@ -34,12 +34,12 @@ export interface TaskResponse {
 	state: string;
 }
 
-export interface ProjectRoleResponse {
+export interface ProjectRole {
 	roleName: string;
 	roleDescription: string;
 }
 
-export interface TaskAttachmentResponse {
+export interface Attachment {
 	id: number;
 	taskId: number;
 	filepath: string;

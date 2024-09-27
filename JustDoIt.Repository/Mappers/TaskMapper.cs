@@ -1,4 +1,4 @@
-﻿using JustDoIt.Model.DTOs.Responses.Attachments;
+﻿using JustDoIt.Model.Responses.Attachments;
 using JustDoIt.Model.Requests.Tasks;
 using JustDoIt.Model.Responses.Tasks;
 using Riok.Mapperly.Abstractions;

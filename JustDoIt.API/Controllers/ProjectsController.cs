@@ -1,11 +1,8 @@
 using JustDoIt.API.Contracts;
-using JustDoIt.Model;
-using JustDoIt.Model.DTOs;
 using JustDoIt.Model.Requests.Abstractions;
 using JustDoIt.Model.Requests.Projects;
 using JustDoIt.Service.Abstractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.API.Controllers

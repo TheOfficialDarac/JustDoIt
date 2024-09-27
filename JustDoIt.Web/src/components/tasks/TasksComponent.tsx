@@ -1,5 +1,5 @@
 import { Button, useDisclosure } from "@nextui-org/react";
-import { ProjectRoleResponse, TaskResponse } from "../../types/Types";
+import { ProjectRoleResponse, TaskResponse } from "../../helpers/Types";
 import LoadingSpinner from "../layout/LoadingSpinner";
 import TaskGroup from "../tasks/TaskGroup";
 import { useCallback, useEffect, useState } from "react";

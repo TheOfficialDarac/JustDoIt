@@ -1,7 +1,4 @@
 ﻿using JustDoIt.DAL;
-using JustDoIt.Model.DTOs.Requests.Attachments;
-using JustDoIt.Model.DTOs.Responses;
-using JustDoIt.Model.DTOs.Responses.Attachments;
 using JustDoIt.Model.Requests.Abstractions;
 using JustDoIt.Model.Requests.Tasks;
 using JustDoIt.Model.Responses.Tasks;

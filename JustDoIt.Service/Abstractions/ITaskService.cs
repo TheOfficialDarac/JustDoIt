@@ -1,8 +1,4 @@
-﻿using JustDoIt.Common;
-using JustDoIt.Model.DTOs;
-using JustDoIt.Model.DTOs.Requests.Attachments;
-using JustDoIt.Model.DTOs.Responses.Attachments;
-using JustDoIt.Model.Requests.Abstractions;
+﻿using JustDoIt.Model.Requests.Abstractions;
 using JustDoIt.Model.Requests.Tasks;
 using JustDoIt.Model.Responses;
 using JustDoIt.Model.Responses.Tasks;

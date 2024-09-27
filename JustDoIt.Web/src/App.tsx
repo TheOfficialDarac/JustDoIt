@@ -12,6 +12,7 @@ import RegisterPage from "./pages/user/RegisterPage";
 import { LoginPage } from "./pages/user/LoginPage";
 import UserSettings from "./components/settings/UserSettings";
 import DisplaySettings from "./components/settings/DisplaySettings";
+import ProjectPage from "./pages/projects/ProjectPage";
 
 export default function App() {
 	const { authToken, user, fetchUserData } = useAuth();
@@ -69,14 +70,14 @@ export default function App() {
 							path='/secret'
 							element={<SecretPage />}
 						/>
+
 						<Route
 							path='/projects'
-							element={
-								<ProjectsPage
-									authToken={authToken}
-									user={user}
-								/>
-							}
+							element={<ProjectsPage />}
+						/>
+						<Route
+							path='/projects/:projectId'
+							element={<ProjectPage />}
 						/>
 						<Route
 							path='/tasks/:projectId'

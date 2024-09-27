@@ -1,5 +1,6 @@
 ﻿using JustDoIt.DAL;
 using JustDoIt.Model;
+using JustDoIt.Model.Database;
 using JustDoIt.Model.Requests.Abstractions;
 using JustDoIt.Model.Requests.Projects;
 using JustDoIt.Model.Responses.Projects;
@@ -27,7 +28,7 @@ namespace JustDoIt.Repository.Implementations
                 await _context.Projects.AddAsync(project);
                 await _context.SaveChangesAsync();
 
-                await _context.UserProjects.AddAsync(new Model.UserProject
+                await _context.UserProjects.AddAsync(new UserProject
                 {
                     UserId = request.IssuerId.ToString(),
                     ProjectId = project.Id,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ProjectRoleResponse, TaskResponse } from "../../types/Types";
+import { ProjectRoleResponse, TaskResponse } from "../../helpers/Types";
 import TaskGroup from "../../components/tasks/TaskGroup";
 import LoadingSpinner from "../../components/layout/LoadingSpinner";
 import { useDisclosure } from "@nextui-org/react";

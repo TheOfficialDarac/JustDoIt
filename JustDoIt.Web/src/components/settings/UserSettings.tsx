@@ -3,7 +3,7 @@ import { SyntheticEvent, useCallback, useRef, useState } from "react";
 import LoadingSpinner from "../layout/LoadingSpinner";
 import { firebaseApp } from "../../Firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { AuthResponse, parseJwt } from "../../types/Types";
+import { AuthResponse, parseJwt } from "../../helpers/Types";
 
 interface Props {
 	user: AuthResponse;
