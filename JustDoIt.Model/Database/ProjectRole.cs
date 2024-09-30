@@ -11,7 +11,5 @@ public partial class ProjectRole
 
     public string? RoleDescription { get; set; }
 
-    public virtual ICollection<RoleClaim> RoleClaims { get; set; } = new List<RoleClaim>();
-
     public virtual ICollection<UserProject> UserProjects { get; set; } = new List<UserProject>();
 }

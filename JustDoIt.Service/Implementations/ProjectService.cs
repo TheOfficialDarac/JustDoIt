@@ -25,13 +25,7 @@ namespace JustDoIt.Service.Implementations
 
             var response = await _repository.GetAll(request);
 
-            if (response.Any()) return new RequestResponse<ProjectResponse>(response, Result.Success());
-            
-            errors.Add(ProjectErrors.NotFound);
-            //errors.Add(ProjectErrors.BadRequest);
-
-            return new RequestResponse<ProjectResponse>([], Result.Failure(errors));
-
+            return new RequestResponse<ProjectResponse>(response, Result.Success());
         }
 
         public async Task<RequestResponse<ProjectResponse>> GetSingle(GetSingleItemRequest request)
@@ -59,13 +53,7 @@ namespace JustDoIt.Service.Implementations
             }
             var response = await _repository.GetUserProjects(request);
 
-            if (response.Any())
-            {
-                return new RequestResponse<ProjectResponse>(response, Result.Success());
-            }
-
-            errors.Add(ProjectErrors.NotFound);
-            return new RequestResponse<ProjectResponse>([], Result.Failure(errors));
+            return new RequestResponse<ProjectResponse>(response, Result.Success());
         }
 
         public async Task<RequestResponse<ProjectResponse>> Update(UpdateProjectRequest request)

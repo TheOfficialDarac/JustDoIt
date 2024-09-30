@@ -17,11 +17,11 @@ public partial class UserProject
 
     public int RoleId { get; set; }
 
+    public bool IsFavorite { get; set; }
+
     public virtual Project Project { get; set; } = null!;
 
     public virtual ProjectRole Role { get; set; } = null!;
 
     public virtual ApplicationUser User { get; set; } = null!;
-
-    public virtual ICollection<ProjectClaim> Claims { get; set; } = new List<ProjectClaim>();
 }

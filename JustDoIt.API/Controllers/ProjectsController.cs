@@ -20,20 +20,20 @@ namespace JustDoIt.API.Controllers
 
         #region Methods
 
-        [HttpGet(ApiRoutes.Projects.UserProjects)]
-        public async Task<IActionResult> GetUserProjects([FromQuery] GetSingleUserRequest request) { 
-            try
-            {
+        //[HttpGet(ApiRoutes.Projects.UserProjects)]
+        //public async Task<IActionResult> GetUserProjects([FromQuery] GetSingleUserRequest request) { 
+        //    try
+        //    {
                 
-                var response = await _service.GetUserProjects(request);
+        //        var response = await _service.GetUserProjects(request);
 
-                return Ok(new { data = response.ListOfData, result = response.Result });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //        return Ok(new { data = response.ListOfData, result = response.Result });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [Authorize]
         [HttpGet(ApiRoutes.Projects.CurrentUserProjects)]
@@ -84,7 +84,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Projects.Update)]
-        public async Task<ActionResult> UpdateProject([FromBody] UpdateProjectRequest request)
+        public async Task<ActionResult> UpdateProject([FromForm] UpdateProjectRequest request)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPost(ApiRoutes.Projects.Create)]
-        public async Task<IActionResult> CreateProject([FromBody] CreateProjectRequest request)
+        public async Task<IActionResult> CreateProject([FromForm] CreateProjectRequest request)
         {
             try
             {

@@ -7,8 +7,6 @@ public partial class Task
 {
     public int Id { get; set; }
 
-    public string? Title { get; set; }
-
     public string IssuerId { get; set; } = null!;
 
     public string? Summary { get; set; }
@@ -23,13 +21,23 @@ public partial class Task
 
     public DateTime CreatedDate { get; set; }
 
-    public bool IsActive { get; set; }
+    public DateTime? LastChangeDate { get; set; }
 
-    public string? State { get; set; }
+    public int PriorityId { get; set; }
+
+    public int StateId { get; set; }
+
+    public int StatusId { get; set; }
 
     public virtual ApplicationUser Issuer { get; set; } = null!;
 
+    public virtual Priority Priority { get; set; } = null!;
+
     public virtual Project Project { get; set; } = null!;
+
+    public virtual State State { get; set; } = null!;
+
+    public virtual Status Status { get; set; } = null!;
 
     public virtual ICollection<TaskAttachment> TaskAttachments { get; set; } = new List<TaskAttachment>();
 

@@ -7,7 +7,6 @@ using JustDoIt.Model.Responses.Projects;
 using JustDoIt.Repository.Abstractions;
 using JustDoIt.Repository.Mappers;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Mail;
 
 namespace JustDoIt.Repository.Implementations
 {
@@ -34,17 +33,18 @@ namespace JustDoIt.Repository.Implementations
                     ProjectId = project.Id,
                     IsVerified = true,
                     Token = "CREATOR",
-                    RoleId = 1
+                    RoleId = 1,
+                    IsFavorite = request.IsFavorite
                 });
 
-                if (request.Attachment != null && request.Attachment.Length > 0 && string.IsNullOrEmpty(request.PictureUrl))
+                if (request.Picture != null && request.Picture.Length > 0)
                 {
-                    var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
+                    var ext = Path.GetExtension(request.Picture.FileName).ToLowerInvariant();
                     var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Projects\\{project.Id}{ext}";
 
                     using (var stream = File.Create(filePath))
                     {
-                        await request.Attachment.CopyToAsync(stream);
+                        await request.Picture.CopyToAsync(stream);
                     }
                     project.PictureUrl = (filePath).Replace("\\", "/");
                 }
@@ -52,7 +52,7 @@ namespace JustDoIt.Repository.Implementations
 
                 return _mapper.TypeToCreateResponse(project);
             }
-            catch (Exception E) { /* Logger */ }
+            catch (Exception) { /* Logger */ }
             return new CreateProjectResponse();
         }
 
@@ -63,15 +63,25 @@ namespace JustDoIt.Repository.Implementations
                 var found = await _context.Projects.FindAsync(request.Id);
                 if (found != null)
                 {
+                    if (!string.IsNullOrEmpty(found.PictureUrl))
+                    File.Delete(found.PictureUrl);
+
+                    var categories = await _context.ProjectCategories.Where(x => x.ProjectId == found.Id).ToListAsync();
+                    _context.ProjectCategories.RemoveRange(categories);
+
+                    var userProjects = await _context.UserProjects.Where(x => x.ProjectId == found.Id).ToListAsync();
+                    _context.UserProjects.RemoveRange(userProjects);
+
                     _context.Remove(found);
                     await _context.SaveChangesAsync();
+
                     return new ProjectResponse();
                 }
 
                 return new ProjectResponse { Id = request.Id };
 
             }
-            catch (Exception e) { }
+            catch (Exception) { }
             return new ProjectResponse { Id = request.Id };
         }
 
@@ -86,9 +96,14 @@ namespace JustDoIt.Repository.Implementations
                     query = query.Where(x => x.Title.Contains(request.Title));
                 }
 
-                if (request.IsActive.HasValue)
+                if (!string.IsNullOrEmpty(request.Key))
                 {
-                    query = query.Where(x => x.IsActive.Equals(request.IsActive));
+                    query = query.Where(x => x.Key.Contains(request.Key));
+                }
+
+                if (request.StatusId != 0)
+                {
+                    query = query.Where(x => x.StatusId.Equals(request.StatusId));
                 }
 
                 if (request.MinCreatedDate.HasValue)
@@ -103,12 +118,20 @@ namespace JustDoIt.Repository.Implementations
                     query = query.Where(x => x.CreatedDate <= request.MaxCreatedDate);
                 }
 
+                if (request.Category.Any())
+                {
+                    //retrieve all categories
+                    var projectCategories = await _context.ProjectCategories.Where(x => request.Category.Contains(x.Id)).ToListAsync();
+                    query = query.Where(x => projectCategories.All(item => x.ProjectCategories.Contains(item)));
+                }
+
                 var result = await query.ToListAsync();
                 return _mapper.ToResponseList(result);
             }
-            catch (Exception e) { }
+            catch (Exception) { }
             return [];
         }
+        
 
         public async Task<ProjectResponse> GetSingle(GetSingleItemRequest request)
         {
@@ -118,7 +141,7 @@ namespace JustDoIt.Repository.Implementations
 
                 return result is null ? new() : _mapper.ToResponse(result);
             }
-            catch (Exception e) { }
+            catch (Exception) { }
             return new();
         }
 
@@ -141,14 +164,17 @@ namespace JustDoIt.Repository.Implementations
 
                 if (!string.IsNullOrEmpty(request.Title))
                     project.Title = request.Title;
+                
+                if (!string.IsNullOrEmpty(request.Key))
+                    project.Key = request.Key;
 
                 if (!string.IsNullOrEmpty(request.Description))
                     project.Description = request.Description;
 
-                if (!string.IsNullOrEmpty(request.PictureUrl))
-                    project.PictureUrl = request.PictureUrl;
+                //if (!string.IsNullOrEmpty(request.PictureUrl))
+                //    project.PictureUrl = request.PictureUrl;
 
-                if (request.Attachment != null && request.Attachment.Length > 0 && string.IsNullOrEmpty(request.PictureUrl))
+                if (request.Attachment != null && request.Attachment.Length > 0 /* && string.IsNullOrEmpty(request.PictureUrl)*/)
                 {
                     var ext = Path.GetExtension(request.Attachment.FileName).ToLowerInvariant();
                     var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Projects\\{project.Id}{ext}";
@@ -160,12 +186,19 @@ namespace JustDoIt.Repository.Implementations
                     project.PictureUrl = (filePath).Replace("\\", "/");
                 }
 
-                project.IsActive = request.IsActive;
+                project.StatusId = request.StatusId;
+
+                if (request.Category.Any())
+                {
+                    //retrieve all categories
+                    var projectCategories = await _context.ProjectCategories.Where(x => request.Category.Contains(x.Id)).ToListAsync();
+                    project.ProjectCategories = projectCategories;
+                }
 
                 await _context.SaveChangesAsync();
                 return _mapper.ToResponse(project);
             }
-            catch (Exception e) { }
+            catch (Exception) { }
             return new();
         }
 

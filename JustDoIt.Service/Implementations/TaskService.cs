@@ -51,7 +51,7 @@ namespace JustDoIt.Service.Implementations
         public async Task<RequestResponse<TaskResponse>> GetSingle(GetSingleItemRequest request)
         {
             var data = await _repository.GetSingle(request);
-            if (data.Id.HasValue)
+            if (data.Id != 0)
             {
                 return new RequestResponse<TaskResponse>(data, Result.Success());
             }

@@ -13,8 +13,6 @@ public partial class UserTask
 
     public DateTime AssignDate { get; set; }
 
-    public bool IsActive { get; set; }
-
     public virtual Task Task { get; set; } = null!;
 
     public virtual ApplicationUser User { get; set; } = null!;

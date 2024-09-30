@@ -93,6 +93,9 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 
+builder.Services.AddScoped<IUtilsRepository, UtilsRepository>();
+builder.Services.AddScoped<IUtilsService, UtilsService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSingleton<TokenProvider>();

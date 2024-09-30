@@ -21,7 +21,7 @@ namespace JustDoIt.API.Controllers
 
             if (response.Result.IsSuccess) return NoContent();
 
-            return BadRequest(response);
+            return BadRequest(new { data = response.Data, result = response.Result });
         }
 
         [HttpPost(ApiRoutes.Auth.Login)]

@@ -136,7 +136,7 @@ namespace JustDoIt.Service.Implementations
 
             if (!string.IsNullOrEmpty(request.PictureUrl))
                 foundUser.PictureUrl = request.PictureUrl;
-                    //SaveImageFromPath(request.PictureUrl, request.Id);
+                    //SaveImageFromPath(request.PictureUrl, request.AttachmentId);
 
             //return new RequestResponse<string>("", Result.Success());
 

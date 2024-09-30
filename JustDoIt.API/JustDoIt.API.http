@@ -1,5 +1,5 @@
 @JustDoIt.API_HostAddress = https://localhost:7010/api/v1
-@auth_token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlYmNjZDIzMC0zNzUxLTRjN2UtYTRhMy1lYzRmMTlhMTQyN2YiLCJlbWFpbCI6ImRhcmlvLnJ1cGNpY0B2dXYuaHIiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTE3MztodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImV4cCI6MTcyNjgzNDMzMiwiaWF0IjoxNzI2ODMyNTMyLCJuYmYiOjE3MjY4MzI1MzJ9.7oY8n7CXPZXT7KYAxo0OwUofCW2zvqZQMJKX29tpgqgWNmX8-kn4QH_Aveu48RxdYBbnj0pAohe9vUK8lJL_dQ
+@auth_token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYzRkN2UzMi1hNTc3LTRmODQtYmIyNy0yNWY4MzllOTE2MWYiLCJlbWFpbCI6ImRhcmlvLnJ1cGNpY0B2dXYuaHIiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTE3MztodHRwczovL2xvY2FsaG9zdDo3MDEwIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAxMCIsImV4cCI6MTcyNzYzNTMyMCwiaWF0IjoxNzI3NjMzNTIwLCJuYmYiOjE3Mjc2MzM1MjB9.3dqUayaQIGXlbe9EVWFzoSfbngcGn1PQOfq5zUbAL6GY_34xRDXacaLJUpWj-SZqLp7NJmoVBzbzRp_VLERr1g
 ############################################################
 # AUTHENTIFICATION
 
@@ -7,7 +7,7 @@ POST {{JustDoIt.API_HostAddress}}/auth/register
 Content-Type: application/json
 
 {
-"email": "test@vuv.hr",
+"email": "dario.rupcic@vuv.hr",
 "password": "Lozinka123!"
 }
 ###
@@ -45,7 +45,7 @@ Authorization: Bearer {{auth_token}}
 ############################################################
 # PROJECTS
 
-GET {{JustDoIt.API_HostAddress}}/projects/user
+GET {{JustDoIt.API_HostAddress}}/projects/current-user
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 ###
@@ -64,4 +64,12 @@ Authorization: Bearer {{auth_token}}
   "title": "Test Project",
   "description": "project description",
   "pictureUrl": "hmhm"
+}
+###
+
+POST {{JustDoIt.API_HostAddress}}/projects/update
+Authorization: Bearer {{auth_token}}
+
+{
+  id:"1"
 }

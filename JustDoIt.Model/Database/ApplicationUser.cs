@@ -10,6 +10,10 @@ namespace JustDoIt.Model.Database
         public string? LastName { get; set; }
 
         public string? PictureUrl { get; set; }
+        public virtual ICollection<IssueComment> IssueComments { get; set; } = new List<IssueComment>();
+
+        public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
+
         public virtual ICollection<TaskComment> TaskComments { get; set; } = new List<TaskComment>();
 
         public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();

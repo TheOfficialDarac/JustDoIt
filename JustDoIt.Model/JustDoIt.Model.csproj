@@ -15,4 +15,8 @@
     <ProjectReference Include="..\JustDoIt.Common\JustDoIt.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Requests\Utils\" />
+  </ItemGroup>
+
 </Project>
