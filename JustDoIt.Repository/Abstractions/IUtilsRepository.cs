@@ -6,7 +6,9 @@ namespace JustDoIt.Repository.Abstractions
     {
         Task<IEnumerable<CategoryResponse>> GetAllCategories();
         Task<IEnumerable<CategoryResponse>> GetAllProjectCategories(int projectId);
+        Task<IEnumerable<StateResponse>> GetAllStates();
         Task<IEnumerable<StatusResponse>> GetAllStatuses();
         Task<StatusResponse> GetProjectStatus(int projectId);
+        Task<StateResponse> GetTaskState(int taskId);
     }
 }

@@ -44,7 +44,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Attachments.UpdateTasks)]
-        public async Task<IActionResult> UpdateTaskAttachments([FromBody] UpdateAttachmentsRequest request)
+        public async Task<IActionResult> UpdateTaskAttachments([FromForm] UpdateAttachmentsRequest request)
         {
             //if (request is null) return BadRequest();
 

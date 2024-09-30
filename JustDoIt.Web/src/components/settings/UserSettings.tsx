@@ -1,12 +1,17 @@
 import { Button, Image, Input, useDisclosure } from "@nextui-org/react";
-import { SyntheticEvent, useCallback, useRef, useState } from "react";
+import {
+	SyntheticEvent,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import LoadingSpinner from "../layout/LoadingSpinner";
-import { firebaseApp } from "../../Firebase";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { AuthResponse, parseJwt } from "../../helpers/Types";
+import { AuthResponse, parseJwt, User } from "../../helpers/Types";
+import { PhotoIcon, TvIcon } from "@heroicons/react/16/solid";
 
 interface Props {
-	user: AuthResponse;
+	user: User;
 	authToken: string;
 	fetchUserData: () => void;
 }
@@ -14,8 +19,7 @@ interface Props {
 const UserSettings = ({ user, authToken, fetchUserData }: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const storage = getStorage(firebaseApp);
-	const [image, setImage] = useState<string>(user?.pictureUrl);
+	const [image, setImage] = useState<string>("");
 	const imageInputRef = useRef<HTMLInputElement>(null);
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -23,6 +27,22 @@ const UserSettings = ({ user, authToken, fetchUserData }: Props) => {
 		() => imageInputRef?.current.click(),
 		[]
 	);
+
+	const getPicture = useCallback(async () => {
+		if (user?.pictureUrl) {
+			const url: string = `/api/v1/attachments/get-file?filepath=${user?.pictureUrl}`;
+			fetch(url, {
+				method: "GET",
+			}).then(async (response) => {
+				response.blob().then((blob) => {
+					const file = new File([blob], `${user?.id}.jpg`, {
+						type: blob.type,
+					});
+					setImage(() => URL.createObjectURL(file));
+				});
+			});
+		}
+	}, [user?.id, user?.pictureUrl]);
 
 	const handleChangeImage = useCallback(() => {
 		const selectedFile = imageInputRef.current.files[0];
@@ -38,43 +58,24 @@ const UserSettings = ({ user, authToken, fetchUserData }: Props) => {
 		}
 	}, [setImage]);
 
-	const handleFirebaseImageUpload = useCallback(async () => {
-		let url = `gs://task-manager-just-do-it.appspot.com/profile-photos/${
-			parseJwt(authToken).sub
-		}.jpeg`;
-		const storageRef = ref(storage, url);
-		await uploadBytes(storageRef, imageInputRef.current.files[0]).then(
-			async (snapshot) => {
-				// console.log("SNAPSHOT: ", snapshot.ref);
-				await getDownloadURL(snapshot.ref).then((downloadURL) => {
-					// console.log("download URL: ", downloadURL);
-					setImage(() => downloadURL);
-					// console.log("Image: ", image);
-				});
-			}
-		);
-	}, [storage, authToken]);
-
 	const handleFormSubmit = useCallback(
 		async (e: SyntheticEvent) => {
 			e.preventDefault();
 
 			onOpen();
-			if (image != user?.pictureUrl) {
-				handleFirebaseImageUpload();
-			}
 
+			console.log("IMAGE: ", image);
 			const formData: FormData = new FormData(e.target);
-			formData.set("pictureUrl", image);
+			if (image != user?.pictureUrl)
+				formData.set("picture", imageInputRef.current.files[0]);
 
 			// console.log(JSON.stringify(Object.fromEntries(formData.entries())));
 			// return;
 
 			await fetch("/api/v1/auth/update", {
 				method: "PUT",
-				body: JSON.stringify(Object.fromEntries(formData.entries())),
+				body: formData,
 				headers: {
-					"Content-Type": "application/json",
 					Authorization: `Bearer ${authToken}`,
 				},
 			})
@@ -93,16 +94,12 @@ const UserSettings = ({ user, authToken, fetchUserData }: Props) => {
 				.finally(onClose);
 			setIsEditing((prev) => !prev);
 		},
-		[
-			onOpen,
-			image,
-			user?.pictureUrl,
-			authToken,
-			onClose,
-			handleFirebaseImageUpload,
-			fetchUserData,
-		]
+		[onOpen, image, user?.pictureUrl, authToken, onClose, fetchUserData]
 	);
+
+	useEffect(() => {
+		getPicture();
+	}, [getPicture]);
 
 	return (
 		<div className='border p-2 flex flex-col'>
@@ -121,16 +118,19 @@ const UserSettings = ({ user, authToken, fetchUserData }: Props) => {
 					ref={imageInputRef}
 					onChange={handleChangeImage}
 				/>
-				<Image
-					removeWrapper
-					className={"mx-auto w-48 " + (isEditing && " cursor-pointer")}
-					isZoomed={isEditing}
-					src={image}
-					onClick={() => isEditing && handleImageInputClick()}
-					radius='lg'
-					loading='lazy'
-					shadow='sm'
-				/>
+				<div className='grid justify-items-center'>
+					<Image
+						className={
+							"mx-auto min-w-48 w-48 " + (isEditing && " cursor-pointer")
+						}
+						isZoomed={isEditing}
+						src={image}
+						onClick={() => isEditing && handleImageInputClick()}
+						radius='lg'
+						loading='lazy'
+						shadow='sm'
+					/>
+				</div>
 				<Input
 					name='userName'
 					isDisabled={!isEditing}

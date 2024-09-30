@@ -51,7 +51,7 @@ const TaskAttachments = ({
 		[]
 	);
 	const getTaskAttachments = useCallback(async () => {
-		fetch(`/api/v1/attachments?TaskId=${taskId}`, {
+		fetch(`/api/v1/attachments/tasks?Id=${taskId}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

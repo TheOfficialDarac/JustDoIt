@@ -19,7 +19,7 @@ namespace JustDoIt.Model.Requests.Projects
 
         public bool IsFavorite { get; set; } = false;
 
-        public IEnumerable<int> Categories { get; set; } = [];
+        //public IEnumerable<int> Categories { get; set; } = [];
 
     }
 }

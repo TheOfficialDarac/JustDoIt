@@ -8,7 +8,7 @@ import {
 	useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserResponse } from "../helpers/Types";
+import { parseJwt, UserResponse } from "../helpers/Types";
 
 interface AuthContextType {
 	user: UserResponse;

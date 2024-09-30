@@ -1,5 +1,10 @@
 import { PlusIcon, PhotoIcon } from "@heroicons/react/16/solid";
-import { getLocalTimeZone, today } from "@internationalized/date";
+import {
+	getLocalTimeZone,
+	now,
+	parseZonedDateTime,
+	today,
+} from "@internationalized/date";
 import {
 	Button,
 	Modal,
@@ -14,8 +19,12 @@ import {
 	useDisclosure,
 	Image,
 	DatePicker,
+	Select,
+	SelectItem,
 } from "@nextui-org/react";
-import React, { SyntheticEvent, useCallback, useRef } from "react";
+import React, { SyntheticEvent, useCallback, useRef, useState } from "react";
+import { State } from "../../helpers/Types";
+import { color } from "framer-motion";
 
 type Props = {
 	authToken: string;
@@ -23,16 +32,27 @@ type Props = {
 	fetchData: () => void;
 };
 
-const CreateTaskComponent = ({ authToken, projectId, fetchData }: Props) => {
+const CreateTaskComponent = ({
+	authToken,
+	projectId,
+	fetchData,
+	states,
+}: Props) => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 	const inputRef = useRef();
 
+	const [image, setImage] = useState<string>("");
 	const handleSubmit = useCallback(
 		async (e: SyntheticEvent) => {
 			e.preventDefault();
 			const formData = new FormData(e.target);
 			// console.log(formData);
 			formData.set("projectId", projectId?.toString());
+
+			// const date = parseZonedDateTime(formData.get("deadline"));
+			// formData.set("deadline", date.toDate("[Europe/Zagreb]"));
+			// console.log("formdata: ", formData);
+			// return;
 
 			await fetch("/api/v1/tasks/create", {
 				method: "post",
@@ -44,8 +64,8 @@ const CreateTaskComponent = ({ authToken, projectId, fetchData }: Props) => {
 				.then(async (response) => {
 					console.log("task create response: ", response);
 					const json = await response.json();
+					console.log("task create json: ", json);
 					if (response.ok) {
-						console.log("task create json: ", json);
 						fetchData();
 					} else {
 						console.warn(json.result);
@@ -54,18 +74,24 @@ const CreateTaskComponent = ({ authToken, projectId, fetchData }: Props) => {
 				.catch((error) => console.error(error));
 			onClose();
 		},
-		[authToken, projectId]
+		[authToken, fetchData, onClose, projectId]
 	);
 
-	//   {
-	//     "title": "string",
-	//     "summary": "string",
-	//     "description": "string",
-	//     "projectId": 0,
-	//     "issuerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-	//     "pictureUrl": "string",
-	//     "deadline": "2024-09-26T22:40:18.534Z"
-	//   }
+	const handleImageChange = useCallback((): void => {
+		const file = inputRef.current.files[0];
+
+		if (file) {
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				setImage(() => e.target.result);
+			};
+
+			reader.readAsDataURL(file); // Read the file as a data URL
+		}
+		// console.log(image);
+	}, []);
+
 	return (
 		<div className='flex-1 flex justify-items-center'>
 			<Button
@@ -90,59 +116,63 @@ const CreateTaskComponent = ({ authToken, projectId, fetchData }: Props) => {
 							</ModalHeader>
 							<Divider />
 							<ModalBody>
-								<div className='flex flex-col'>
-									<input
-										type='file'
-										name='attachment'
-										className='hidden'
-										accept='image/*'
-										ref={inputRef}
-										// onChange={handleImageChange}
-									/>
-									{false ? (
-										<Image
-											removeWrapper
-											className={"mx-auto w-48 cursor-pointer"}
-											//   src={image}
-											onClick={() => {
-												inputRef.current.click();
-											}}
-											radius='lg'
-											// loading="lazy"
-											shadow='sm'
+								<div className='grid grid-cols-2 gap-3 items-center'>
+									<div className='flex flex-col'>
+										<input
+											type='file'
+											name='attachment'
+											className='hidden'
+											accept='image/*'
+											ref={inputRef}
+											onChange={handleImageChange}
 										/>
-									) : (
-										<button
-											type='button'
-											className='p-0 mx-auto text-center'
-											onClick={() => {
-												inputRef.current.click();
-											}}
-										>
-											<PhotoIcon className='size-24' />
-										</button>
-									)}
+										{image ? (
+											<Image
+												removeWrapper
+												className={"mx-auto h-24 cursor-pointer"}
+												src={image}
+												onClick={() => {
+													inputRef.current.click();
+												}}
+												radius='lg'
+												// loading="lazy"
+												shadow='sm'
+											/>
+										) : (
+											<button
+												type='button'
+												className='p-0 mx-auto text-center'
+												onClick={() => {
+													inputRef.current.click();
+												}}
+											>
+												<PhotoIcon className='size-24' />
+											</button>
+										)}
+									</div>
+									<Textarea
+										name='summary'
+										placeholder='Summary'
+										label='Summary'
+									></Textarea>
 								</div>
-								<Input
-									placeholder='Title'
-									name='title'
-									label='Title'
-								/>
-								<DatePicker
-									name='deadline'
-									label='Deadline'
-									variant='bordered'
-									hideTimeZone
-									hourCycle={24}
-									defaultValue={today(getLocalTimeZone())}
-									showMonthAndYearPickers
-									minValue={today(getLocalTimeZone())}
-								/>
-								<Textarea
-									name='summary'
-									placeholder='Summary'
-									label='Summary'
-								></Textarea>
+								<div className='grid gap-3 grid-cols-2'>
+									{/* <DatePicker
+										className='hidden'
+										variant='bordered'
+										hideTimeZone
+										showMonthAndYearPickers
+									/> */}
+									<DatePicker
+										name='deadline'
+										label='Deadline'
+										variant='bordered'
+										hideTimeZone
+										showMonthAndYearPickers
+										minValue={today(getLocalTimeZone())}
+										defaultValue={today(getLocalTimeZone())}
+									/>
+								</div>
 								<Textarea
 									name='description'
 									placeholder='Description'

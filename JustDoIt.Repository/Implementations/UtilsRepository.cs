@@ -51,13 +51,39 @@ namespace JustDoIt.Repository.Implementations
             try
             {
                 var project = await _context.Projects.FindAsync(projectId);
-                if(project != null)
+                if (project != null)
                 {
                     var response = await _context.Statuses.FindAsync(project.StatusId);
                     if (response != null)
-                    { 
+                    {
                         return _mapper.ToStatusResponse(response);
                     }
+                }
+            }
+            catch (Exception) { /* Logger */ }
+            return new();
+        }
+        public async Task<IEnumerable<StateResponse>> GetAllStates()
+        {
+            try
+            {
+                var response = await _context.States.ToListAsync();
+                return _mapper.ToStateResponseList(response);
+            }
+            catch (Exception) { /* Logger */ }
+            return [];
+        }
+
+        public async Task<StateResponse> GetTaskState(int taskId)
+        {
+            try
+            {
+                var task = await _context.Tasks.FindAsync(taskId);
+                if (task != null)
+                {
+                    var response = await _context.States.FindAsync(task.StateId);
+                    if(response!= null)
+                        return _mapper.ToStateResponse(response);
                 }
             }
             catch (Exception) { /* Logger */ }

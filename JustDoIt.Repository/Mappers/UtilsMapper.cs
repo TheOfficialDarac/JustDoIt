@@ -11,7 +11,9 @@ namespace JustDoIt.Repository.Mappers
         public partial IEnumerable<CategoryResponse> ToCategoryResponseList(IEnumerable<Category> items);
 
         public partial StatusResponse ToStatusResponse(Status item);
-        public partial IEnumerable<StatusResponse> ToStatusResponseList(IEnumerable<Status> items);
+        public partial IEnumerable<StatusResponse> ToStatusResponseList(IEnumerable<Status> items); 
+        public partial StateResponse ToStateResponse(State item);
+        public partial IEnumerable<StateResponse> ToStateResponseList(IEnumerable<State> items);
 
     }
 }

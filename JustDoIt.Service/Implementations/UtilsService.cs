@@ -35,5 +35,19 @@ namespace JustDoIt.Service.Implementations
 
             return new RequestResponse<StatusResponse>(response, Result.Success());
         }
+
+
+        public async Task<RequestResponse<StateResponse>> GetAllStates()
+        {
+            var response = await _repository.GetAllStates();
+
+            return new RequestResponse<StateResponse>(response, Result.Success());
+        }
+        public async Task<RequestResponse<StateResponse>> GetTaskState(int taskId)
+        {
+            var response = await _repository.GetTaskState(taskId);
+
+            return new RequestResponse<StateResponse>(response, Result.Success());
+        }
     }
 }

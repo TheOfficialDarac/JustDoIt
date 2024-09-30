@@ -16,7 +16,7 @@ import {
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import TaskAttachments from "./TaskAttachments";
 import TaskComments from "./TaskComments";
-import { TaskAttachmentResponse, TaskResponse } from "../../helpers/Types";
+import { TaskAttachmentResponse, Task } from "../../helpers/Types";
 import {
 	getLocalTimeZone,
 	parseDateTime,
@@ -24,7 +24,7 @@ import {
 } from "@internationalized/date";
 
 type Props = {
-	task: TaskResponse;
+	task: Task;
 	roleName: string;
 	authToken: string;
 	fetchData: () => void;
@@ -43,12 +43,12 @@ const UpdateTaskComponent = ({
 	const handleUpdateAttachments = useCallback(
 		async (attachments: File[]) => {
 			const formData = new FormData();
-			formData.set("taskId", task?.id.toString());
+			formData.set("TypeId", task?.id.toString());
 			for (const file of attachments) {
 				formData.append("attachments", file, file.name);
 			}
 
-			await fetch("/api/v1/attachments/task-attachments", {
+			await fetch("/api/v1/attachments/tasks/update", {
 				method: "PUT",
 				headers: {
 					Authorization: `Bearer ${authToken}`,
@@ -56,7 +56,6 @@ const UpdateTaskComponent = ({
 				body: formData,
 			})
 				.then(async (response) => {
-					console.log("update attachments response: ", response);
 					if (response.ok) {
 						//
 					}
@@ -70,17 +69,10 @@ const UpdateTaskComponent = ({
 		(e: FormEvent<HTMLFormElement>): void => {
 			e.preventDefault();
 
+			if (attachments) handleUpdateAttachments(attachments);
 			const data: FormData = new FormData(e.target);
-			//   console.log("data: ", data);
-			//   return;
 			data.set("id", task?.id.toString());
 			//   data.set("state", task?.state);
-
-			const state = data.get("isActive");
-			data.delete("isActive");
-			data.set("isActive", state == "1" ? true : false);
-
-			if (attachments) handleUpdateAttachments(attachments);
 
 			fetch("/api/v1/tasks/update", {
 				method: "PUT",
@@ -124,7 +116,7 @@ const UpdateTaskComponent = ({
 				className='p-2 w-full bg-transparent'
 				onPress={onOpen}
 			>
-				{task?.title}
+				{task?.summary}
 			</Button>
 			<Modal
 				isOpen={isOpen}
@@ -144,54 +136,14 @@ const UpdateTaskComponent = ({
 									<Select
 										label='Select Task state'
 										className=''
-										name='state'
+										name='stateId'
 										isDisabled={!isEnabledEditing}
-										defaultSelectedKeys={task?.state}
+										defaultSelectedKeys={[task?.stateId]}
 									>
-										<SelectItem
-											key={"1"}
-											value={"1"}
-										>
-											To Do
-										</SelectItem>
-										<SelectItem
-											key={"2"}
-											value={"2"}
-										>
-											In progress
-										</SelectItem>
-										<SelectItem
-											key={"3"}
-											value={"3"}
-										>
-											Checking
-										</SelectItem>
-										<SelectItem
-											key={"4"}
-											value={"4"}
-										>
-											Done
-										</SelectItem>
-									</Select>
-									<Select
-										label='Select task status'
-										name='isActive'
-										className=''
-										isDisabled={!isEnabledEditing}
-										defaultSelectedKeys={task?.isActive ? "1" : "0"}
-									>
-										<SelectItem
-											key={"0"}
-											value={1}
-										>
-											Active
-										</SelectItem>
-										<SelectItem
-											key={"1"}
-											value={0}
-										>
-											Not Active
-										</SelectItem>
+										<SelectItem key={1}>To Do</SelectItem>
+										<SelectItem key={2}>In progress</SelectItem>
+										<SelectItem key={3}>Checking</SelectItem>
+										<SelectItem key={4}>Done</SelectItem>
 									</Select>
 								</div>
 								<div className='flex flex-1 text-xs gap-3'>
@@ -215,12 +167,12 @@ const UpdateTaskComponent = ({
 										minValue={today(getLocalTimeZone())}
 									/>
 								</div>
-								<Input
+								{/* <Input
 									label='Title'
 									name='title'
 									defaultValue={task?.title}
 									disabled={!isEnabledEditing}
-								/>
+								/> */}
 								<Textarea
 									label='Summary'
 									name='summary'

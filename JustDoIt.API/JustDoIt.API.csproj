@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\Attachments\" />
+    <Folder Include="Assets\Profiles\" />
     <Folder Include="Assets\Tasks\" />
     <Folder Include="Assets\Projects\" />
   </ItemGroup>

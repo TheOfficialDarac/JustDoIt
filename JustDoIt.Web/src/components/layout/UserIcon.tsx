@@ -7,11 +7,37 @@ import {
 	DropdownTrigger,
 } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useEffect, useState } from "react";
+import { User } from "../../helpers/Types";
 
-export default function UserIcon() {
+interface Props {
+	user: User;
+	authToken: string;
+	logout: () => void;
+}
+
+export default function UserIcon({ user, logout, authToken }: Props) {
 	const navigate = useNavigate();
-	const { user, logout, authToken } = useAuth();
+	const [image, setImage] = useState<string>("");
+
+	useEffect(() => {
+		const getPicture = async () => {
+			if (user?.pictureUrl) {
+				const url: string = `/api/v1/attachments/get-file?filepath=${user?.pictureUrl}`;
+				fetch(url, {
+					method: "GET",
+				}).then(async (response) => {
+					response.blob().then((blob) => {
+						const file = new File([blob], `${user?.id}.jpg`, {
+							type: blob.type,
+						});
+						setImage(() => URL.createObjectURL(file));
+					});
+				});
+			}
+		};
+		getPicture();
+	}, [user]);
 
 	return (
 		<>
@@ -68,7 +94,7 @@ export default function UserIcon() {
 							className='transition-transform'
 							color='secondary'
 							size='sm'
-							src={user?.pictureUrl}
+							src={image}
 						/>
 					</DropdownTrigger>
 					<DropdownMenu
@@ -81,7 +107,7 @@ export default function UserIcon() {
 					>
 						<DropdownSection showDivider>
 							<DropdownItem
-								key='profile'
+								key='profile-info'
 								className='h-14 gap-2'
 							>
 								<p className='font-semibold'>Signed in as</p>

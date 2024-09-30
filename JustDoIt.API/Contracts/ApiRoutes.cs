@@ -78,6 +78,9 @@ namespace JustDoIt.API.Contracts
 
             public const string GetAllStatuses = "statuses";
             public const string GetProjectStatus = "statuses/{projectId}";
+
+            public const string GetAllStates = "states";
+            public const string GetTaskState = "states/{taskId}";
         }
 
         public static class Comments

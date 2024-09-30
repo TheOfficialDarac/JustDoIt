@@ -63,7 +63,7 @@ namespace JustDoIt.API.Controllers
         }
 
         [HttpPut(ApiRoutes.Auth.Update)]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequest request)
         {
             var uid = HttpContext.GetUserId();
             request.Id = uid;

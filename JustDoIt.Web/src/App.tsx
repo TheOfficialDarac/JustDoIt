@@ -6,7 +6,7 @@ import { useAuth } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProjectsPage from "./pages/projects/ProjectsPage";
-import TasksPage from "./pages/projects/TasksPage";
+import TasksPage from "./pages/tasks/TasksPage";
 import SettingsPage from "./pages/user/SettingsPage";
 import RegisterPage from "./pages/user/RegisterPage";
 import { LoginPage } from "./pages/user/LoginPage";
@@ -15,11 +15,15 @@ import DisplaySettings from "./components/settings/DisplaySettings";
 import ProjectPage from "./pages/projects/ProjectPage";
 
 export default function App() {
-	const { authToken, user, fetchUserData } = useAuth();
+	const { authToken, user, fetchUserData, logout } = useAuth();
 
 	return (
 		<div className='min-h-screen flex flex-col items-center'>
-			<Layout>
+			<Layout
+				user={user}
+				authToken={authToken}
+				logout={logout}
+			>
 				<Routes>
 					<Route
 						path='/'
@@ -73,11 +77,11 @@ export default function App() {
 
 						<Route
 							path='/projects'
-							element={<ProjectsPage />}
+							element={<ProjectsPage authToken={authToken} />}
 						/>
 						<Route
 							path='/projects/:projectId'
-							element={<ProjectPage />}
+							element={<ProjectPage authToken={authToken} />}
 						/>
 						<Route
 							path='/tasks/:projectId'

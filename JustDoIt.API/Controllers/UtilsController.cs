@@ -43,6 +43,22 @@ namespace JustDoIt.API.Controllers
 
             return Ok(new { data = response.ListOfData, result = response.Result });
         }
+
+        [HttpGet(ApiRoutes.Utils.GetAllStates)]
+        public async Task<IActionResult> GetAllStates()
+        {
+            var response = await _service.GetAllStates();
+
+            return Ok(new { data = response.ListOfData, result = response.Result });
+        }
+
+        [HttpGet(ApiRoutes.Utils.GetTaskState)]
+        public async Task<IActionResult> GetTaskState([FromRoute] int taskId)
+        {
+            var response = await _service.GetTaskState(taskId);
+
+            return Ok(new { data = response.Data, result = response.Result });
+        }
         #endregion
     }
 }

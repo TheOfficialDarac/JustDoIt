@@ -23,6 +23,7 @@ namespace JustDoIt.Repository.Implementations
         {
             try
             {
+                //request.Deadline = DateTime.SpecifyKind(new DateTime(request.Deadline), DateTimeKind.Utc);
                 var task = _mapper.CreateRequestToType(request);
 
                 await _context.Tasks.AddAsync(task);
@@ -31,7 +32,7 @@ namespace JustDoIt.Repository.Implementations
 
                 return _mapper.TypeToCreateResponse(task);
             }
-            catch (Exception) { /*Logger? */ }
+            catch (Exception e) { /*Logger? */ }
             return new CreateTaskResponse();
         }
 

@@ -134,9 +134,22 @@ namespace JustDoIt.Service.Implementations
                 foundUser.PhoneNumber = request.PhoneNumber;
 
 
-            if (!string.IsNullOrEmpty(request.PictureUrl))
-                foundUser.PictureUrl = request.PictureUrl;
-                    //SaveImageFromPath(request.PictureUrl, request.AttachmentId);
+            //if (!string.IsNullOrEmpty(request.PictureUrl))
+            //foundUser.PictureUrl = request.PictureUrl;
+
+            if (request.Picture != null && request.Picture.Length > 0)
+            {
+                var ext = Path.GetExtension(request.Picture.FileName).ToLowerInvariant();
+                var filePath = $"{Directory.GetCurrentDirectory()}\\Assets\\Profiles\\{foundUser.Id}{ext}";
+
+                using (var stream = File.Create(filePath))
+                {
+                    await request.Picture.CopyToAsync(stream);
+                }
+                foundUser.PictureUrl = (filePath).Replace("\\", "/");
+            }
+
+            //SaveImageFromPath(request.PictureUrl, request.AttachmentId);
 
             //return new RequestResponse<string>("", Result.Success());
 
