@@ -10,7 +10,6 @@ charts
 - **CREATE** Must contain [Key, Title, Description, Status, Image, isFavorite, Categories ]
 - **GET** [Title, Key, StatusId, Category, MinCreatedDate, MaxCreatedDate]
 
-
 logger
 project, issue & task
-project pregress bar
+project progress bar
